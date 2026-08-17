@@ -25,7 +25,10 @@ export default defineConfig({
 				'Human-facing documentation for operating, integrating with, and contributing to ShowMesh.',
 			favicon: '/brand/showmesh-icon.png',
 			customCss: ['./src/styles/showmesh.css'],
-			components: { SiteTitle: './src/components/SiteTitle.astro' },
+			components: {
+				Footer: './src/components/DiagramTools.astro',
+				SiteTitle: './src/components/SiteTitle.astro',
+			},
 			social: [
 				{
 					icon: 'github',

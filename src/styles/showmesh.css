@@ -42,6 +42,7 @@
 	--sl-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 	--sl-content-width: 48rem;
 	--sl-sidebar-width: 18rem;
+	--showmesh-toc-width: 13rem;
 	color-scheme: light;
 }
 
@@ -146,7 +147,7 @@ header.header {
 	overflow: hidden;
 }
 
-.mermaid {
+.showmesh-diagram-frame {
 	margin-block: 1.5rem;
 	padding: 1rem;
 	border: 1px solid var(--showmesh-border);
@@ -154,11 +155,152 @@ header.header {
 	background: var(--showmesh-surface);
 }
 
+.showmesh-diagram-frame__toolbar {
+	display: flex;
+	justify-content: flex-end;
+	margin: -0.5rem -0.5rem 0.5rem;
+}
+
+.showmesh-diagram-frame__expand,
+.showmesh-diagram-dialog button {
+	min-height: 2rem;
+	padding: 0.375rem 0.625rem;
+	border: 1px solid var(--showmesh-border);
+	border-radius: 0.375rem;
+	color: var(--showmesh-text);
+	background: var(--showmesh-surface-raised);
+	font: inherit;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.showmesh-diagram-frame__expand:hover,
+.showmesh-diagram-dialog button:hover {
+	border-color: var(--showmesh-accent);
+	color: var(--showmesh-accent-strong);
+}
+
+.showmesh-diagram-frame__expand:active,
+.showmesh-diagram-dialog button:active {
+	background: var(--showmesh-accent-soft);
+}
+
+.showmesh-diagram-dialog button:disabled {
+	opacity: 0.45;
+	pointer-events: none;
+}
+
+.showmesh-diagram-frame .mermaid {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+}
+
 .mermaid svg {
 	display: block;
 	max-width: 100%;
 	height: auto;
 	margin-inline: auto;
+}
+
+.showmesh-diagram-dialog {
+	width: min(96vw, 100rem);
+	max-width: none;
+	height: 94vh;
+	max-height: none;
+	margin: auto;
+	padding: 0;
+	border: 1px solid var(--showmesh-border);
+	border-radius: 0.75rem;
+	color: var(--showmesh-text);
+	background: var(--showmesh-surface);
+}
+
+.showmesh-diagram-dialog::backdrop {
+	background: color-mix(in srgb, var(--showmesh-bg) 78%, transparent);
+	backdrop-filter: blur(4px);
+}
+
+.showmesh-diagram-dialog__panel {
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr);
+	height: 100%;
+}
+
+.showmesh-diagram-dialog__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid var(--showmesh-border);
+}
+
+.showmesh-diagram-dialog__header h2 {
+	margin: 0;
+	font-size: 1rem;
+	letter-spacing: -0.01em;
+}
+
+.showmesh-diagram-dialog__actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.showmesh-diagram-dialog__actions output {
+	display: inline-block;
+	min-width: 3rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.showmesh-diagram-dialog__canvas {
+	overflow: auto;
+	padding: 1rem;
+	background: var(--showmesh-bg);
+}
+
+.showmesh-diagram-dialog__svg {
+	display: block;
+	max-width: none !important;
+	height: auto !important;
+	margin: auto;
+}
+
+body:has(.showmesh-diagram-dialog[open]) { overflow: hidden; }
+
+@media (min-width: 72rem) {
+	:root[data-has-toc] { --__toc-width: var(--showmesh-toc-width); }
+
+	.right-sidebar-container {
+		--sl-sidebar-width: var(--showmesh-toc-width);
+		flex: 0 0 var(--showmesh-toc-width);
+		width: var(--showmesh-toc-width);
+	}
+
+	[data-has-sidebar][data-has-toc] .main-pane {
+		width: calc(100% - var(--showmesh-toc-width));
+	}
+}
+
+@media (max-width: 40rem) {
+	.showmesh-diagram-dialog {
+		width: 100vw;
+		height: 100dvh;
+		border: 0;
+		border-radius: 0;
+	}
+
+	.showmesh-diagram-dialog__header {
+		align-items: flex-start;
+		padding: 0.75rem;
+	}
+
+	.showmesh-diagram-dialog__header h2 { display: none; }
+	.showmesh-diagram-dialog__actions { width: 100%; justify-content: flex-end; }
 }
 
 .hero h1 { letter-spacing: -0.035em; }

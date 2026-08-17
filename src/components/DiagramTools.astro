@@ -1,0 +1,114 @@
+---
+import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
+---
+
+<DefaultFooter />
+
+<dialog class="showmesh-diagram-dialog" aria-labelledby="showmesh-diagram-dialog-title">
+	<section class="showmesh-diagram-dialog__panel">
+		<header class="showmesh-diagram-dialog__header">
+			<h2 id="showmesh-diagram-dialog-title">Expanded diagram</h2>
+			<div class="showmesh-diagram-dialog__actions" aria-label="Diagram controls">
+				<button type="button" data-diagram-zoom-out aria-label="Zoom out">−</button>
+				<button type="button" data-diagram-reset aria-label="Reset zoom">
+					<output data-diagram-zoom>100%</output>
+				</button>
+				<button type="button" data-diagram-zoom-in aria-label="Zoom in">+</button>
+				<button type="button" data-diagram-close>Close</button>
+			</div>
+		</header>
+		<div class="showmesh-diagram-dialog__canvas" data-diagram-canvas tabindex="0"></div>
+	</section>
+</dialog>
+
+<script>
+	const dialog = document.querySelector<HTMLDialogElement>('.showmesh-diagram-dialog');
+	const canvas = dialog?.querySelector<HTMLElement>('[data-diagram-canvas]');
+	const zoomOutput = dialog?.querySelector<HTMLOutputElement>('[data-diagram-zoom]');
+	const zoomOut = dialog?.querySelector<HTMLButtonElement>('[data-diagram-zoom-out]');
+	const zoomIn = dialog?.querySelector<HTMLButtonElement>('[data-diagram-zoom-in]');
+	const reset = dialog?.querySelector<HTMLButtonElement>('[data-diagram-reset]');
+	const close = dialog?.querySelector<HTMLButtonElement>('[data-diagram-close]');
+
+	let scale = 1;
+	let expandedDiagram: SVGSVGElement | null = null;
+	let openingButton: HTMLButtonElement | null = null;
+
+	function updateZoom(nextScale: number) {
+		scale = Math.min(3, Math.max(0.5, nextScale));
+		if (expandedDiagram) expandedDiagram.style.width = `${scale * 100}%`;
+		if (zoomOutput) zoomOutput.value = `${Math.round(scale * 100)}%`;
+		if (zoomOut) zoomOut.disabled = scale <= 0.5;
+		if (zoomIn) zoomIn.disabled = scale >= 3;
+	}
+
+	function openDiagram(source: HTMLElement, trigger: HTMLButtonElement) {
+		const svg = source.querySelector<SVGSVGElement>('svg');
+		if (!dialog || !canvas || !svg) return;
+
+		expandedDiagram = svg.cloneNode(true) as SVGSVGElement;
+		expandedDiagram.classList.add('showmesh-diagram-dialog__svg');
+		expandedDiagram.removeAttribute('width');
+		expandedDiagram.removeAttribute('height');
+		canvas.replaceChildren(expandedDiagram);
+		openingButton = trigger;
+		updateZoom(1);
+		dialog.showModal();
+		canvas.focus();
+	}
+
+	function enhanceDiagram(diagram: HTMLElement) {
+		if (diagram.closest('.showmesh-diagram-frame') || !diagram.querySelector('svg')) return;
+
+		const frame = document.createElement('div');
+		frame.className = 'showmesh-diagram-frame';
+		const toolbar = document.createElement('div');
+		toolbar.className = 'showmesh-diagram-frame__toolbar';
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.className = 'showmesh-diagram-frame__expand';
+		button.textContent = 'Expand diagram';
+		button.addEventListener('click', () => openDiagram(diagram, button));
+		toolbar.append(button);
+		diagram.before(frame);
+		frame.append(toolbar, diagram);
+	}
+
+	function enhanceRenderedDiagrams() {
+		document.querySelectorAll<HTMLElement>('.mermaid').forEach(enhanceDiagram);
+	}
+
+	const observer = new MutationObserver(enhanceRenderedDiagrams);
+	const pageContent = document.querySelector('main');
+	if (pageContent) observer.observe(pageContent, { childList: true, subtree: true });
+	enhanceRenderedDiagrams();
+	document.addEventListener('astro:page-load', enhanceRenderedDiagrams);
+
+	zoomOut?.addEventListener('click', () => updateZoom(scale - 0.25));
+	zoomIn?.addEventListener('click', () => updateZoom(scale + 0.25));
+	reset?.addEventListener('click', () => {
+		updateZoom(1);
+		canvas?.scrollTo({ top: 0, left: 0 });
+	});
+	close?.addEventListener('click', () => dialog?.close());
+
+	dialog?.addEventListener('click', (event) => {
+		if (event.target === dialog) dialog.close();
+	});
+	dialog?.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape') {
+			event.preventDefault();
+			dialog.close();
+			return;
+		}
+		if (event.key === '+' || event.key === '=') updateZoom(scale + 0.25);
+		if (event.key === '-') updateZoom(scale - 0.25);
+		if (event.key === '0') updateZoom(1);
+	});
+	dialog?.addEventListener('close', () => {
+		canvas?.replaceChildren();
+		expandedDiagram = null;
+		openingButton?.focus();
+		openingButton = null;
+	});
+</script>
