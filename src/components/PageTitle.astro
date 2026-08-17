@@ -7,5 +7,9 @@ const status = Astro.locals.starlightRoute.entry.data.status as Status | undefin
 
 <div class="showmesh-page-title">
 	<DefaultPageTitle />
-	{status && <StatusBadge {status} />}
+	{status && (
+		<div class="showmesh-page-status">
+			<StatusBadge {status} />
+		</div>
+	)}
 </div>

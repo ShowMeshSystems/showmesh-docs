@@ -114,13 +114,14 @@ header.header {
 .sl-markdown-content :is(h2, h3) { letter-spacing: -0.015em; }
 
 .showmesh-page-title {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 0.75rem 1rem;
+	display: block;
 }
 
-.showmesh-page-title .showmesh-status { margin-top: 1rem; }
+.showmesh-page-status {
+	display: flex;
+	align-items: center;
+	margin-top: 0.75rem;
+}
 
 .sl-markdown-content :not(pre) > code {
 	border: 1px solid var(--showmesh-border);
