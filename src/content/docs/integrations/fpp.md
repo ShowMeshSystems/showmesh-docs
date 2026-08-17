@@ -1,9 +1,8 @@
 ---
 title: FPP
 description: Configure FPP observation and use the eight evidence-confirmed controls in the current build.
+status: experimental-testing
 ---
-
-**Status: Experimental — Ready for Testing**
 
 ShowMesh can poll configured FPP instances over REST, consume FPP status from MQTT, and dispatch eight primitive controls. FPP remains the scheduler and playback authority.
 

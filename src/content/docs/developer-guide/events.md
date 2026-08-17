@@ -1,9 +1,8 @@
 ---
 title: Events and live state
 description: Bootstrap from a snapshot, consume Server-Sent Events, and recover correctly after every interruption.
+status: available
 ---
-
-**Status: Available**
 
 Connect to `GET /api/v1/stream` using a Server-Sent Events client.
 

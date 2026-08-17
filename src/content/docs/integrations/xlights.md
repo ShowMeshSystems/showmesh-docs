@@ -1,9 +1,8 @@
 ---
 title: xLights
 description: Planned xLights and FPP Connect integration boundary.
+status: planned
 ---
-
-**Status: Planned**
 
 :::note[Planned]
 ShowMesh does not currently accept an xLights FPP Connect upload or translate one into ShowMesh shows, surfaces, assets, or FPP deployment operations.

@@ -1,9 +1,8 @@
 ---
 title: NDI
 description: Planned NDI output boundary for ShowMesh surfaces.
+status: planned
 ---
-
-**Status: Planned**
 
 :::note[Planned]
 ShowMesh does not currently render a surface or create an NDI source.

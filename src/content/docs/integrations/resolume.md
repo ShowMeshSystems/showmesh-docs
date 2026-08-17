@@ -1,9 +1,8 @@
 ---
 title: Resolume Arena
 description: Configure Arena observation, upload composition identity, and use evidence-confirmed actions.
+status: experimental-testing
 ---
-
-**Status: Experimental — Ready for Testing**
 
 ShowMesh integrates with Resolume Arena through its REST API and WebSocket updates, with polling as a fallback. It can track one or more store-configured instances; the legacy environment seam supports one instance.
 

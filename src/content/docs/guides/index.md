@@ -1,9 +1,8 @@
 ---
 title: Guides
 description: Task-focused paths for common ShowMesh operations in the current development build.
+status: experimental-testing
 ---
-
-**Status: Experimental — Ready for Testing**
 
 These guides begin with the result an operator needs and stop at the boundary the current implementation can verify.
 

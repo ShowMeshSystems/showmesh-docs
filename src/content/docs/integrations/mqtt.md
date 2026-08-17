@@ -1,9 +1,8 @@
 ---
 title: Integration MQTT
 description: Use explicitly configured external MQTT brokers as advanced show-action targets.
+status: advanced
 ---
-
-**Status: Advanced**
 
 ShowMesh actions can publish to external MQTT brokers for integrations that do not have a dedicated adapter. This is an advanced, configuration-driven path: the coordinator does not discover brokers or devices, and a bad topic can operate the wrong equipment.
 

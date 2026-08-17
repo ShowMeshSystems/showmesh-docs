@@ -1,9 +1,8 @@
 ---
 title: Reference
 description: Exact current interfaces, configuration names, commands, and compatibility boundaries.
+status: experimental-active
 ---
-
-**Status: Experimental — Active Development**
 
 Use Reference when you already know what you are trying to configure or call. For a working path, start in Getting Started; for failure recovery, use Troubleshooting.
 

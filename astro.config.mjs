@@ -39,6 +39,7 @@ export default defineConfig({
 			customCss: ['./src/styles/showmesh.css'],
 			components: {
 				Footer: './src/components/DiagramTools.astro',
+				PageTitle: './src/components/PageTitle.astro',
 				SiteTitle: './src/components/SiteTitle.astro',
 			},
 			social: [

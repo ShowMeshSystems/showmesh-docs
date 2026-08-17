@@ -1,9 +1,8 @@
 ---
 title: Integrations
 description: Connect ShowMesh to the systems it can verify today and identify planned integration work.
+status: experimental-active
 ---
-
-**Status: Experimental — Active Development**
 
 ShowMesh has current integrations for FPP and Resolume Arena. Other named ecosystems remain planned or are represented only by configuration models/research.
 

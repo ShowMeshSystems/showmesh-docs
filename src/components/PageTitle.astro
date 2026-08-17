@@ -1,0 +1,11 @@
+---
+import DefaultPageTitle from '@astrojs/starlight/components/PageTitle.astro';
+import StatusBadge, { type Status } from './StatusBadge.astro';
+
+const status = Astro.locals.starlightRoute.entry.data.status as Status | undefined;
+---
+
+<div class="showmesh-page-title">
+	<DefaultPageTitle />
+	{status && <StatusBadge {status} />}
+</div>

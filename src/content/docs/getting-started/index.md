@@ -1,9 +1,8 @@
 ---
 title: Getting Started
 description: Understand ShowMesh, install the current development build, and learn where the usable path ends today.
+status: experimental-active
 ---
-
-**Status: Experimental — Active Development**
 
 ShowMesh gives one operator a coherent view of the computers and playback systems involved in a show. The current development build can inventory native ShowMesh nodes, monitor and control FPP players, monitor and control one or more Resolume Arena instances, manage show configuration and assets, and run reusable actions and macros.
 

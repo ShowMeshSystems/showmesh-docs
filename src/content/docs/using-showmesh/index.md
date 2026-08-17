@@ -1,9 +1,8 @@
 ---
 title: Using ShowMesh
 description: Operate the current ShowMesh UI and control surfaces without assuming unimplemented playback features.
+status: experimental-active
 ---
-
-**Status: Experimental — Active Development**
 
 The Operator UI and `showmeshctl` use the same `/api/v1` contract. Use the UI for rapid situational awareness and authoring; use the CLI or API when repeatability or machine-readable output matters.
 

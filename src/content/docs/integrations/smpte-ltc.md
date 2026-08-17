@@ -1,9 +1,8 @@
 ---
 title: SMPTE / LTC
 description: Planned timecode integration and the current absence of a runtime control path.
+status: planned
 ---
-
-**Status: Planned**
 
 :::note[Planned]
 The current build has no SMPTE/LTC input, decoder, clock-domain runtime, timecode-following playback, or operator controls.
