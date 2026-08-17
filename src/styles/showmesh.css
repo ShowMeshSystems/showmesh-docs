@@ -282,6 +282,7 @@ body:has(.showmesh-diagram-dialog[open]) { overflow: hidden; }
 	}
 
 	[data-has-sidebar][data-has-toc] .main-pane {
+		--sl-content-margin-inline: auto;
 		width: calc(100% - var(--showmesh-toc-width));
 	}
 }

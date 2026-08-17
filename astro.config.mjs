@@ -8,6 +8,18 @@ const section = (label, directory) => ({
 	items: [{ autogenerate: { directory } }],
 });
 
+const gettingStarted = {
+	label: 'Getting Started',
+	items: [
+		{ label: 'Getting Started', link: '/getting-started/' },
+		{ label: 'What is ShowMesh?', link: '/getting-started/what-is-showmesh/' },
+		{ label: 'Requirements', link: '/getting-started/requirements/' },
+		{ label: 'Architecture Overview', link: '/getting-started/architecture/' },
+		{ label: 'Installation', link: '/getting-started/installation/' },
+		{ label: 'Your First Show', link: '/getting-started/your-first-show/' },
+	],
+};
+
 export default defineConfig({
 	site: 'https://docs.showmesh.systems',
 	integrations: [
@@ -37,7 +49,7 @@ export default defineConfig({
 				},
 			],
 			sidebar: [
-				section('Getting Started', 'getting-started'),
+				gettingStarted,
 				section('Using ShowMesh', 'using-showmesh'),
 				section('Integrations', 'integrations'),
 				section('Guides', 'guides'),
