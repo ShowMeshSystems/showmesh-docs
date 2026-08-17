@@ -28,6 +28,8 @@ FPP and Resolume writes are evidence-confirmed: ShowMesh sends a bounded primiti
 
 Macros are asynchronous runs composed from logical actions. Submitting a run returns before all steps finish unless the client follows the run. Runs normally continue after a failed step. A step configured with `onFailure: abort` skips the remainder after failure; `onUnconfirmed: abort` does the same after an unconfirmed result. The completed run records every attempted or skipped outcome.
 
-## Planned runtime path
+## Media-node runtime path
 
-Surface objects can describe geometry, channel ranges, node assignment, and an `ndi` or `hdmi` transport. No current runtime consumes those objects to render pixels or produce either output. Treat the surface model as configuration available for authoring and inspection, not a working media path.
+Surface objects can describe geometry, channel ranges, node assignment, and an `ndi` or `hdmi` transport. In the current documented `main` baseline, no runtime consumes those objects to render pixels or produce either output. Track B's [render-node](../../using-showmesh/node-types/render-nodes/) implementation is in active development and approaching its first show-hardware test; it is not yet a supported operating path.
+
+The separate [audio-node](../../using-showmesh/node-types/audio-nodes/) role is planned. Both roles build on the same native agent and advertise composable capabilities rather than belonging to a hardcoded node class.

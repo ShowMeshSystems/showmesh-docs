@@ -20,6 +20,26 @@ const gettingStarted = {
 	],
 };
 
+const usingShowMesh = {
+	label: 'Using ShowMesh',
+	items: [
+		{ label: 'Using ShowMesh', link: '/using-showmesh/' },
+		{ label: 'Actions and Macros', link: '/using-showmesh/actions-and-macros/' },
+		{ label: 'Assets', link: '/using-showmesh/assets/' },
+		{ label: 'Nodes', link: '/using-showmesh/nodes/' },
+		{
+			label: 'Node Types',
+			items: [
+				{ label: 'Overview', link: '/using-showmesh/node-types/' },
+				{ label: 'Render Nodes', link: '/using-showmesh/node-types/render-nodes/' },
+				{ label: 'Audio Nodes', link: '/using-showmesh/node-types/audio-nodes/' },
+			],
+		},
+		{ label: 'Shows', link: '/using-showmesh/shows/' },
+		{ label: 'Surfaces', link: '/using-showmesh/surfaces/' },
+	],
+};
+
 export default defineConfig({
 	site: 'https://docs.showmesh.systems',
 	integrations: [
@@ -51,7 +71,7 @@ export default defineConfig({
 			],
 			sidebar: [
 				gettingStarted,
-				section('Using ShowMesh', 'using-showmesh'),
+				usingShowMesh,
 				section('Integrations', 'integrations'),
 				section('Guides', 'guides'),
 				section('Troubleshooting', 'troubleshooting'),

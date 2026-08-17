@@ -16,6 +16,15 @@ The node record answers practical questions such as:
 
 An FPP instance or Resolume host is not automatically a ShowMesh node merely because ShowMesh integrates with it. The node inventory specifically represents native ShowMesh agents. A computer may run both an agent and another integrated application, but ShowMesh keeps those records and their evidence separate.
 
+## Node roles and capabilities
+
+ShowMesh does not assign each node one fixed class. Nodes advertise versioned capabilities, and those capabilities determine which workloads the node can support. The currently approved media-node roles are:
+
+- [Render nodes](../node-types/render-nodes/), which turn node-local FSEQ data into a video surface. This role is in active development and entering hardware testing.
+- [Audio nodes](../node-types/audio-nodes/), which will play node-local audio, mix show sources, and generate LTC. This role is planned and not implemented.
+
+See [Node Types](../node-types/) for the shared agent foundation, why roles can eventually compose on one machine, and which ShowMesh components are not nodes.
+
 ## What a node does today
 
 The bundled agent publishes a retained hello record, ongoing health, last-will state, command results, and asset inventory through MQTT. It can receive asset-fetch commands, download content from the coordinator, verify its SHA-256 hash, store it in the configured asset directory, and publish the updated inventory.

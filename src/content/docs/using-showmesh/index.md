@@ -23,7 +23,7 @@ These are references, not one large nested show file. For example, reading a sho
 
 This section covers:
 
-- [Nodes](./nodes/): identify ShowMesh agents, accept them into managed inventory, and read their evidence correctly.
+- [Nodes](./nodes/): identify ShowMesh agents, accept them into managed inventory, and read their evidence correctly. [Node Types](./node-types/) explains the render and audio roles built on that agent.
 - [Shows](./shows/): create a stable namespace for one production and select which show's assets are desired.
 - [Surfaces](./surfaces/): describe a node's intended pixel canvas, channel range, frame rate, and output transport.
 - [Assets](./assets/): upload exact content revisions, target them, and follow synchronization to nodes.
