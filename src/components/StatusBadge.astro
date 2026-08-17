@@ -1,0 +1,24 @@
+---
+export type Status =
+	| 'available'
+	| 'experimental-active'
+	| 'experimental-testing'
+	| 'planned'
+	| 'advanced'
+	| 'deprecated';
+
+interface Props { status: Status; label?: string; }
+
+const labels: Record<Status, string> = {
+	available: 'Available',
+	'experimental-active': 'Experimental — Active Development',
+	'experimental-testing': 'Experimental — Ready for Testing',
+	planned: 'Planned',
+	advanced: 'Advanced',
+	deprecated: 'Deprecated',
+};
+
+const { status, label = labels[status] } = Astro.props;
+---
+
+<span class:list={['showmesh-status', `showmesh-status--${status}`]}>{label}</span>

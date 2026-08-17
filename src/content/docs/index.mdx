@@ -1,0 +1,44 @@
+---
+title: ShowMesh documentation
+description: Operate, integrate with, and contribute to ShowMesh.
+template: splash
+hero:
+  title: See the whole show.
+  tagline: Practical documentation for operating, integrating with, and building ShowMesh.
+  image:
+    html: '<img class="showmesh-hero-logo" src="/brand/showmesh-full-logo.png" width="1536" height="1024" alt="ShowMesh — View, Explore, Understand" />'
+  actions:
+    - text: Get started
+      link: /getting-started/
+      icon: right-arrow
+    - text: Troubleshoot a show
+      link: /troubleshooting/
+      icon: open-book
+      variant: secondary
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import StatusBadge from '../../components/StatusBadge.astro';
+
+ShowMesh brings the state of a distributed show into one place. Start with the shortest path to a running system, find an integration, or go directly to symptom-first troubleshooting.
+
+<CardGrid>
+	<Card title="Operate ShowMesh" icon="rocket">
+		Install the current development build, connect nodes, configure a show, and understand what healthy operation looks like. [Start with installation →](/getting-started/installation/)
+	</Card>
+	<Card title="Integrate systems" icon="puzzle">
+		Connect supported show systems and clearly distinguish current behavior from planned capability. [Browse integrations →](/integrations/)
+	</Card>
+	<Card title="Fix a problem" icon="warning">
+		Work from the symptom toward immediate checks, likely causes, and deeper diagnostics. [Open troubleshooting →](/troubleshooting/)
+	</Card>
+	<Card title="Build with ShowMesh" icon="seti">
+		Use current interfaces and extension points without needing the contributor internals first. [Open the developer guide →](/developer-guide/)
+	</Card>
+</CardGrid>
+
+## Documentation status
+
+<StatusBadge status="experimental-active" label="Current main / development" />
+
+These docs describe the current `main` development state. Section landing pages and capability pages use explicit maturity labels where they help distinguish available, experimental, advanced, and planned behavior. Engineering specifications and architecture decisions remain authoritative in the main ShowMesh repository; this site translates verified implementation into human-facing operating guidance.

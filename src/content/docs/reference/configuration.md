@@ -1,0 +1,65 @@
+---
+title: Configuration
+description: Runtime environment variables for the coordinator, native agent, and CLI.
+---
+
+This page lists the supported runtime entry points. Secrets should come from the deployment secret mechanism, not committed environment files.
+
+## Coordinator basics
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `SHOWMESH_HTTP_ADDR` | `:8080` | HTTP listen address. |
+| `SHOWMESH_DATA_DIR` | `/var/lib/showmesh` | SQLite, revision data, and local coordinator state. |
+| `SHOWMESH_MQTT_BROKER` | `tcp://localhost:1883` | ShowMesh control-plane broker URL. |
+| `SHOWMESH_MQTT_CLIENT_ID` | `showmesh-coordinator` | Coordinator MQTT client ID. |
+| `SHOWMESH_MQTT_USERNAME` | empty | Optional broker user. |
+| `SHOWMESH_MQTT_PASSWORD` | empty | Optional broker password. |
+| `SHOWMESH_LOG_LEVEL` | `info` | `debug`, `info`, `warn`, or `error`. |
+
+`SHOWMESH_API_TOKEN` is retired. A non-empty value makes the coordinator refuse to start; an unset or empty value is tolerated. Remove the variable rather than relying on the empty-value compatibility behavior.
+
+## API and identity
+
+- `SHOWMESH_API_ALLOWED_ORIGINS`: comma-separated browser origins; empty emits no CORS headers.
+- `SHOWMESH_API_CLOSE_READS`: require authentication for reads when true. Writes always require authentication.
+- `SHOWMESH_API_SECURE_COOKIE`: set true when HTTPS is provided in front of ShowMesh.
+- `SHOWMESH_API_TRUST_CLIENT_ADDR`: trust the forwarded client-address boundary when deliberately configured.
+- `SHOWMESH_API_LOGIN_CONCURRENCY`, `SHOWMESH_API_LOGIN_QUEUE_WAIT`, `SHOWMESH_API_LOGIN_PER_SOURCE_DELAY`, `SHOWMESH_API_LOGIN_MAX_DELAY`: login cost and delay controls.
+
+## Integrations
+
+- `SHOWMESH_FPP_ENDPOINTS`: legacy/startup comma-separated `id=url` endpoints. Current configuration is revisioned through `fpp.endpoints`; an active environment override can block API writes.
+- `SHOWMESH_FPP_MQTT_BROKER_URL`, `SHOWMESH_FPP_MQTT_USERNAME`, `SHOWMESH_FPP_MQTT_PASSWORD`, `SHOWMESH_FPP_MQTT_TOPIC_PREFIX`, `SHOWMESH_FPP_MQTT_HOSTS`: FPP MQTT ingestion. The default topic root is `falcon/player`.
+- `SHOWMESH_INTEGRATION_BROKERS`: named brokers used by configured integration actions.
+- `SHOWMESH_RESOLUME_URL`, `SHOWMESH_RESOLUME_ID`: startup Resolume instance; the default ID is `resolume` when an instance URL is present.
+- `SHOWMESH_RESOLUME_POLL_INTERVAL`, `SHOWMESH_RESOLUME_WEBSOCKET_DISABLED`: Resolume collection tuning.
+- `SHOWMESH_RESOLUME_RECOVERY_SETTLE`: recovery settle delay, default `8s`, maximum `60s`. The default is a ShowMesh hypothesis, not a measured production value.
+
+## Assets
+
+- `SHOWMESH_ASSET_DIR`: coordinator asset-byte root; on the agent, node-local asset root (agent default `./assets`).
+- `SHOWMESH_ASSET_MAX_UPLOAD_BYTES`: upload size ceiling.
+- `SHOWMESH_ASSET_CONTENT_BASE_URL`: base URL agents use to fetch content.
+- `SHOWMESH_ASSET_SYNC_INTERVAL`: coordinator sync interval; default `5m`.
+- `SHOWMESH_ASSET_INVENTORY_INTERVAL`: inventory cadence; default `2m`.
+
+## Native agent
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `SHOWMESH_NODE_ID` | OS hostname | Stable node ID. |
+| `SHOWMESH_NODE_LABEL` | empty | Human-readable label. |
+| `SHOWMESH_NODE_CAPABILITIES` | empty | Explicit `id` or `id:version` overrides, comma-separated. |
+| `SHOWMESH_MQTT_BROKER` | `tcp://localhost:1883` | Control-plane broker. |
+| `SHOWMESH_MQTT_CLIENT_ID` | derived from node ID | Must be unique. |
+| `SHOWMESH_ASSET_DIR` | `./assets` | Node-local downloaded assets. |
+| `SHOWMESH_AGENT_API_TOKEN` | empty | Bearer token for asset reads when reads are closed. |
+| `SHOWMESH_ASSET_INVENTORY_INTERVAL` | `2m` | Periodic inventory publication. |
+
+The agent also accepts the shared MQTT username, password, and log-level variables listed above.
+
+## CLI
+
+- `SHOWMESH_SERVER`: coordinator base URL; default `http://localhost:8080`.
+- `SHOWMESH_CTL_TOKEN`: principal bearer token. Prefer it to `--token`, which can be visible in the process list.

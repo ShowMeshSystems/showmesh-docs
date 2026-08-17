@@ -1,0 +1,217 @@
+/* ShowMesh theme: quiet documentation surfaces built from semantic tokens. */
+:root,
+:root[data-theme='light'] {
+	--showmesh-bg: #f7f8fb;
+	--showmesh-surface: #ffffff;
+	--showmesh-surface-raised: #f0f3f8;
+	--showmesh-text: #171a24;
+	--showmesh-text-muted: #596174;
+	--showmesh-border: #dce1ea;
+	--showmesh-accent: #006fba;
+	--showmesh-accent-strong: #005c9d;
+	--showmesh-accent-soft: #e6f5fc;
+	--showmesh-focus: #006fba;
+	--showmesh-success: #237a57;
+	--showmesh-success-soft: #e8f5ef;
+	--showmesh-warning: #8b5b00;
+	--showmesh-warning-soft: #fff5d9;
+	--showmesh-danger: #a83d4d;
+	--showmesh-danger-soft: #fcebef;
+	--showmesh-experimental: #6947b8;
+	--showmesh-experimental-soft: #f0ebfc;
+	--showmesh-logo-field: #080b13;
+	--showmesh-logo-border: #293245;
+	--sl-color-accent-low: var(--showmesh-accent-soft);
+	--sl-color-accent: var(--showmesh-accent);
+	--sl-color-accent-high: var(--showmesh-accent-strong);
+	--sl-color-white: var(--showmesh-text);
+	--sl-color-gray-1: #2b3040;
+	--sl-color-gray-2: #4d5568;
+	--sl-color-gray-3: var(--showmesh-text-muted);
+	--sl-color-gray-4: #a8b0bf;
+	--sl-color-gray-5: var(--showmesh-border);
+	--sl-color-gray-6: var(--showmesh-surface-raised);
+	--sl-color-black: var(--showmesh-bg);
+	--sl-color-bg: var(--showmesh-bg);
+	--sl-color-bg-nav: color-mix(in srgb, var(--showmesh-bg) 94%, transparent);
+	--sl-color-bg-sidebar: var(--showmesh-bg);
+	--sl-color-bg-inline-code: var(--showmesh-surface-raised);
+	--sl-color-hairline-light: var(--showmesh-border);
+	--sl-color-hairline: var(--showmesh-border);
+	--sl-font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--sl-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+	--sl-content-width: 48rem;
+	--sl-sidebar-width: 18rem;
+	color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+	--showmesh-bg: #080b13;
+	--showmesh-surface: #0f1420;
+	--showmesh-surface-raised: #171d2b;
+	--showmesh-text: #eef4fb;
+	--showmesh-text-muted: #a6b2c4;
+	--showmesh-border: #293245;
+	--showmesh-accent: #35c5e9;
+	--showmesh-accent-strong: #8be8f7;
+	--showmesh-accent-soft: #102d3b;
+	--showmesh-focus: #35c5e9;
+	--showmesh-success: #69c69b;
+	--showmesh-success-soft: #123126;
+	--showmesh-warning: #efc15a;
+	--showmesh-warning-soft: #33290f;
+	--showmesh-danger: #f18b9d;
+	--showmesh-danger-soft: #391c25;
+	--showmesh-experimental: #b69af4;
+	--showmesh-experimental-soft: #281f42;
+	--showmesh-logo-field: transparent;
+	--showmesh-logo-border: transparent;
+	--sl-color-accent-low: var(--showmesh-accent-soft);
+	--sl-color-accent: var(--showmesh-accent);
+	--sl-color-accent-high: var(--showmesh-accent-strong);
+	--sl-color-white: var(--showmesh-text);
+	--sl-color-gray-1: #d9e1ed;
+	--sl-color-gray-2: #bcc7d6;
+	--sl-color-gray-3: var(--showmesh-text-muted);
+	--sl-color-gray-4: #6d788b;
+	--sl-color-gray-5: var(--showmesh-border);
+	--sl-color-gray-6: var(--showmesh-surface-raised);
+	--sl-color-black: var(--showmesh-bg);
+	--sl-color-bg: var(--showmesh-bg);
+	--sl-color-bg-nav: color-mix(in srgb, var(--showmesh-bg) 92%, transparent);
+	--sl-color-bg-sidebar: var(--showmesh-bg);
+	--sl-color-bg-inline-code: var(--showmesh-surface-raised);
+	--sl-color-hairline-light: var(--showmesh-border);
+	--sl-color-hairline: var(--showmesh-border);
+	color-scheme: dark;
+}
+
+html { background: var(--showmesh-bg); }
+
+body {
+	color: var(--showmesh-text);
+	background: radial-gradient(circle at 88% -10%, color-mix(in srgb, var(--showmesh-accent) 9%, transparent), transparent 30rem), var(--showmesh-bg);
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+	outline: 2px solid var(--showmesh-focus);
+	outline-offset: 3px;
+}
+
+header.header {
+	border-bottom-color: var(--showmesh-border);
+	backdrop-filter: blur(14px);
+}
+
+.sidebar-pane { border-inline-end-color: var(--showmesh-border); }
+
+.sl-markdown-content {
+	font-size: 1rem;
+	line-height: 1.65;
+}
+
+.sl-markdown-content :is(h2, h3) { letter-spacing: -0.015em; }
+
+.sl-markdown-content :not(pre) > code {
+	border: 1px solid var(--showmesh-border);
+	border-radius: 0.375rem;
+	padding: 0.12em 0.35em;
+}
+
+.sl-markdown-content :is(table, pre, .expressive-code, .mermaid) {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
+.card {
+	background: color-mix(in srgb, var(--showmesh-surface) 92%, transparent);
+	border-color: var(--showmesh-border);
+	box-shadow: none;
+}
+
+.hero { padding-block: clamp(2rem, 8vw, 6rem) !important; }
+
+.hero .showmesh-hero-logo {
+	display: block;
+	width: min(100%, 28rem);
+	height: auto;
+	filter: drop-shadow(0 1rem 2.5rem color-mix(in srgb, var(--showmesh-accent) 14%, transparent));
+}
+
+.hero > .hero-html {
+	padding: 0.75rem;
+	border: 1px solid var(--showmesh-logo-border);
+	border-radius: 1rem;
+	background: var(--showmesh-logo-field);
+	overflow: hidden;
+}
+
+.mermaid {
+	margin-block: 1.5rem;
+	padding: 1rem;
+	border: 1px solid var(--showmesh-border);
+	border-radius: 0.5rem;
+	background: var(--showmesh-surface);
+}
+
+.mermaid svg {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin-inline: auto;
+}
+
+.hero h1 { letter-spacing: -0.035em; }
+.hero .tagline { line-height: 1.5; }
+
+.showmesh-status {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.375rem;
+	width: fit-content;
+	max-width: 100%;
+	padding: 0.25rem 0.625rem;
+	border: 1px solid currentColor;
+	border-radius: 999px;
+	font-size: 0.75rem;
+	font-weight: 650;
+	line-height: 1.25;
+	letter-spacing: 0.01em;
+	vertical-align: middle;
+}
+
+.showmesh-status::before {
+	content: '';
+	width: 0.45rem;
+	height: 0.45rem;
+	flex: 0 0 auto;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+.showmesh-status--available { color: var(--showmesh-success); background: var(--showmesh-success-soft); }
+.showmesh-status--experimental-active,
+.showmesh-status--experimental-testing { color: var(--showmesh-experimental); background: var(--showmesh-experimental-soft); }
+.showmesh-status--planned { color: var(--showmesh-text-muted); background: var(--showmesh-surface-raised); }
+.showmesh-status--advanced { color: var(--showmesh-warning); background: var(--showmesh-warning-soft); }
+.showmesh-status--deprecated { color: var(--showmesh-danger); background: var(--showmesh-danger-soft); }
+
+.showmesh-status-note {
+	margin-block: 1.5rem;
+	padding: 1rem;
+	border-inline-start: 0.25rem solid currentColor;
+	border-radius: 0 0.5rem 0.5rem 0;
+	background: var(--showmesh-surface-raised);
+}
+
+.showmesh-status-note > :first-child { margin-top: 0; }
+.showmesh-status-note > :last-child { margin-bottom: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+	}
+}

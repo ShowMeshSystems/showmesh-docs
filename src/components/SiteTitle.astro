@@ -1,0 +1,51 @@
+---
+const { siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<a href={siteTitleHref} class="showmesh-site-title" aria-label="ShowMesh documentation home">
+	<span class="showmesh-site-mark" aria-hidden="true">
+		<img src="/brand/showmesh-icon.png" width="1536" height="1024" alt="" />
+	</span>
+	<span class="showmesh-site-name" translate="no">ShowMesh</span>
+	<span class="showmesh-site-context">Docs</span>
+</a>
+
+<style>
+	.showmesh-site-title {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-width: 0;
+		color: var(--showmesh-text);
+		font-size: var(--sl-text-h4);
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.showmesh-site-title:hover .showmesh-site-name { color: var(--showmesh-accent-strong); }
+	.showmesh-site-mark {
+		display: grid;
+		width: 2.25rem;
+		height: 2.25rem;
+		place-items: center;
+		overflow: hidden;
+		border-radius: 0.5rem;
+		background: var(--showmesh-bg);
+	}
+	.showmesh-site-mark img {
+		width: 3.15rem;
+		height: 2.1rem;
+		max-width: none;
+		object-fit: cover;
+	}
+	.showmesh-site-context {
+		padding-inline-start: 0.5rem;
+		border-inline-start: 1px solid var(--showmesh-border);
+		color: var(--showmesh-text-muted);
+		font-size: var(--sl-text-sm);
+		font-weight: 550;
+		letter-spacing: 0;
+	}
+	@media (max-width: 25rem) { .showmesh-site-context { display: none; } }
+</style>

@@ -1,0 +1,11 @@
+---
+import StatusBadge, { type Status } from './StatusBadge.astro';
+
+interface Props { status: Status; label?: string; }
+const { status, label } = Astro.props;
+---
+
+<aside class:list={['showmesh-status-note', `showmesh-status--${status}`]}>
+	<StatusBadge {status} {label} />
+	<div><slot /></div>
+</aside>
