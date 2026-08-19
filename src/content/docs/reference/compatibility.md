@@ -18,16 +18,17 @@ This is a development-state compatibility boundary, not a release support matrix
 - Resolume behavior was exercised against Arena on a development laptop. That is not verification of the production playout host.
 - No runtime path should call Resolume's full `GET /composition`; ShowMesh uses an uploaded `.avc` map and targeted live reads.
 - Resolume OSC is not implemented.
+- The experimental NDI render path has sender evidence on Debian 13 amd64. Its real FSEQ-to-wall timing, pacing, recovery, arm64, and Ubuntu boundaries are not yet verified.
 
 ## Not currently available
 
-- Rendering surfaces to NDI or HDMI.
+- HDMI surface output.
 - Audio playback, mixing, or LTC generation.
 - xLights/FPP Connect ingestion.
 - A supported SDK or plugin/provider development kit.
 - Documentation version selection.
 
-Configuration models may contain fields for planned transports or architecture. Their presence is not evidence that a runtime renderer exists.
+The presence of a surface configuration is not evidence that a renderer is producing output. NDI requires a prepared render node, a ready node-local FSEQ asset, an applied surface, a working transport probe, and fresh pipeline evidence.
 
 ## Version negotiation
 

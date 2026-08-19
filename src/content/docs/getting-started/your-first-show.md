@@ -3,7 +3,7 @@ title: Your First Show
 description: Create and inspect a show configuration without mistaking it for a complete playback pipeline.
 ---
 
-The current build can create a revisioned show, add surface definitions, upload assets, create actions and macros, activate the show, and inspect asset readiness. It cannot render a surface or start a complete ShowMesh-owned playback pipeline.
+The current build can create a revisioned show, add surface definitions, upload assets, create actions and macros, activate the show, inspect asset readiness, and experimentally apply a prepared NDI surface to a render node. It does not provide a complete ShowMesh-owned playback pipeline.
 
 ## Before you start
 
@@ -14,7 +14,7 @@ The current build can create a revisioned show, add surface definitions, upload 
 ## Author the configuration
 
 1. In the Operator UI, create a show with a stable ID, human-readable name, and optional notes.
-2. Create surfaces assigned to the show and a declared node. Surface channel ranges and geometry are validated, but do not produce output.
+2. Create surfaces assigned to the show and a declared node. Surface channel ranges and geometry are validated. NDI output requires a separate experimental render apply after the node's asset and transport are ready.
 3. Upload assets for the show. Choose whether each asset targets all nodes or one node.
 4. Check the asset manifest. `ready` means the agent reported the expected content hash; it does not mean a media engine can play the asset.
 5. Create logical actions that target implemented providers such as FPP, Resolume, or an approved integration MQTT broker.
@@ -27,5 +27,4 @@ You can see the active show, its surfaces, actions, macros, assets, and node rea
 
 ## Current boundary
 
-Activating a show changes a stored pointer. It does not schedule FPP, render surface pixels, start audio/video playback, or emit NDI/HDMI. Use FPP and Resolume's current playback facilities, with ShowMesh as the observation and bounded-control layer.
-
+Activating a show changes a stored pointer. It does not schedule FPP, apply a render surface, start audio playback, or emit HDMI. The experimental NDI render path is a separate, explicit node operation; use [Set Up a Video Node](../../guides/set-up-a-video-node/) to commission it before relying on it. Use FPP and Resolume's current playback facilities, with ShowMesh as the observation and bounded-control layer.

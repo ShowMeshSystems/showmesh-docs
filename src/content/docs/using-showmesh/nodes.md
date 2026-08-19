@@ -20,7 +20,7 @@ An FPP instance or Resolume host is not automatically a ShowMesh node merely bec
 
 ShowMesh does not assign each node one fixed class. Nodes advertise versioned capabilities, and those capabilities determine which workloads the node can support. The currently approved media-node roles are:
 
-- [Render nodes](../node-types/render-nodes/), which turn node-local FSEQ data into a video surface. This role is in active development and entering hardware testing.
+- [Render nodes](../node-types/render-nodes/), which turn node-local FSEQ data into a video surface. This role is experimental and requires hardware commissioning.
 - [Audio nodes](../node-types/audio-nodes/), which will play node-local audio, mix show sources, and generate LTC. This role is planned and not implemented.
 
 See [Node Types](../node-types/) for the shared agent foundation, why roles can eventually compose on one machine, and which ShowMesh components are not nodes.
@@ -29,7 +29,7 @@ See [Node Types](../node-types/) for the shared agent foundation, why roles can 
 
 The bundled agent publishes a retained hello record, ongoing health, last-will state, command results, and asset inventory through MQTT. It can receive asset-fetch commands, download content from the coordinator, verify its SHA-256 hash, store it in the configured asset directory, and publish the updated inventory.
 
-The current generic agent does **not** render a surface, play an asset, or automatically detect production media capabilities. A healthy node therefore means the ShowMesh agent and its control-plane path are healthy, not that video or sequence playback is working.
+A node without an applied media role does **not** render a surface, play an asset, or automatically gain production media capabilities. A healthy node therefore means the ShowMesh agent and its control-plane path are healthy, not that a configured video or future-audio path is working. Render-node readiness additionally needs local FSEQ assets, a working transport probe, an applied surface, and fresh pipeline evidence.
 
 ## Discovered and declared
 
@@ -72,7 +72,16 @@ export SHOWMESH_ASSET_DIR=/var/lib/showmesh/assets
 
 Node IDs accept lowercase letters, digits, and internal hyphens. The agent defaults to the OS hostname, but startup fails with a useful message if that hostname is invalid.
 
-Capabilities are versioned claims advertised by the agent, optionally with attributes. They are intended to tell the coordinator what a node can actually do. Do not set `SHOWMESH_NODE_CAPABILITIES` merely to describe intended hardware; the current generic agent does not auto-detect production media capabilities, and a manually advertised capability must correspond to real implementation.
+Capabilities are versioned claims advertised by the agent, optionally with attributes. The current agent probes its usable GStreamer/NDI path after connecting to MQTT and republishes refreshed hello evidence. Restart the agent after changing the runtime or plugin. Do not set `SHOWMESH_NODE_CAPABILITIES` merely to describe intended hardware: an override disables automatic probing, and a manually advertised capability must still correspond to real, working implementation.
+
+For a separate node to receive ShowMesh assets, an administrator must also configure `assets.settings.contentBaseUrl` to an HTTP(S) coordinator URL reachable from that node. The default is empty, so asset-fetch dispatch is disabled until this value exists:
+
+```sh
+showmeshctl assets settings set \
+  --content-base-url http://<node-reachable-coordinator>:8080
+```
+
+Use the coordinator's network hostname rather than `localhost` for a separate node. If the coordinator closes anonymous API reads, create a separate `machine` principal with the `viewer` role and issue a token for that node; place that token in `SHOWMESH_AGENT_API_TOKEN`. Do not reuse a human administrator token—the viewer role has the `node:read` permission the asset endpoint needs. [Install a Native Node](../../guides/add-a-node/) includes the exact issuance commands.
 
 ## Read health correctly
 

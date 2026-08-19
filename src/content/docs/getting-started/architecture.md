@@ -30,6 +30,6 @@ Macros are asynchronous runs composed from logical actions. Submitting a run ret
 
 ## Media-node runtime path
 
-Surface objects can describe geometry, channel ranges, node assignment, and an `ndi` or `hdmi` transport. In the current documented `main` baseline, no runtime consumes those objects to render pixels or produce either output. Track B's [render-node](../../using-showmesh/node-types/render-nodes/) implementation is in active development and approaching its first show-hardware test; it is not yet a supported operating path.
+Surface objects describe geometry, channel ranges, node assignment, and an `ndi` or `hdmi` transport. Current `main` includes an experimental render-node runtime that consumes an applied NDI surface and node-local FSEQ asset. Its timing, pacing, recovery, and real-wall behavior still need show-hardware commissioning; HDMI has no runtime output path. See the [render-node](../../using-showmesh/node-types/render-nodes/) page for the operating boundary.
 
 The separate [audio-node](../../using-showmesh/node-types/audio-nodes/) role is planned. Both roles build on the same native agent and advertise composable capabilities rather than belonging to a hardcoded node class.

@@ -29,20 +29,22 @@ This page lists the supported runtime entry points. Secrets should come from the
 
 ## Integrations
 
-- `SHOWMESH_FPP_ENDPOINTS`: legacy/startup comma-separated `id=url` endpoints. Current configuration is revisioned through `fpp.endpoints`; an active environment override can block API writes.
-- `SHOWMESH_FPP_MQTT_BROKER_URL`, `SHOWMESH_FPP_MQTT_USERNAME`, `SHOWMESH_FPP_MQTT_PASSWORD`, `SHOWMESH_FPP_MQTT_TOPIC_PREFIX`, `SHOWMESH_FPP_MQTT_HOSTS`: FPP MQTT ingestion. The default topic root is `falcon/player`.
+- `SHOWMESH_FPP_ENDPOINTS`: legacy/startup comma-separated `id=url` endpoints. The active configuration is revisioned through `fpp.endpoints`; this legacy value blocks store-backed edits until its migration is deliberately resolved.
+- `SHOWMESH_FPP_MQTT_BROKER_URL`, `SHOWMESH_FPP_MQTT_USERNAME`, `SHOWMESH_FPP_MQTT_PASSWORD`, `SHOWMESH_FPP_MQTT_TOPIC_PREFIX`, `SHOWMESH_FPP_MQTT_HOSTS`: legacy/startup FPP MQTT configuration. The default topic root is `falcon/player`; the whole group blocks store-backed edits until its migration is deliberately resolved.
 - `SHOWMESH_INTEGRATION_BROKERS`: named brokers used by configured integration actions.
-- `SHOWMESH_RESOLUME_URL`, `SHOWMESH_RESOLUME_ID`: startup Resolume instance; the default ID is `resolume` when an instance URL is present.
+- `SHOWMESH_RESOLUME_URL`, `SHOWMESH_RESOLUME_ID`: legacy/startup Resolume instance; the default ID is `resolume` when an instance URL is present. This pair blocks store-backed edits until its migration is deliberately resolved.
 - `SHOWMESH_RESOLUME_POLL_INTERVAL`, `SHOWMESH_RESOLUME_WEBSOCKET_DISABLED`: Resolume collection tuning.
 - `SHOWMESH_RESOLUME_RECOVERY_SETTLE`: recovery settle delay, default `8s`, maximum `60s`. The default is a ShowMesh hypothesis, not a measured production value.
 
 ## Assets
 
 - `SHOWMESH_ASSET_DIR`: coordinator asset-byte root; on the agent, node-local asset root (agent default `./assets`).
-- `SHOWMESH_ASSET_MAX_UPLOAD_BYTES`: upload size ceiling.
-- `SHOWMESH_ASSET_CONTENT_BASE_URL`: base URL agents use to fetch content.
-- `SHOWMESH_ASSET_SYNC_INTERVAL`: coordinator sync interval; default `5m`.
-- `SHOWMESH_ASSET_INVENTORY_INTERVAL`: inventory cadence; default `2m`.
+- `SHOWMESH_ASSET_MAX_UPLOAD_BYTES`: legacy/startup upload size ceiling.
+- `SHOWMESH_ASSET_CONTENT_BASE_URL`: legacy/startup base URL agents use to fetch content.
+- `SHOWMESH_ASSET_SYNC_INTERVAL`: legacy/startup coordinator sync interval; default `5m`.
+- `SHOWMESH_ASSET_INVENTORY_INTERVAL`: legacy/startup inventory cadence; default `2m`.
+
+The four `SHOWMESH_ASSET_*` settings above migrate as one group into revisioned `assets.settings`; when any is set, store-backed asset edits are blocked. `SHOWMESH_ASSET_DIR` does **not** migrate and remains environment-only. See [Install the Coordinator](../../getting-started/installation/#confirm-legacy-migration-before-removing-its-environment-values) for the deferred-migration and disagreement procedure.
 
 ## Native agent
 

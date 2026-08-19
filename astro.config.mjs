@@ -15,7 +15,8 @@ const gettingStarted = {
 		{ label: 'What is ShowMesh?', link: '/getting-started/what-is-showmesh/' },
 		{ label: 'Requirements', link: '/getting-started/requirements/' },
 		{ label: 'Architecture Overview', link: '/getting-started/architecture/' },
-		{ label: 'Installation', link: '/getting-started/installation/' },
+		{ label: 'Install the Coordinator', link: '/getting-started/installation/' },
+		{ label: 'Roadmap', link: '/getting-started/roadmap/' },
 		{ label: 'Your First Show', link: '/getting-started/your-first-show/' },
 	],
 };

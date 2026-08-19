@@ -1,14 +1,16 @@
 ---
 title: Audio Nodes
-description: Planned ShowMesh nodes for local audience-audio playback, mixing, routing, and LTC generation.
+description: The planned audience-audio role, plus the limits of the current unmerged implementation preview.
 status: planned
 ---
 
-An **audio node** is the planned authority for audience-facing audio playback on its assigned outputs. It will hold complete audio files locally, play them on its own stable audio clock, mix background, show, and announcement sources, and generate LTC on a discrete output in the same clock domain as program audio.
+An **audio node** is the planned authority for audience-facing audio playback on its assigned outputs. It is intended to hold complete audio files locally, play them on its own stable audio clock, mix background, show, and announcement sources, and generate LTC on a discrete output in the same clock domain as program audio.
 
-:::caution[Not currently available]
-Track C is specified but has not started. The current agent does not contain an audio engine, playback sessions, audio-device discovery, mixing, LTC generation, or audio readiness checks. Uploading an asset with `mediaType: audio` only stores and synchronizes bytes; it does not make the file playable.
+:::caution[Preview only — do not deploy]
+Track C exists on the unmerged `track-c/audio-node` branch as PR #21, with changes requested. Its coordinator-to-agent audio command path is broken end to end, its LTC seam is incomplete, no physical audio interface has been commissioned, and nothing has produced sound. Current `main` has no supported audio-playback or LTC-generation path.
 :::
+
+The preview is useful for reviewing the intended authority and safety boundaries. It is not an installation guide or a release candidate. See [Audio Node Preview](../../../guides/set-up-an-audio-node/) for the precise current status and the work that must land before a runnable guide exists.
 
 ## Planned responsibilities
 
@@ -24,16 +26,16 @@ The audio-node role is intended to provide:
 - explicit command outcomes for start, stop, pause, resume, seek, restart, fades, and source changes;
 - safe supervision and manual recovery when a device or pipeline fails.
 
-Linux is the reference platform for the initial role. GStreamer will perform media decoding and rendering while ShowMesh owns session state, synchronization policy, supervision, health, and operator-visible evidence.
+Linux is the reference platform for the initial role. GStreamer is intended to perform media decoding and rendering while ShowMesh owns session state, synchronization policy, supervision, health, and operator-visible evidence.
 
 ## Planned data flow
 
-1. ShowMesh synchronizes the exact audio assets to the node before an operating session begins.
-2. The audio engine probes the local file and verifies that the required route and output capabilities are available.
-3. FPP remains the schedule and show-timeline authority. The node aligns at start and at explicit correction points rather than continuously changing playback rate.
-4. The node plays and mixes audio locally. Neither the coordinator nor MQTT carries real-time PCM audio.
-5. Program audio and LTC leave through separate outputs backed by the same hardware clock.
-6. The node publishes fresh session and output evidence for the coordinator and Operator UI.
+1. ShowMesh would synchronize the exact audio assets to the node before an operating session begins.
+2. The audio engine would probe the local file and verify that the required route and output capabilities are available.
+3. FPP would remain the schedule and show-timeline authority. The node would align at start and at explicit correction points rather than continuously changing playback rate.
+4. The node would play and mix audio locally. Neither the coordinator nor MQTT would carry real-time PCM audio.
+5. Program audio and LTC would leave through separate outputs backed by the same hardware clock.
+6. The node would publish fresh session and output evidence for the coordinator and Operator UI.
 
 ## Failure behavior
 

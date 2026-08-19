@@ -7,7 +7,7 @@ ShowMesh uses two related but different vocabularies.
 
 ## Node capabilities
 
-A capability is a namespaced, versioned claim advertised by a node. It describes what that node can actually perform. The current native agent can advertise an explicit capability override, but it does not yet perform production capability detection. Do not treat an empty list as an error or infer hardware type from it.
+A capability is a namespaced, versioned claim advertised by a node. It describes what that node can actually perform. The current native agent probes its supported GStreamer/NDI path after connecting to MQTT and can also advertise an explicit capability override. An override disables automatic probing. An empty list is valid on a host without a detected supported path; do not infer an untested hardware role from it.
 
 ## Logical show actions
 

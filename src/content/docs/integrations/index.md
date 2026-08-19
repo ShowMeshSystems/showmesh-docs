@@ -11,6 +11,6 @@ ShowMesh has current integrations for FPP and Resolume Arena. Other named ecosys
 - [Integration MQTT](./mqtt/) — advanced action publishing to explicitly configured external brokers.
 - [xLights](./xlights/) — planned FPP Connect ingestion; not implemented.
 - [SMPTE / LTC](./smpte-ltc/) — planned synchronization work; no current timecode control path.
-- [NDI](./ndi/) — planned output transport; no current sender or renderer.
+- [NDI](./ndi/) — experimental Debian 13 amd64 render-node output; real-installation commissioning remains open.
 
 An integration page may describe intended behavior, but only sections explicitly marked current should be treated as runnable.

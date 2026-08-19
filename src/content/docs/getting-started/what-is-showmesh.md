@@ -15,12 +15,11 @@ ShowMesh separates **desired state** from **observed state**. A command being ac
 
 ## Current maturity
 
-This is an active development build, not a released appliance. Its strongest usable path is observation and bounded control of existing FPP and Resolume systems. Show authoring, actions, macros, and asset synchronization are implemented and testable, but the end-to-end renderer/output pipeline described by some project plans is not present.
+This is an active development build, not a released appliance. Its strongest usable path is observation and bounded control of existing FPP and Resolume systems. Show authoring, actions, macros, asset synchronization, and an experimental FSEQ-to-NDI render path are implemented, but the render path still needs real-installation commissioning before it can be treated as a supported operating capability.
 
 ## What ShowMesh is not
 
 - It is not a replacement scheduler for FPP.
-- It is not currently a video or pixel renderer.
+- It is not a production-commissioned video or pixel renderer. The experimental NDI path is documented separately and does not yet establish real-wall timing or recovery.
 - It does not make an offline node equivalent to a stopped show. A lost management connection is evidence about the control plane, not proof that local playback stopped.
 - It is not a TLS terminator. Keep it on a trusted show network or place your own TLS reverse proxy in front of the UI.
-

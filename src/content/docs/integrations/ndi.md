@@ -1,15 +1,42 @@
 ---
 title: NDI
-description: Planned NDI output boundary for ShowMesh surfaces.
-status: planned
+description: Use the experimental native render-node path to publish a ShowMesh surface to Resolume.
+status: experimental-testing
 ---
 
-:::note[Planned]
-ShowMesh does not currently render a surface or create an NDI source.
+ShowMesh can now publish an NDI source from a native render node. The current implementation follows FPP MultiSync locally, reads a node-local FSEQ asset, renders the configured surface, and supervises a GStreamer NDI sender. Resolume receives and composes that source downstream.
+
+:::caution[Experimental hardware path]
+The tested NDI sender path is Debian 13 amd64. Real FSEQ-to-wall timing, sender/receiver recovery, arm64, and Ubuntu validation remain open. Do not claim a production-ready NDI installation solely because a source appears in the receiver.
 :::
 
-Surface configuration accepts `output.transport: ndi` and an NDI source name. That is a validated configuration model only. There is no runtime sender, frame producer, or monitorable NDI output in this snapshot.
+## What the node needs
 
-Do not reserve production routing on the assumption that creating a ShowMesh surface will make a source appear. Continue to configure NDI in the playback system that owns it today.
+- A native ShowMesh agent, installed through [Install a Native Node](../../guides/add-a-node/).
+- The vendor NDI runtime installed by the operator. ShowMesh detects it dynamically and does not vendor the runtime.
+- A GStreamer `ndisink` element. Debian 13 does not package it; the current working path is a source build from `gst-plugins-rs`.
+- A free UDP `32320` listener on the render node for FPP MultiSync. Do not run `fppd` on the same node.
 
-This page will eventually cover runtime requirements, source naming, discovery domains, bandwidth, frame formats, health evidence, and failover after an implementation is verified.
+The reproducible Debian `gst-plugins-rs` build recipe has not yet been captured from the working bench node. That is a release blocker for an independently reproducible setup; use a validated local recipe rather than guessing package or Cargo commands.
+
+## What to verify
+
+Element discovery is not enough: the NDI plugin loads the NDI runtime when a pipeline changes state. A node that passes `gst-inspect-1.0 ndisink` can still fail when it attempts to send a frame.
+
+Run a small real pipeline on the render node before declaring the transport available:
+
+```sh
+gst-launch-1.0 videotestsrc num-buffers=5 is-live=true \
+  ! video/x-raw,format=UYVY,width=64,height=64,framerate=10/1 \
+  ! ndisink ndi-name=commissioning-check sync=false
+```
+
+A clean exit after the pipeline reaches `PLAYING` is the relevant result. If it fails, the agent should remain usable and advertise its render capability without `transport.ndi.send`; investigate the runtime, plugin, and its library path rather than treating the node as healthy NDI output.
+
+## Boundaries
+
+- NDI carries the render node's video surface. It does not replace FPP MultiSync as the timing path.
+- Resolume owns source routing, composition, projection mapping, and output. ShowMesh does not edit Arena preferences or start/restart Arena.
+- Surface configuration specifies the intended NDI source name and geometry. It becomes output only after the surface is applied to a prepared render node.
+
+Follow [Set Up a Video Node](../../guides/set-up-a-video-node/) for the end-to-end procedure, then [Resolume Arena](../resolume/) for receiver-side configuration.

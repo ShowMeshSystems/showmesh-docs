@@ -23,5 +23,5 @@ ShowMesh treats freshness as evidence. A retained hello can restore inventory af
 The agent periodically publishes its asset inventory. Check `SHOWMESH_ASSET_DIR`, broker connectivity, and `SHOWMESH_ASSET_INVENTORY_INTERVAL`. If reads are closed, the agent also needs a valid `SHOWMESH_AGENT_API_TOKEN` to fetch asset bytes.
 
 :::note
-`SHOWMESH_NODE_CAPABILITIES` is an explicit testing/operator override. The current agent does not perform production capability detection, and an empty capability list is valid.
+`SHOWMESH_NODE_CAPABILITIES` is an explicit testing/operator override that disables automatic GStreamer/NDI probing. An empty capability list is valid on a host where that path is unavailable.
 :::
