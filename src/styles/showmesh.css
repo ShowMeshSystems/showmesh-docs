@@ -120,6 +120,8 @@ header.header {
 .showmesh-page-status {
 	display: flex;
 	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5rem;
 	margin-top: 0.75rem;
 }
 
@@ -348,6 +350,16 @@ body:has(.showmesh-diagram-dialog[open]) { overflow: hidden; }
 .showmesh-status--planned { color: var(--showmesh-text-muted); background: var(--showmesh-surface-raised); }
 .showmesh-status--advanced { color: var(--showmesh-warning); background: var(--showmesh-warning-soft); }
 .showmesh-status--deprecated { color: var(--showmesh-danger); background: var(--showmesh-danger-soft); }
+
+.showmesh-status--complexity::before {
+	width: 0;
+	height: 0;
+	border: 0.28rem solid transparent;
+	border-bottom: 0.48rem solid currentColor;
+	border-radius: 0;
+	background: transparent;
+	transform: translateY(-0.12rem);
+}
 
 .showmesh-status-note {
 	margin-block: 1.5rem;

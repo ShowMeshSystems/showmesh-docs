@@ -7,8 +7,10 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "check:content": "node scripts/check-content.mjs",
+    "check:astro": "astro check",
     "check:links": "node scripts/check-links.mjs",
-    "check": "npm run build && npm run check:links",
+    "check": "npm run check:content && npm run check:astro && npm run build && npm run check:links",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -21,5 +23,10 @@
     "astro-mermaid": "^2.1.0",
     "mermaid": "^11.16.1",
     "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3",
+    "yaml": "^2.9.0"
   }
 }

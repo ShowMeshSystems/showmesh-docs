@@ -1,6 +1,7 @@
 ---
 title: Repository structure
 description: Where implementation, contracts, tests, engineering decisions, deployment, and public docs belong.
+pageType: concept
 ---
 
 ## Main `showmesh` repository

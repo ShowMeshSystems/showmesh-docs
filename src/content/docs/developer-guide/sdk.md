@@ -1,7 +1,8 @@
 ---
 title: SDK roadmap
 description: What does not exist yet, and the stable surface to use in the meantime.
-status: planned
+pageType: roadmap
+maturity: planned
 ---
 
 ShowMesh does not currently ship a supported SDK, generated client package, plugin ABI, or provider development kit.

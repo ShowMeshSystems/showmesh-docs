@@ -1,9 +1,15 @@
 ---
 title: Check Show Health Quickly
 description: A short triage path for the coordinator, evidence freshness, nodes, FPP, Resolume, and assets.
+pageType: procedure
+maturity: available
 ---
 
 Use this order when you need visibility before making a change.
+
+## Before you start
+
+Have the coordinator address and a configured `showmeshctl` client available. These checks are read-only; preserve their output before restarting services or changing configuration.
 
 ## 1. Confirm the management plane
 

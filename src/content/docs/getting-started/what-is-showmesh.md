@@ -1,6 +1,8 @@
 ---
 title: What is ShowMesh?
 description: A human-first introduction to ShowMesh and the boundary of the current development build.
+pageType: concept
+maturity: experimental-active
 ---
 
 ShowMesh is a control and visibility layer for distributed show systems. It is designed to let an operator answer practical questions—what is online, what is playing, what evidence is stale, and whether a command actually took effect—without treating every player and media computer as an unrelated island.

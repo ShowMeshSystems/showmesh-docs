@@ -1,7 +1,8 @@
 ---
 title: Install the Coordinator
 description: Build and start the current coordinator appliance, establish an administrator, and protect its state.
-status: experimental-active
+pageType: procedure
+maturity: experimental-active
 ---
 
 This is the supported installation path for the current source-built development version. It starts three services on one host: the coordinator, an authenticated Mosquitto broker, and the Operator UI. Native nodes run elsewhere; add them only after this host is healthy.
@@ -126,7 +127,9 @@ Use the externally reachable coordinator hostname, never `localhost` for a separ
 
 Put the issued value in that node's `SHOWMESH_AGENT_API_TOKEN`. The `viewer` role supplies the `node:read` access needed for asset fetching without granting control or configuration writes.
 
-:::caution[Confirm legacy migration before removing its environment values]
+### Confirm legacy migration before removing its environment values
+
+:::caution[Preserve the authoritative configuration]
 These environment groups are startup migration inputs, not normal configuration: `SHOWMESH_FPP_ENDPOINTS`; all `SHOWMESH_FPP_MQTT_*` variables; `SHOWMESH_RESOLUME_URL` and `SHOWMESH_RESOLUME_ID`; and the four coordinator `SHOWMESH_ASSET_*` settings (`CONTENT_BASE_URL`, `MAX_UPLOAD_BYTES`, `SYNC_INTERVAL`, and `INVENTORY_INTERVAL`). `SHOWMESH_ASSET_DIR` is not migrated and remains environment-only. A legacy group deliberately blocks store-backed edits while it is present.
 
 Remove a migrated group only after the coordinator reports that its environment value **matches the active store configuration exactly**. If a request reports that startup migration was **deferred**, do **not** remove the corresponding variable: it is still the only configuration copy. Repair the coordinator data volume (for example, a full, read-only, or damaged volume) and restart; migration is retried on every boot.

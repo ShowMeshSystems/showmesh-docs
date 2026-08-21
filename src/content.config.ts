@@ -8,16 +8,25 @@ export const collections = {
 		loader: docsLoader(),
 		schema: docsSchema({
 			extend: z.object({
-				status: z
+				pageType: z.enum([
+					'landing',
+					'concept',
+					'procedure',
+					'troubleshooting',
+					'integration',
+					'reference',
+					'roadmap',
+				]),
+				maturity: z
 					.enum([
 						'available',
 						'experimental-active',
 						'experimental-testing',
 						'planned',
-						'advanced',
 						'deprecated',
 					])
 					.optional(),
+				complexity: z.enum(['advanced']).optional(),
 			}),
 		}),
 	}),

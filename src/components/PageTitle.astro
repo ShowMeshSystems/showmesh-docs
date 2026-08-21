@@ -1,15 +1,18 @@
 ---
 import DefaultPageTitle from '@astrojs/starlight/components/PageTitle.astro';
 import StatusBadge, { type Status } from './StatusBadge.astro';
+import ComplexityBadge, { type Complexity } from './ComplexityBadge.astro';
 
-const status = Astro.locals.starlightRoute.entry.data.status as Status | undefined;
+const maturity = Astro.locals.starlightRoute.entry.data.maturity as Status | undefined;
+const complexity = Astro.locals.starlightRoute.entry.data.complexity as Complexity | undefined;
 ---
 
 <div class="showmesh-page-title">
 	<DefaultPageTitle />
-	{status && (
+	{(maturity || complexity) && (
 		<div class="showmesh-page-status">
-			<StatusBadge {status} />
+			{maturity && <StatusBadge status={maturity} />}
+			{complexity && <ComplexityBadge {complexity} />}
 		</div>
 	)}
 </div>

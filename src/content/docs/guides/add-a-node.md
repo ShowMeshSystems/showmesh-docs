@@ -1,7 +1,8 @@
 ---
 title: Install a Native Node
 description: Build a native ShowMesh agent, give it one broker identity, make it survive reboot, and verify it is visible.
-status: experimental-active
+pageType: procedure
+maturity: experimental-active
 ---
 
 This guide installs the shared native-agent foundation used by render and future audio nodes. The agent runs directly on the node host so it can access local media hardware; it is not another Compose service.

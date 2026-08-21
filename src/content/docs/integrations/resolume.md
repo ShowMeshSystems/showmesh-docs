@@ -1,7 +1,8 @@
 ---
 title: Resolume Arena
 description: Connect one Arena instance, import its composition identity, and operate the supported evidence-confirmed actions.
-status: experimental-testing
+pageType: integration
+maturity: experimental-testing
 ---
 
 ShowMesh integrates with **Resolume Arena** through its REST API, WebSocket change signal, and polling fallback. It supports one configured Arena instance today. Arena remains the authority for its own composition, source routing, projection mapping, preferences, and process lifetime.
@@ -9,10 +10,6 @@ ShowMesh integrates with **Resolume Arena** through its REST API, WebSocket chan
 ## 1. Prepare Arena and its network path
 
 On the Arena host, enable the Webserver/API and record the port it is listening on. From the coordinator network, confirm that the API URL is reachable before configuring ShowMesh.
-
-:::note[Owner screenshot needed]
-Add a current Arena screenshot here showing the Webserver/API enablement control and configured port. Arena's UI and terminology can vary by version; the screenshot should name the tested Arena version.
-:::
 
 The coordinator needs an HTTP(S) base URL with no embedded credentials, for example `http://arena-host:8080`. Put Arena and the coordinator on the trusted show-management network; the integration does not add a separate authentication layer around Arena's API.
 
@@ -69,8 +66,8 @@ The action path requires the `resolume:action` scope and reports the observed ou
 
 For a ShowMesh render node, configure the NDI source and mapping in Arena after the node advertises the source. ShowMesh does not create that routing for you.
 
-:::note[Owner screenshots needed]
-Add two versioned Arena screenshots here: the NDI source-selection/routing view used for a ShowMesh render source, and the per-clip LTC input/configuration view. The physical LTC path and Arena's behavior when LTC is missing or restored have not yet been verified for the reference installation.
+:::caution[Commission LTC separately]
+The physical LTC path and Arena's behavior when LTC is missing or restored have not been verified for the reference installation. Do not infer synchronization from the audio node reporting that it generated timecode.
 :::
 
 Use [Set Up a Video Node](../../guides/set-up-a-video-node/) for the sender side. Treat LTC configuration as a separately commissioned physical audio path, not proof that audio is synchronized merely because the node says it generated timecode.

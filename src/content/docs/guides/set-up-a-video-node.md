@@ -1,7 +1,8 @@
 ---
 title: Set Up a Video Node
 description: Commission the experimental FSEQ-to-NDI render path without confusing a configured surface for a working screen.
-status: experimental-testing
+pageType: procedure
+maturity: experimental-testing
 ---
 
 This guide gets one experimental render node from a node-local FSEQ file to an NDI source that Resolume can receive. It is a commissioning procedure, not proof that the path is ready for a live show.
@@ -124,10 +125,6 @@ showmeshctl render status <node-id>
 `render apply` configures the assignment but does not itself prove that a frame can leave the node. `render probe` performs the real GStreamer transport transition and creates the fresh transport evidence to inspect in `render status`. Confirm the surface pipeline state and transport availability after the probe. An accepted request is not proof that the pipeline is producing frames.
 
 In Resolume, select the exact NDI source name configured on the surface and route it into the intended composition. ShowMesh does not create Arena's source routing, mapping, or projection output.
-
-:::note[Owner screenshot needed]
-Add a screenshot of the tested Arena version's NDI source-selection and routing view. Label the ShowMesh source name, its destination layer, and the screen/output it feeds.
-:::
 
 ## 7. Make the evidence meaningful
 

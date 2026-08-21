@@ -2,6 +2,12 @@
 
 This repository is the human-facing documentation for ShowMesh: operators, users, integrators, platform developers, and contributors should be able to understand and use the current system without first reading its internal build history.
 
+## Documentation standard
+
+The public [Documentation standard](src/content/docs/contributing/documentation.md) is authoritative. It defines the source-of-truth boundary, page-type contracts, maturity and complexity labels, voice, safety conventions, review evidence, and automated gates.
+
+Use the [Google Developer Documentation Style Guide](https://developers.google.com/style/) for general technical-writing mechanics when the ShowMesh standard does not make a project-specific choice.
+
 ## Source-of-truth boundary
 
 The main [`ShowMeshSystems/showmesh`](https://github.com/ShowMeshSystems/showmesh) repository remains authoritative for implementation, OpenAPI contracts, tests, engineering specifications, ADRs, research evidence, build plans, and agent guidance. This repository translates verified behavior into usable human documentation. It does not supersede engineering truth and must not mirror the main repository's `docs/` tree.
@@ -18,7 +24,7 @@ Treat main-repository prose as a lead, not proof. Verify claims against code, te
 - Never add a bare `TODO` page.
 - Never turn planned architecture into a runnable procedure.
 
-Use the documented maturity vocabulary consistently: Available, Experimental — Active Development, Experimental — Ready for Testing, Planned, Advanced, and Deprecated.
+Use the documented maturity vocabulary consistently: Available, Experimental — Active Development, Experimental — Ready for Testing, Planned, and Deprecated. Advanced is a separate complexity label and may accompany maturity.
 
 ## Local development
 
@@ -27,7 +33,7 @@ npm ci
 npm run build
 ```
 
-Run the project's content/link checks defined in `package.json` before opening a pull request.
+Run the project's content, schema, build, link, anchor, and asset checks defined in `package.json` before opening a pull request.
 
 ## Process intentionally deferred
 

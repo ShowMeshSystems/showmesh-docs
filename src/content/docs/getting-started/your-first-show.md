@@ -1,6 +1,8 @@
 ---
 title: Your First Show
 description: Create and inspect a show configuration without mistaking it for a complete playback pipeline.
+pageType: procedure
+maturity: experimental-active
 ---
 
 The current build can create a revisioned show, add surface definitions, upload assets, create actions and macros, activate the show, inspect asset readiness, and experimentally apply a prepared NDI surface to a render node. It does not provide a complete ShowMesh-owned playback pipeline.

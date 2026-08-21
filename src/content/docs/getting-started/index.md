@@ -1,7 +1,8 @@
 ---
 title: Getting Started
 description: Understand ShowMesh, install the current development build, and learn where the usable path ends today.
-status: experimental-active
+pageType: landing
+maturity: experimental-active
 ---
 
 ShowMesh gives one operator a coherent view of the computers and playback systems involved in a show. The current development build can inventory native ShowMesh nodes, monitor and control FPP players, monitor and control one Resolume Arena instance, manage show configuration and assets, and run reusable actions and macros.
@@ -29,4 +30,4 @@ These pages track the current `main` development state, not a stable release or 
 
 ## What does not work yet
 
-ShowMesh does not yet provide a production-commissioned render path, HDMI output, xLights/FPP Connect ingestion, audience-audio playback, or verified SMPTE/LTC operation. The current NDI render path needs real-installation commissioning; the audio-node work is an unmerged, non-deployable preview.
+ShowMesh does not yet provide a production-commissioned render path, HDMI output, xLights/FPP Connect ingestion, audience-audio playback, or verified SMPTE/LTC operation. The NDI render path needs real-installation commissioning; the audio-node material is a Planned, non-deployable preview.

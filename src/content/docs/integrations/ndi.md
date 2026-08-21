@@ -1,7 +1,8 @@
 ---
 title: NDI
 description: Use the experimental native render-node path to publish a ShowMesh surface to Resolume.
-status: experimental-testing
+pageType: integration
+maturity: experimental-testing
 ---
 
 ShowMesh can now publish an NDI source from a native render node. The current implementation follows FPP MultiSync locally, reads a node-local FSEQ asset, renders the configured surface, and supervises a GStreamer NDI sender. Resolume receives and composes that source downstream.

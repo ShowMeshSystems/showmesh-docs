@@ -1,0 +1,13 @@
+---
+export type Complexity = 'advanced';
+
+interface Props { complexity: Complexity; }
+
+const labels: Record<Complexity, string> = {
+	advanced: 'Advanced',
+};
+
+const { complexity } = Astro.props;
+---
+
+<span class:list={['showmesh-status', 'showmesh-status--complexity', `showmesh-status--${complexity}`]}>{labels[complexity]}</span>

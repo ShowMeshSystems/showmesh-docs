@@ -38,7 +38,7 @@ import StatusNote from '../../../components/StatusNote.astro';
 </StatusNote>
 ```
 
-Supported status values are `available`, `experimental-active`, `experimental-testing`, `planned`, `advanced`, and `deprecated`. Their meanings are governed by the documentation contribution guide, not by individual pages.
+Page frontmatter uses a required `pageType`, an applicable `maturity`, and optional `complexity: advanced`. Inline status notes use `available`, `experimental-active`, `experimental-testing`, `planned`, or `deprecated`. Their meanings are governed by the documentation standard, not by individual pages.
 
 ## Cloudflare Pages
 

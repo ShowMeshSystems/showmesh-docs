@@ -1,6 +1,7 @@
 ---
 title: Coordinator unavailable or not ready
 description: Separate a stopped HTTP process from an MQTT or SQLite readiness failure.
+pageType: troubleshooting
 ---
 
 ## Symptom: connection refused or timeout

@@ -1,6 +1,8 @@
 ---
 title: Configuration
 description: Runtime environment variables for the coordinator, native agent, and CLI.
+pageType: reference
+maturity: available
 ---
 
 This page lists the supported runtime entry points. Secrets should come from the deployment secret mechanism, not committed environment files.

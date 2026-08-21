@@ -1,6 +1,8 @@
 ---
 title: Command-line interface
 description: Current showmeshctl command groups, global flags, and operational exit behavior.
+pageType: reference
+maturity: available
 ---
 
 `showmeshctl` is the independent non-UI client for the coordinator's public API.

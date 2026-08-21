@@ -4,7 +4,6 @@ export type Status =
 	| 'experimental-active'
 	| 'experimental-testing'
 	| 'planned'
-	| 'advanced'
 	| 'deprecated';
 
 interface Props { status: Status; label?: string; }
@@ -14,7 +13,6 @@ const labels: Record<Status, string> = {
 	'experimental-active': 'Experimental — Active Development',
 	'experimental-testing': 'Experimental — Ready for Testing',
 	planned: 'Planned',
-	advanced: 'Advanced',
 	deprecated: 'Deprecated',
 };
 

@@ -1,7 +1,8 @@
 ---
 title: Render Nodes
 description: How the in-development Track B node turns FSEQ surface data into synchronized video output.
-status: experimental-testing
+pageType: concept
+maturity: experimental-testing
 ---
 
 A **render node** turns lighting-sequence data into a video surface. It holds its own node-specific FSEQ asset, follows the FPP MultiSync timeline, extracts the channel range assigned to a ShowMesh surface, paints those values into the surface's pixel canvas, and sends the resulting frames through an output transport.

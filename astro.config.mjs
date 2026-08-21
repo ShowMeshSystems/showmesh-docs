@@ -3,6 +3,10 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import mermaid from 'astro-mermaid';
 
+/**
+ * @param {string} label
+ * @param {string} directory
+ */
 const section = (label, directory) => ({
 	label,
 	items: [{ autogenerate: { directory } }],

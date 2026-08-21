@@ -1,6 +1,7 @@
 ---
 title: Macro or action did not complete
 description: Read the run record before retrying so a partial outcome is not repeated blindly.
+pageType: troubleshooting
 ---
 
 ## Symptom: a macro command returned but the show did not change

@@ -1,7 +1,8 @@
 ---
 title: API surface
 description: Current route groups and rules for the public version 1 contract.
-status: available
+pageType: reference
+maturity: available
 ---
 
 The normative machine-readable API is `api/openapi.yaml` in the main ShowMesh repository. It is verified against the implementation in both directions. This page is an orientation map, not a replacement schema.

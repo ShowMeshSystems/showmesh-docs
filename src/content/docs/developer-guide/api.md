@@ -1,7 +1,8 @@
 ---
 title: API
 description: Use the versioned REST contract, principal tokens, and structured errors safely.
-status: available
+pageType: reference
+maturity: available
 ---
 
 The coordinator serves its public API at `/api/v1`. The machine-readable contract is `api/openapi.yaml` in the main ShowMesh repository and is conformance-tested against handler responses.

@@ -1,6 +1,8 @@
 ---
 title: Assets
 description: Upload content, target it to nodes, and interpret synchronization readiness.
+pageType: concept
+maturity: available
 ---
 
 An **asset** is an exact file revision that ShowMesh can distribute to native nodes. The coordinator stores the uploaded bytes by content hash and records which show, sequence ID, media type, and target the file belongs to.

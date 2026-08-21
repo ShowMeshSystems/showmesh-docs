@@ -1,6 +1,7 @@
 ---
 title: Node missing or stale
 description: Check broker connectivity, identity, declaration state, and evidence age in that order.
+pageType: troubleshooting
 ---
 
 ## Symptom: the node does not appear

@@ -1,6 +1,8 @@
 ---
 title: Compatibility
 description: What the captured development build is known to integrate with—and what it does not yet provide.
+pageType: reference
+maturity: experimental-active
 ---
 
 This is a development-state compatibility boundary, not a release support matrix.

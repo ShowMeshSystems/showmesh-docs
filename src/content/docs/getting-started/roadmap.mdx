@@ -1,7 +1,8 @@
 ---
 title: Roadmap
 description: See what can be used now, what needs a real installation, and what remains before a day-0 public release.
-status: experimental-active
+pageType: roadmap
+maturity: experimental-active
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
@@ -46,12 +47,12 @@ flowchart LR
     The Debian 13 amd64 sender path is built and has transport evidence. The complete FSEQ → MultiSync → NDI → Resolume → wall path still needs timing, pacing, recovery, and real-installation evidence. [Commission a video node →](/guides/set-up-a-video-node/)
   </Card>
   <Card title="Audio node" icon="warning">
-    <StatusBadge status="planned" label="Unmerged preview — do not deploy" />
+    <StatusBadge status="planned" label="Planned — do not deploy" />
 
-    PR #21 describes the intended audio authority but currently has a broken command path, incomplete LTC work, no output backend, and no hardware evidence. [Read the audio preview →](/guides/set-up-an-audio-node/)
+    The intended audio authority and safety boundaries are documented, but ShowMesh has no supported sound-producing installation path or commissioned hardware workflow. [Read the audio preview →](/guides/set-up-an-audio-node/)
   </Card>
   <Card title="Night-session operation" icon="open-book">
-    The operating-day controller is specified and has unmerged implementation work. It is not part of current `main`; its public operator guide remains a day-0 documentation item after a real-installation observation.
+    The night-session operating path and public operator guide are not available. They remain day-0 work and require real-installation observation before publication.
   </Card>
 </CardGrid>
 
@@ -74,4 +75,4 @@ Until those gates close, use the current guides to stage and test a show deliber
 
 <StatusBadge status="experimental-testing" /> means the feature has a defined test path and some evidence, but still requires real-system validation before it is relied on.
 
-<StatusBadge status="planned" /> means the behavior is design intent or an unmerged preview, not an available operating capability.
+<StatusBadge status="planned" /> means the behavior is design intent, not an available operating capability.

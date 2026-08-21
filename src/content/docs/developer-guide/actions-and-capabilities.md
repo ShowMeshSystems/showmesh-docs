@@ -1,6 +1,8 @@
 ---
 title: Actions and capabilities
 description: Keep node capability claims separate from logical show actions and integration primitives.
+pageType: concept
+maturity: available
 ---
 
 ShowMesh uses two related but different vocabularies.

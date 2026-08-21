@@ -1,6 +1,8 @@
 ---
 title: Diagnostics, health, and logs
 description: Collect the evidence needed to distinguish process, broker, device, and authorization failures.
+pageType: reference
+maturity: available
 ---
 
 Use these checks before changing configuration. They separate “the process is serving,” “the coordinator can operate,” and “a device was observed healthy”—three different facts in ShowMesh.

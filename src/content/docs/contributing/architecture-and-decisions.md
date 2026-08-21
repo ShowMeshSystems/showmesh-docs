@@ -1,6 +1,7 @@
 ---
 title: Architecture and decisions
 description: Change durable constraints through ADRs and keep public explanations subordinate to engineering truth.
+pageType: concept
 ---
 
 ShowMesh records durable engineering constraints as Architecture Decision Records in the main repository. If implementation work contradicts an accepted decision, write a superseding ADR; do not silently edit history until it appears consistent.

@@ -1,6 +1,8 @@
 ---
 title: Architecture Overview
 description: How the current coordinator, UI, broker, native nodes, FPP, and Resolume pieces relate.
+pageType: concept
+maturity: experimental-active
 ---
 
 ShowMesh keeps the management plane separate from show playback. The coordinator can fail or become unreachable without being placed in the media path of an already-running device.

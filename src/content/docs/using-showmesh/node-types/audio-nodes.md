@@ -1,16 +1,17 @@
 ---
 title: Audio Nodes
-description: The planned audience-audio role, plus the limits of the current unmerged implementation preview.
-status: planned
+description: The planned audience-audio role and the limits of the current non-deployable preview.
+pageType: roadmap
+maturity: planned
 ---
 
 An **audio node** is the planned authority for audience-facing audio playback on its assigned outputs. It is intended to hold complete audio files locally, play them on its own stable audio clock, mix background, show, and announcement sources, and generate LTC on a discrete output in the same clock domain as program audio.
 
 :::caution[Preview only — do not deploy]
-Track C exists on the unmerged `track-c/audio-node` branch as PR #21, with changes requested. Its coordinator-to-agent audio command path is broken end to end, its LTC seam is incomplete, no physical audio interface has been commissioned, and nothing has produced sound. Current `main` has no supported audio-playback or LTC-generation path.
+ShowMesh has no released, sound-producing audio-node workflow. No physical audio interface or complete public installation path has been commissioned. Treat configuration or isolated implementation behavior as insufficient evidence for playback or LTC readiness.
 :::
 
-The preview is useful for reviewing the intended authority and safety boundaries. It is not an installation guide or a release candidate. See [Audio Node Preview](../../../guides/set-up-an-audio-node/) for the precise current status and the work that must land before a runnable guide exists.
+The preview is useful for reviewing the intended authority and safety boundaries. It is not an installation guide or a release candidate. See [Audio Node Preview](../../../guides/set-up-an-audio-node/) for the public boundary and the work required before a runnable guide exists.
 
 ## Planned responsibilities
 

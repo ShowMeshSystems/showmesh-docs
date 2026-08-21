@@ -1,6 +1,8 @@
 ---
 title: Nodes
 description: Understand node identity, discovery, declaration, health, capabilities, and asset inventory.
+pageType: concept
+maturity: available
 ---
 
 A **node** is a computer running the native ShowMesh agent. Nodes are the machines ShowMesh can identify, monitor through its MQTT control plane, and keep synchronized with show assets.

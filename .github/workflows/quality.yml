@@ -25,5 +25,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build and check internal links
+      - name: Check content, schema, build, links, anchors, and assets
         run: npm run check

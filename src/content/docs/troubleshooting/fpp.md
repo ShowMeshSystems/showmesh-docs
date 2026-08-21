@@ -1,6 +1,7 @@
 ---
 title: FPP unreachable or command unconfirmed
 description: Distinguish collection failure, refusal, dispatch failure, and missing confirming evidence.
+pageType: troubleshooting
 ---
 
 ## Symptom: an FPP instance is missing

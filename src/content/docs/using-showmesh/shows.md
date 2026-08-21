@@ -1,6 +1,8 @@
 ---
 title: Shows
 description: Manage revisioned show objects and the active-show pointer.
+pageType: concept
+maturity: available
 ---
 
 A **show** is the stable namespace for one production. It gives related surfaces, assets, actions, and macros a common show ID and gives operators a human-readable name and notes.

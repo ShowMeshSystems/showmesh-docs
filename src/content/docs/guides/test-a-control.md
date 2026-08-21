@@ -1,6 +1,8 @@
 ---
 title: Test a Control Safely
 description: Exercise one implemented device control and distinguish confirmed, failed, and uncertain outcomes.
+pageType: procedure
+maturity: available
 ---
 
 Test one primitive against a non-critical target before placing it in an action or macro.
@@ -34,4 +36,3 @@ showmeshctl resolume composition show
 ## Move into a macro
 
 Only after the primitive is confirmed should you bind it to a logical action and reference that action from a macro. Run the macro with `--follow` during testing, then inspect every step rather than relying on the overall label alone.
-

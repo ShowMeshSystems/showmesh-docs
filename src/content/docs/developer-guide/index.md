@@ -1,7 +1,8 @@
 ---
 title: Developer Guide
 description: Build clients and integrations against ShowMesh's public contract without modifying ShowMesh itself.
-status: experimental-active
+pageType: landing
+maturity: experimental-active
 ---
 
 This section is for software that uses ShowMesh: operator tools, automation clients, integration adapters, and future extensions. If you are changing ShowMesh source, use [Contributing](/contributing/).

@@ -1,7 +1,8 @@
 ---
 title: xLights
 description: Planned xLights and FPP Connect integration boundary.
-status: planned
+pageType: integration
+maturity: planned
 ---
 
 :::note[Planned]
