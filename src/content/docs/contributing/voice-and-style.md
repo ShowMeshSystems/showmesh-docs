@@ -2,7 +2,6 @@
 title: Voice and style
 description: Write ShowMesh documentation with a calm operator voice and consistent editorial and safety conventions.
 pageType: reference
-maturity: available
 ---
 
 ShowMesh documentation sounds like a calm, experienced technician helping another operator prepare for a show. It is direct without being abrupt, complete without narrating irrelevant internals, and precise about what is known, expected, or unverified.

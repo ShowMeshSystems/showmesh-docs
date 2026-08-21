@@ -2,7 +2,6 @@
 title: Development setup
 description: Build the current ShowMesh repository and run the fast verification gate.
 pageType: procedure
-maturity: available
 ---
 
 ## Before you start

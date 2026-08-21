@@ -2,7 +2,6 @@
 title: Troubleshooting
 description: Restore visibility first, then isolate the failing dependency without guessing.
 pageType: landing
-maturity: available
 ---
 
 Start here when ShowMesh is not behaving as expected. The shortest safe path is to establish whether the coordinator is alive, whether it is ready, and what evidence it currently holds.

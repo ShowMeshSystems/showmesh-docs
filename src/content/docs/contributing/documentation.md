@@ -2,7 +2,6 @@
 title: Documentation standard
 description: The canonical standard for clear, safe, human-operable ShowMesh documentation.
 pageType: reference
-maturity: available
 ---
 
 This page is the canonical standard for public ShowMesh documentation. The shorter repository contribution notes point here; if they disagree, this page wins.

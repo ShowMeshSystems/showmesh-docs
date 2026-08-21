@@ -3,6 +3,7 @@ title: Install the Coordinator
 description: Build and start the current coordinator appliance, establish an administrator, and protect its state.
 pageType: procedure
 maturity: experimental-active
+complexity: advanced
 ---
 
 This is the supported installation path for the current source-built development version. It starts three services on one host: the coordinator, an authenticated Mosquitto broker, and the Operator UI. Native nodes run elsewhere; add them only after this host is healthy.

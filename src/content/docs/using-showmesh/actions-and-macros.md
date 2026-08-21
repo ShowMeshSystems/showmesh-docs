@@ -3,6 +3,7 @@ title: Actions and Macros
 description: Build reusable logical controls and inspect every step of an asynchronous macro run.
 pageType: concept
 maturity: available
+complexity: advanced
 ---
 
 An **action** is one named operation that ShowMesh knows how to send to another system. Instead of placing provider-specific details throughout an operator workflow, you define them once: for example, `start-main-playlist` can mean “ask the configured FPP instance `fpp-main` to start playlist `Main Show`,” while `video-blackout` can mean “send Resolume's blackout operation.”

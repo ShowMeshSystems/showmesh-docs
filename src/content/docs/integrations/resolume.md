@@ -3,6 +3,7 @@ title: Resolume Arena
 description: Connect one Arena instance, import its composition identity, and operate the supported evidence-confirmed actions.
 pageType: integration
 maturity: experimental-testing
+complexity: advanced
 ---
 
 ShowMesh integrates with **Resolume Arena** through its REST API, WebSocket change signal, and polling fallback. It supports one configured Arena instance today. Arena remains the authority for its own composition, source routing, projection mapping, preferences, and process lifetime.

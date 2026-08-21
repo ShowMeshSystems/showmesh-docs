@@ -3,6 +3,7 @@ title: Set Up a Video Node
 description: Commission the experimental FSEQ-to-NDI render path without confusing a configured surface for a working screen.
 pageType: procedure
 maturity: experimental-testing
+complexity: advanced
 ---
 
 This guide gets one experimental render node from a node-local FSEQ file to an NDI source that Resolume can receive. It is a commissioning procedure, not proof that the path is ready for a live show.

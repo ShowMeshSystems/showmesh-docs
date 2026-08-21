@@ -2,7 +2,6 @@
 title: Page-type contracts
 description: Minimum content contracts for each kind of ShowMesh documentation page.
 pageType: reference
-maturity: available
 ---
 
 Every page declares one of the following `pageType` values. A contract defines information the reader must receive, not mandatory heading text. Combine sections when that improves the page, but do not omit the underlying requirement.

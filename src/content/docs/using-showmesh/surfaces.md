@@ -3,6 +3,7 @@ title: Surfaces
 description: Author the geometry and transport contract a render node uses to present a video surface.
 pageType: concept
 maturity: experimental-testing
+complexity: advanced
 ---
 
 A **surface** describes one logical pixel canvas and the output a particular node is intended to drive. It connects show layout intent to a concrete machine: “channels 1 through 24,576 form a 128×64 RGB canvas on `stage-left`, published as this NDI source.”

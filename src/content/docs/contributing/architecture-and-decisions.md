@@ -8,6 +8,8 @@ ShowMesh records durable engineering constraints as Architecture Decision Record
 
 ## Core boundaries to preserve
 
+These are decision constraints, not a list of available product capabilities. Their presence here means implementations must preserve the boundary; it does not claim that every related system or integration is implemented, supported, or commissioned.
+
 - FPP remains the calendar scheduler.
 - Desired state and observed evidence are separate.
 - The coordinator is not in the real-time media or timing path.

@@ -2,7 +2,6 @@
 title: Testing
 description: Choose the smallest test that proves the claim, then verify assembled behavior when the claim crosses a process boundary.
 pageType: reference
-maturity: available
 ---
 
 ## Fast gate
