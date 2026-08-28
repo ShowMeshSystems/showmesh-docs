@@ -1,7 +1,7 @@
 ---
 title: Audio Node Overview
 description: Understand experimental audio-node configuration, sessions, and output behavior.
-pageType: guide
+pageType: procedure
 maturity: experimental-testing
 ---
 
