@@ -4,7 +4,7 @@ description: Choose the smallest test that proves the claim, then verify assembl
 pageType: reference
 ---
 
-## Fast gate
+## Fast check
 
 ```sh
 make check

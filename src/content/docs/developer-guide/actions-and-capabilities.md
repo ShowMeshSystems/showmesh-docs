@@ -35,6 +35,6 @@ Dispatch and confirmation are distinct. An action can be confirmed, unconfirmed,
 ## Integration guidance
 
 - Prefer a logical action and a typed binding over embedding raw MQTT topics, REST paths, or device commands in macros.
-- Use idempotency keys according to the API contract. Reusing one for a different target or payload causes a conflict.
+- Use idempotency keys as the API requires. Reusing one for a different target or payload causes a conflict.
 - Treat authorization refusal as a healthy coordinator declining the operation, not as coordinator loss.
 - Do not advertise a node capability until the node backs the claim with runtime behavior and evidence.

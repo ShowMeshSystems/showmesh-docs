@@ -1,6 +1,6 @@
 ---
 title: Development setup
-description: Build the current ShowMesh repository and run the fast verification gate.
+description: Build the current ShowMesh repository and run the fast verification check.
 pageType: procedure
 ---
 
@@ -26,14 +26,14 @@ pageType: procedure
    nvm use
    ```
 
-3. Build the binaries and run the fast gate:
+3. Build the binaries and run the fast check:
 
    ```sh
    make build
    make check
    ```
 
-`make build` creates five binaries in `./bin`: coordinator, agent, MultiSync probe, CLI, and FPP plugin. `make check` is the fast project gate and includes Go formatting, vetting, linting and unit tests plus UI lint, types, tests, build, and generated-type verification.
+`make build` creates five binaries in `./bin`: coordinator, agent, MultiSync probe, CLI, and FPP plugin. `make check` is the fast project check and includes Go formatting, vetting, linting and unit tests plus UI lint, types, tests, build, and generated-type verification.
 
 Use only synthetic or isolated integration targets during development. Never point tests or discovery tools at the live fleet without explicit owner authorization.
 

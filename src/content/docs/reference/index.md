@@ -11,8 +11,10 @@ Use Reference when you already know what you are trying to configure or call. Fo
 
 - [Configuration](./configuration/) — coordinator, agent, and CLI environment settings.
 - [Command-line interface](./cli/) — global flags, command groups, and exit semantics.
-- [Compatibility](./compatibility/) — current contract and integration boundaries.
+- [Compatibility](./compatibility/) — current compatibility and integration boundaries.
 - [API surface](./api/) — route groups and the machine-readable source of truth.
+- [Roadmap](./roadmap/) — current development priorities and remaining release work.
+- [Maturity and complexity](./maturity/) — what the status labels mean.
 
 This reference describes the captured development state, not a released version. Documentation versioning is intentionally deferred until ShowMesh has a release/versioning system to match.
 

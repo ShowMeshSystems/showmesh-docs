@@ -1,12 +1,12 @@
 ---
 title: API
-description: Use the versioned REST contract, principal tokens, and structured errors safely.
+description: Use the versioned REST API, principal tokens, and structured errors safely.
 pageType: reference
 maturity: available
 complexity: advanced
 ---
 
-The coordinator serves its public API at `/api/v1`. The machine-readable contract is `api/openapi.yaml` in the main ShowMesh repository and is conformance-tested against handler responses.
+The coordinator serves its public API at `/api/v1`. The machine-readable API description is `api/openapi.yaml` in the main ShowMesh repository.
 
 ## Connect
 
@@ -30,7 +30,7 @@ Do not place credentials in URLs or query strings. The coordinator rejects a que
 
 ## Resource groups
 
-The current contract covers:
+The current API covers:
 
 - Snapshot, nodes, discovery, observations, event history, and live stream.
 - FPP instances and commands.

@@ -16,19 +16,14 @@ This is a development-state compatibility boundary, not a release support matrix
 - Resolume Arena is observed and controlled through its REST API, with a WebSocket used only as a change signal. Composition metadata is uploaded from an `.avc` file.
 - External clients use HTTP API version 1 and Server-Sent Events.
 
-## Verified boundaries
+## Important limits
 
-- FPP container integration tests exercise a real containerized `fppd`, but this does not establish show-hardware or network readiness.
-- Resolume behavior was exercised against Arena on a development laptop. That is not verification of the production playout host.
 - No runtime path should call Resolume's full `GET /composition`; ShowMesh uses an uploaded `.avc` map and targeted live reads.
 - Resolume OSC is not implemented.
-- The experimental NDI render path has sender evidence on Debian 13 amd64. Its real FSEQ-to-wall timing, pacing, recovery, arm64, and Ubuntu boundaries are not yet verified.
-
-## Implemented, not production-verified
-
-- FPP Connect ingestion has source and automated coverage, but no supported deployed xLights/FPP compatibility claim or real-show commissioning result.
-- Audio and LTC have software configuration and command paths, but no commissioned physical route, receiver lock, signal-loss, or recovery evidence.
-- `showmesh-fpp-plugin` is a bench-tested FPP-host macro runner. Its package/install path, permissions, FPP-version compatibility, and real-host behavior are not verified.
+- The experimental NDI render path supports NDI output; HDMI output is not available.
+- FPP Connect is experimental. Its page names the deployment limitation.
+- Audio and LTC have software configuration and command paths. See [SMPTE / LTC](../../integrations/smpte-ltc/) for timing and receiver limits.
+- `showmesh-fpp-plugin` is experimental and does not yet have a supported packaged installation.
 
 ## Not currently available
 

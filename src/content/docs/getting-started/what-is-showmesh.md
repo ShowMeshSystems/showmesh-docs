@@ -17,7 +17,7 @@ ShowMesh separates **desired state** from **observed state**. A command being ac
 
 ## Current maturity
 
-This is an active development build, not a released appliance. Its strongest usable path is observation and bounded control of existing FPP and Resolume systems. Show authoring, actions, macros, asset synchronization, and an experimental FSEQ-to-NDI render path are implemented, but the render path still needs real-installation commissioning before it can be treated as a supported operating capability.
+This is an active development build, not a released appliance. Its strongest usable path is observation and bounded control of existing FPP and Resolume systems. Show authoring, actions, macros, asset synchronization, and an experimental FSEQ-to-NDI render path are implemented.
 
 ## What ShowMesh is not
 

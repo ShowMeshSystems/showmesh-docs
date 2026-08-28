@@ -1,6 +1,6 @@
 ---
 title: Render Nodes
-description: How the in-development Track B node turns FSEQ surface data into synchronized video output.
+description: How an experimental render node turns FSEQ surface data into synchronized video output.
 pageType: concept
 maturity: experimental-testing
 complexity: advanced
@@ -8,11 +8,9 @@ complexity: advanced
 
 A **render node** turns lighting-sequence data into a video surface. It holds its own node-specific FSEQ asset, follows the FPP MultiSync timeline, extracts the channel range assigned to a ShowMesh surface, paints those values into the surface's pixel canvas, and sends the resulting frames through an output transport.
 
-The initial Track B path uses NDI to deliver that video to Resolume. Resolume remains responsible for projection composition and mapping after the source arrives; the render node does not launch clips, select decks, or control the projection layout.
+The initial path uses NDI to deliver that video to Resolume. Resolume remains responsible for projection composition and mapping after the source arrives; the render node does not launch clips, select decks, or control the projection layout.
 
-:::caution[Hardware commissioning remains open]
-The render path is on current `main`, including the native agent, FSEQ rendering, GStreamer supervision, and NDI transport evidence. Its end-to-end timing, recovery, and pacing still need to be observed on the intended FPP, wall, and Resolume installation. Treat it as experimental, not a normal production deployment.
-:::
+Treat the render path as experimental. The current runtime supports one active surface per node and NDI output; HDMI output is not available.
 
 ## What the node owns
 
@@ -39,7 +37,7 @@ The coordinator is not in the timing or frame path. It assigns configuration, di
 
 This is file-based local rendering, not a live matrix stream from the coordinator or FPP. Keeping the FSEQ on the node removes the coordinator and ordinary control traffic from the real-time media path.
 
-## Current Track B scope
+## Current scope
 
 The implementation in current `main` includes:
 
@@ -52,18 +50,12 @@ The implementation in current `main` includes:
 
 The first deployment profile concentrates on Linux/x86 hardware, one active surface per node, 40 fps, and NDI. The broader schema does not permanently encode the one-surface limit.
 
-## What remains unproven
-
-The earlier NDI transport spike sustained a 1920×1080 UYVY test source at 40 fps for 6 hours 49 minutes with no reported dropped or late frames. A later Debian 13 amd64 soak established the tested sender path. Neither result proves the completed FSEQ renderer on the intended hardware.
-
-The upcoming hardware test still needs to establish the complete path: correct FSEQ variant, real channel extraction, MultiSync following, achieved frame rate, output behavior when sync is lost, pipeline recovery, and usable reception in Resolume. Until those checks pass, configuration validity or an `online` agent is not renderer readiness.
-
 ## Deliberate boundaries
 
 - Render nodes do not run `fppd`; they listen for MultiSync as remotes.
-- Track B ends when a usable video source reaches Resolume. Resolume control belongs to the separate integration.
+- A render node publishes a video source for Resolume. Resolume control belongs to the separate integration.
 - NDI support is dynamically detected. A missing runtime must degrade the render capability without preventing the rest of the agent from starting.
-- HDMI remains represented by the surface model but is not part of the initial tested Track B operating profile.
-- FPP Connect ingestion is experimental; manual targeted asset upload remains a valid fallback until deployment compatibility is commissioned.
+- HDMI remains represented by the surface model but is not part of the current operating profile.
+- FPP Connect ingestion is experimental; manual targeted asset upload remains a valid fallback.
 
-For the operator procedure, including NDI runtime checks, surface authoring, and the exact hardware evidence still owed, see [Set Up a Video Node](../../../guides/set-up-a-video-node/).
+For the operator procedure, including NDI runtime checks and surface authoring, see [Set Up a Video Node](../../../guides/set-up-a-video-node/).

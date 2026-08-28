@@ -1,20 +1,20 @@
 ---
 title: Set Up a Video Node
-description: Commission the experimental FSEQ-to-NDI render path without confusing a configured surface for a working screen.
+description: Set up the experimental FSEQ-to-NDI render path without confusing a configured surface for a working screen.
 pageType: procedure
 maturity: experimental-testing
 complexity: advanced
 ---
 
-This guide gets one experimental render node from a node-local FSEQ file to an NDI source that Resolume can receive. It is a commissioning procedure, not proof that the path is ready for a live show.
+This guide gets one experimental render node from a node-local FSEQ file to an NDI source that Resolume can receive.
 
-:::caution[Use a dedicated bench path]
-Do not use the deployed fleet or its live MQTT broker for this procedure. A render node listens for FPP MultiSync on UDP `32320`; it must not share that port with `fppd`, and no command here should reach a production FPP player until the complete path has been tested safely.
+:::caution[Use a dedicated node]
+A render node listens for FPP MultiSync on UDP `32320`; it must not share that port with `fppd`.
 :::
 
 ## 1. Confirm the deployment profile
 
-The tested transport profile is a native node on Debian 13 amd64, one active surface, 40 fps, and NDI. The broader configuration model supports more, but arm64, Ubuntu, HDMI output, real-wall timing, and sender/receiver recovery remain unverified.
+The documented transport profile is a native node on Debian 13 amd64, one active surface, 40 fps, and NDI. HDMI output is not available.
 
 Install the node first with [Install a Native Node](../add-a-node/). Give it local storage for the node-targeted FSEQ assets and network reachability to the broker.
 
@@ -35,7 +35,7 @@ Then run an actual sender pipeline. Element discovery alone does not load the ND
 ```sh
 gst-launch-1.0 videotestsrc num-buffers=5 is-live=true \
   ! video/x-raw,format=UYVY,width=64,height=64,framerate=10/1 \
-  ! ndisink ndi-name=commissioning-check sync=false
+  ! ndisink ndi-name=showmesh-check sync=false
 ```
 
 The expected result is a clean transition to `PLAYING` and exit. If the test fails after `PLAYING` is printed, NDI is not working yet. Fix the runtime or plugin path before continuing; do not treat a successful `gst-inspect` as transport evidence.

@@ -1,17 +1,13 @@
 ---
 title: Audio Nodes
-description: Experimental audience-audio software behavior and its uncommissioned physical-output boundary.
+description: Experimental audience-audio settings, sessions, routes, and output behavior.
 pageType: concept
 maturity: experimental-testing
 ---
 
 An **audio node** is the ShowMesh authority for node-local audience-audio playback on configured outputs. Current source includes session, gain, output, routing, and LTC command/configuration paths. It holds complete audio files locally, rather than carrying real-time PCM through the coordinator or MQTT.
 
-:::caution[Experimental software, not a commissioned audio system]
-No physical audio interface, route, receiver lock, or complete public installation workflow has been commissioned. Treat configuration and software evidence as insufficient proof that program audio or LTC is reaching the intended equipment.
-:::
-
-See [Audio Node Preview](../../../guides/set-up-an-audio-node/) for the operational boundary. It is not an installation guide or a release candidate.
+See [SMPTE / LTC](../../../integrations/smpte-ltc/) for timecode rates, receiver limits, and the remaining physical-output warning.
 
 ## Current software responsibilities
 
@@ -28,6 +24,19 @@ The audio-node role provides configuration and command paths for:
 - safe supervision and manual recovery when a device or pipeline fails.
 
 Linux is the reference platform. GStreamer performs media decoding and rendering while ShowMesh owns session state, synchronization policy, supervision, health, and operator-visible evidence.
+
+## Configure an audio node
+
+Audio settings set the engine-wide drift threshold, fade curve and duration, background gain ceiling, announcement duck target, LTC frame rate, and default LTC start offset. Audio-node settings choose a program route and ordered program channels, then optionally a separate LTC channel on that same route with a declared clock-domain name and provenance.
+
+```sh
+showmeshctl audio settings get
+showmeshctl audio settings set --help
+showmeshctl audio node list
+showmeshctl audio node set <node-id> --help
+```
+
+The node must advertise the selected program and LTC routes. A program-only node omits the LTC route and channel. Writes replace the full settings object, so read the current values before changing them.
 
 ## Data-flow boundary
 
@@ -47,7 +56,7 @@ A running local session is intended to survive coordinator or broker loss when a
 
 The audio role is broader than any single connector. Local program output, FM feed, LTC, and possible future transports are separate capabilities with their own readiness evidence. Dante is not a requirement for the initial role, and a possible future Dante bridge is not currently a supported node type.
 
-Likewise, an audio-capable machine should not be considered ready merely because Linux lists an interface. Operational readiness still requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, commissioned physical separation, supported session operations, and fresh engine evidence.
+Likewise, an audio-capable machine should not be considered ready merely because Linux lists an interface. Readiness requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, supported session operations, and fresh engine evidence.
 
 ## Deliberate boundaries
 

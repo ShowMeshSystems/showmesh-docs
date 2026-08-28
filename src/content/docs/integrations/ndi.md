@@ -8,10 +8,6 @@ complexity: advanced
 
 ShowMesh can now publish an NDI source from a native render node. The current implementation follows FPP MultiSync locally, reads a node-local FSEQ asset, renders the configured surface, and supervises a GStreamer NDI sender. Resolume receives and composes that source downstream.
 
-:::caution[Experimental hardware path]
-The tested NDI sender path is Debian 13 amd64. Real FSEQ-to-wall timing, sender/receiver recovery, arm64, and Ubuntu validation remain open. Do not claim a production-ready NDI installation solely because a source appears in the receiver.
-:::
-
 ## What the node needs
 
 - A native ShowMesh agent, installed through [Install a Native Node](../../guides/add-a-node/).
@@ -19,7 +15,7 @@ The tested NDI sender path is Debian 13 amd64. Real FSEQ-to-wall timing, sender/
 - A GStreamer `ndisink` element. Debian 13 does not package it; the current working path is a source build from `gst-plugins-rs`.
 - A free UDP `32320` listener on the render node for FPP MultiSync. Do not run `fppd` on the same node.
 
-The reproducible Debian `gst-plugins-rs` build recipe has not yet been captured from the working bench node. That is a release blocker for an independently reproducible setup; use a validated local recipe rather than guessing package or Cargo commands.
+Use a documented local recipe for `gst-plugins-rs`; do not guess package or Cargo commands.
 
 ## What to verify
 
@@ -30,7 +26,7 @@ Run a small real pipeline on the render node before declaring the transport avai
 ```sh
 gst-launch-1.0 videotestsrc num-buffers=5 is-live=true \
   ! video/x-raw,format=UYVY,width=64,height=64,framerate=10/1 \
-  ! ndisink ndi-name=commissioning-check sync=false
+  ! ndisink ndi-name=showmesh-check sync=false
 ```
 
 A clean exit after the pipeline reaches `PLAYING` is the relevant result. If it fails, the agent should remain usable and advertise its render capability without `transport.ndi.send`; investigate the runtime, plugin, and its library path rather than treating the node as healthy NDI output.
