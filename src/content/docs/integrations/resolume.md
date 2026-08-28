@@ -67,11 +67,7 @@ The action path requires the `resolume:action` scope and reports the observed ou
 
 For a ShowMesh render node, configure the NDI source and mapping in Arena after the node advertises the source. ShowMesh does not create that routing for you.
 
-:::caution[Check LTC separately]
-The physical LTC path and Arena's behavior when LTC is missing or restored have not been verified for the reference installation. Do not infer synchronization from the audio node reporting that it generated timecode.
-:::
-
-Use [Set Up a Video Node](../../guides/set-up-a-video-node/) for the sender side. Treat LTC configuration as a separate physical audio path, not proof that audio is synchronized merely because the node says it generated timecode.
+Use [Set Up a Video Node](../../guides/set-up-a-video-node/) for the sender side. Configure LTC separately from the NDI source and mapping; see [SMPTE / LTC](../smpte-ltc/) for timecode behavior.
 
 ## Recovery boundary
 
