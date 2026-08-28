@@ -10,16 +10,16 @@ The standard is intentionally practical. It defines the information a reader nee
 
 ## Put information in the right repository
 
-- Put ADRs, architecture specifications, research, protocol contracts, tests, implementation plans, and agent instructions in the main `showmesh` repository.
+- Put ADRs, architecture specifications, research, protocol definitions, tests, implementation plans, and agent instructions in the main `showmesh` repository.
 - Put human task guides, operator procedures, integration usage, troubleshooting, and public reference in `showmesh-docs`.
 
-Public documentation translates engineering truth into a usable path. It does not copy the main repository's engineering history or supersede its contracts.
+Public documentation translates engineering truth into a usable path. It does not copy the main repository's engineering history or supersede its defined interfaces.
 
 ## Verify behavioral claims during review
 
 Engineering prose is a lead, not automatic truth. Check the source appropriate to the claim:
 
-- HTTP behavior: `api/openapi.yaml`, implementation, and contract tests.
+- HTTP behavior: `api/openapi.yaml`, implementation, and API tests.
 - CLI commands: compiled help and exercised command behavior.
 - Configuration, defaults, and migrations: implementation, schemas, and migration tests.
 - Runtime behavior: tests that cross the relevant process boundary or captured running-system evidence.
@@ -32,9 +32,9 @@ If authoritative sources disagree, resolve the conflict before publishing a defi
 
 ## Classify the page
 
-Every page declares a `pageType`. The type selects the page's minimum content contract; it is authoring metadata and is not displayed to readers.
+Every page declares a `pageType`. The type selects the page's minimum reader information; it is authoring metadata and is not displayed to readers.
 
-Use the [page-type contracts](../page-types/) for procedures, troubleshooting, integrations, concepts, references, landing pages, and roadmaps. Use the [maturity and complexity vocabulary](../statuses/) when the page describes product capability.
+Use the [page types](../page-types/) for procedures, troubleshooting, integrations, concepts, references, landing pages, and roadmaps. Use the [maturity and complexity vocabulary](../../reference/maturity/) when the page describes product capability.
 
 ## Write the working path first
 
@@ -60,7 +60,7 @@ ShowMesh will introduce versioned documentation after the product release model 
 
 The post-release routing, maintenance, backport, search, and retirement workflow is tracked separately. Do not invent a documentation-only version scheme before the product defines one.
 
-## Meet the review gate
+## Review before publishing
 
 Before merging a documentation change:
 
@@ -72,4 +72,4 @@ Before merging a documentation change:
 6. Run `npm run check` and resolve every blocking failure.
 7. Review the page as an operator; automation cannot prove factual sufficiency, good judgment, or usable prose.
 
-Linked-PR enforcement, documentation release gates, and version archives remain deferred until the first ShowMesh release workflow exists. The editorial and review contract applies now.
+Linked-PR enforcement, documentation release checks, and version archives remain deferred until the first ShowMesh release workflow exists. The editorial and review standard applies now.

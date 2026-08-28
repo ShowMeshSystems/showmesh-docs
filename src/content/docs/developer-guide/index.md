@@ -1,6 +1,6 @@
 ---
 title: Developer Guide
-description: Build clients and integrations against ShowMesh's public contract without modifying ShowMesh itself.
+description: Build clients and integrations against ShowMesh's public API without modifying ShowMesh itself.
 pageType: landing
 maturity: experimental-active
 ---
@@ -19,8 +19,8 @@ Start with the [API guide](./api/), then read [Events and live state](./events/)
 
 ## Extension boundary
 
-The current public extension surface is the HTTP API. There is no released plugin SDK, provider SDK, or stable in-process extension ABI. Building directly against SQLite, coordinator internals, MQTT topics, or UI implementation details creates coupling outside the public contract.
+The current public extension surface is the HTTP API. There is no released plugin SDK, provider SDK, or stable in-process extension ABI. Building directly against SQLite, coordinator internals, MQTT topics, or UI implementation details creates coupling outside the public API.
 
 ## Planned here later
 
-Provider authoring, node extension kits, generated client libraries, and a supported SDK belong here once their contracts exist. See [SDK roadmap](./sdk/).
+Provider authoring, node extension kits, generated client libraries, and a supported SDK belong here once their public APIs exist. See [SDK roadmap](./sdk/).

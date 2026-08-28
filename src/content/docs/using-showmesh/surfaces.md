@@ -1,6 +1,6 @@
 ---
 title: Surfaces
-description: Author the geometry and transport contract a render node uses to present a video surface.
+description: Author the geometry and output settings a render node uses to present a video surface.
 pageType: concept
 maturity: experimental-testing
 complexity: advanced
@@ -35,12 +35,14 @@ showmeshctl surface revisions <surface-id>
 
 `surface set` is a full replacement. Supply the show, name, declared node, channel range, geometry, frame rate, transport, and the transport-specific NDI source name or HDMI display every time. Use `--help` for the exact flags before writing a revision.
 
-## Important current limit
+## Current limits
 
 :::caution[Applying a surface is experimental]
-The current render path can apply an NDI surface to a prepared render node. HDMI has no runtime output path. A valid surface, an online node, or a successful configuration write is never evidence that frames are reaching the intended screen.
+The current render path runs one active surface per node. You can configure more than one surface for a node, but the agent will not run them together. HDMI has no runtime output path. A valid surface, an online node, or a successful configuration write is never evidence that frames are reaching the intended screen.
 :::
+
+Surface geometry must stay within the coordinator's safety limit: the last channel number, width, and height cannot exceed `8,388,608`. This prevents invalid or overflowing configuration; it is not a statement about the limits of FPP or a particular output device. Render telemetry can carry at most eight surface reports in one message, which is separate from the one-active-surface runtime limit.
 
 Use `showmeshctl render apply <node-id> <surface-id> <sequence-id>` only after the exact FSEQ asset is ready on that node. Then run `showmeshctl render probe <node-id> <surface-id>` to make a real GStreamer transport transition, followed by `showmeshctl render status <node-id>` to inspect the fresh pipeline and transport evidence. `render apply` alone intentionally does not establish transport availability; the coordinator does not substitute a configuration write for that evidence.
 
-See [Set Up a Video Node](../../guides/set-up-a-video-node/) for the full commissioning path.
+See [Set Up a Video Node](../../guides/set-up-a-video-node/) for the experimental setup procedure.

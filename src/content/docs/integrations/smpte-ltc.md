@@ -1,17 +1,36 @@
 ---
 title: SMPTE / LTC
-description: Experimental audio-node LTC configuration and the uncommissioned physical timing boundary.
+description: Configure experimental LTC output and understand its timing and receiver limits.
 pageType: integration
 maturity: experimental-testing
 ---
 
 :::caution[Physical timecode behavior is unverified]
-Current source has audio-node LTC configuration and an LTC-generation path. It does not establish a commissioned physical route, a receiving-device lock, signal-loss behavior, or a supported production timing workflow.
+Current source has audio-node LTC configuration and an LTC-generation path. It does not prove a physical route, a receiving-device lock, signal-loss behavior, or a supported production timing workflow.
 :::
 
-Audio settings include an LTC frame rate and start offset. An audio-node declaration can include a program route and an LTC route/channel in one declared clock domain; a program-only declaration omits the LTC route and channel. The coordinator refuses a declaration whose selected routes are not advertised by that node.
+## Configure the output
 
-The current software contract does not prove an LTC receiver is locked. Keep timing and recovery decisions inside the system that owns the physical connection until an installation has verified frame rate, channel separation, clock relationship, signal loss, and recovery.
+Audio settings choose the default LTC frame rate and start offset. Supported rates are `24`, `25`, `29.97`, and `30` frames per second. An audio-node declaration chooses a program route and ordered program channels, then optionally a discrete LTC channel on that same route. Omit both LTC fields for a program-only node.
+
+The coordinator checks the selected route against the node's advertised program/LTC capabilities. It refuses a route the node has not reported and refuses an LTC route that differs from the program route.
+
+```sh
+showmeshctl audio settings get
+showmeshctl audio settings set --help
+showmeshctl audio node get <node-id>
+showmeshctl audio node set <node-id> --help
+```
+
+## What playback does
+
+Only a Show-role audio session can start LTC. The node starts timecode from the configured or per-session offset plus the session's current playback position. It reports LTC as running only after downstream output confirmation. If LTC cannot start, program audio continues and the node reports the LTC outcome separately.
+
+Cue activation keeps audio and timecode together: the node starts the Cue's audio asset, seeks to the observed Cue position, and derives LTC from that same session rather than a separate timing source.
+
+## Rate and receiver limits
+
+All supported rates are non-drop-frame, including `29.97`. A receiver that expects drop-frame timecode at `29.97` can drift during a long session. Choose a rate that every receiving device supports and verify that choice on the receiving device.
 
 ## What a future installation must verify
 

@@ -29,4 +29,4 @@ You can see the active show, its surfaces, actions, macros, assets, and node rea
 
 ## Current boundary
 
-Activating a show changes a stored pointer. It does not schedule FPP, apply a render surface, start audio playback, or emit HDMI. The experimental NDI render path is a separate, explicit node operation; use [Set Up a Video Node](../../guides/set-up-a-video-node/) to commission it before relying on it. Use FPP and Resolume's current playback facilities, with ShowMesh as the observation and bounded-control layer.
+Activating a show changes a stored pointer. It does not schedule FPP, apply a render surface, start audio playback, or emit HDMI. The experimental NDI render path is a separate, explicit node operation; use [Set Up a Video Node](../../guides/set-up-a-video-node/) for that workflow. Use FPP and Resolume's current playback facilities, with ShowMesh as the observation and bounded-control layer.

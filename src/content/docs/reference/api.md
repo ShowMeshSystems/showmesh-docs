@@ -1,30 +1,33 @@
 ---
-title: API surface
-description: Current route groups and rules for the public version 1 contract.
+title: API reference
+description: Current route groups and rules for the public version 1 API.
 pageType: reference
 maturity: available
 complexity: advanced
 ---
 
-The normative machine-readable API is `api/openapi.yaml` in the main ShowMesh repository. It is verified against the implementation in both directions. This page is an orientation map, not a replacement schema.
+The machine-readable API is `api/openapi.yaml` in the main ShowMesh repository. This page is an orientation map, not a replacement schema.
 
 Base path: `/api/v1`
 
-## State and evidence
+## Route groups
 
-`/snapshot`, `/nodes`, `/observations`, `/events`, `/stream`, `/fpp`, `/current-runs`, and `/resolume/instances` expose current and historical evidence. FPP playlist-entry and playlist-definition routes preserve imported evidence separately from FPP REST/MQTT collection. A filter matching no observations returns an empty collection, not `404`.
+Every public route belongs to one of these groups:
 
-## Configuration and operation
+| Group | Routes and purpose |
+| --- | --- |
+| Service and live state | `/`, `/snapshot`, `/nodes`, node declarations, discovery, `/observations`, `/events`, and `/stream`. |
+| FPP | `/fpp`, FPP commands, instance-UUID acknowledgement, imported playlist entries/definitions, reconciliation, and Playlist readiness. |
+| Native media | Node render operations, audio session/gain/output operations, assets, cue catalogs, and FPP Connect settings/status. |
+| Show configuration | Revisioned Show, Surface, Cue, Playlist, Action, Macro, active-Show, Show Night, and Show Mode resources. |
+| Integration configuration | Revisioned FPP endpoints/MQTT, Resolume instances/composition/recovery, asset settings, render settings, audio settings/nodes, and FPP Connect settings. |
+| Resolume | Action vocabulary, actions, recovery, and instance state. |
+| Identity and audit | Session, bootstrap, audit records, principals, roles, enable/disable, passwords, and API tokens. |
+| Runs and bindings | Action binding checks/invocations and macro-run submission, listing, and detail. |
 
-`/config/*` routes expose revisioned configuration for FPP endpoints/MQTT, FPP Connect settings, Resolume instances/composition/recovery, assets, render settings, audio settings/nodes, shows, surfaces, cues, playlists, actions, macros, night sessions, active pointers, and show mode. Macro run, FPP command, Resolume action, asset, render/audio session, discovery, declaration, cue-catalog, and FPP Connect routes perform operations.
+The OpenAPI document is the exact inventory of methods, request bodies, responses, and required scopes. This table was checked against every route group in the current OpenAPI file.
 
-The FPP Connect, audio/LTC, playlist/cue, and night-session route groups are current development contract surfaces. The OpenAPI description remains authoritative for their required scopes, payloads, and evidence semantics.
-
-## Identity and accountability
-
-`/session`, `/bootstrap`, `/audit`, `/principals`, and nested token routes provide authentication context and administration. Network bootstrap is deliberately constrained; host-level coordinator subcommands remain the break-glass path.
-
-## Contract rules
+## API rules
 
 - Clients must ignore unknown JSON fields and unknown SSE event names.
 - Writes require authentication and a scope; reads are deployment-configurable.

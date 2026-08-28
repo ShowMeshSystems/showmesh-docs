@@ -40,6 +40,6 @@ In a controlled bench environment, run a known macro and inspect the local `stat
 
 Refused, rejected, and unreachable outcomes are retained locally and included with a later successful authenticated run submission. The buffer is bounded by count and age and records dropped entries. It improves later diagnosis; it is not a substitute for checking the host-local status record when the coordinator is unavailable.
 
-## What this page does not establish
+## Current focus
 
-This page does not provide FPP Plugin Manager installation steps, a supported FPP-version matrix, or a real-host recovery procedure. Those claims need package and host evidence before they belong in public operating guidance.
+The plugin reports host-local macro outcomes and can retain delivery results while the coordinator is unavailable. Use the local `status` record to inspect the most recent outcome for a run.

@@ -13,10 +13,10 @@ Start here in order:
 2. Check [Requirements](./requirements/) before changing a show computer.
 3. Follow [Installation](./installation/) to start the coordinator, broker, and Operator UI.
 4. Read [Your First Show](./your-first-show/) before authoring show objects. It explains which parts of that workflow are usable and which are not yet a playback pipeline.
-5. Read the [Roadmap](./roadmap/) for the distinction between usable development features, hardware commissioning, and day-0 release work.
+5. Use the [Reference roadmap](/reference/roadmap/) to see current development priorities and remaining release work.
 
 :::caution[Development-state documentation]
-These pages track the current `main` development state, not a stable release or versioned documentation set. Check the source revision and `showmeshctl version` before following an experimental procedure, and validate the system on a non-show network before relying on it during an event.
+These pages describe the current `main` development state, not a stable release or versioned documentation set. Check the source revision and `showmeshctl version` before following an experimental procedure.
 :::
 
 ## What works now
@@ -28,8 +28,12 @@ These pages track the current `main` development state, not a stable release or 
 - Experimental render nodes that turn node-local FSEQ data into an NDI source on the tested Debian 13 amd64 path.
 - Revisioned shows, surfaces, logical actions, macros, an active-show pointer, an asset store, cues, and playlists.
 - Experimental xLights FPP Connect ingestion for node-targeted sequence content.
-- Experimental audio-node and LTC software paths with no commissioned physical-output workflow.
+- Experimental audio-node and LTC software paths.
 
 ## What does not work yet
 
-ShowMesh does not yet provide a production-commissioned render path, HDMI output, a supported FPP Connect deployment, audience-audio playback on commissioned hardware, or verified SMPTE/LTC operation. The NDI render, FPP Connect, and audio/LTC paths need real-installation commissioning.
+ShowMesh does not yet provide HDMI output or a supported FPP Connect deployment. Audio/LTC details are documented separately, including their timing and receiver limits.
+
+## How to read a maturity label
+
+Available features are part of the current development build. Experimental features are still changing or intended for deliberate testing. Planned pages describe work that is not yet available. Experimental features might not yet have been tested with the hardware used in your installation. [Read the complete maturity definitions](/reference/maturity/).

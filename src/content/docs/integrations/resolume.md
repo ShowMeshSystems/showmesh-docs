@@ -67,14 +67,10 @@ The action path requires the `resolume:action` scope and reports the observed ou
 
 For a ShowMesh render node, configure the NDI source and mapping in Arena after the node advertises the source. ShowMesh does not create that routing for you.
 
-:::caution[Commission LTC separately]
-The physical LTC path and Arena's behavior when LTC is missing or restored have not been verified for the reference installation. Do not infer synchronization from the audio node reporting that it generated timecode.
-:::
-
-Use [Set Up a Video Node](../../guides/set-up-a-video-node/) for the sender side. Treat LTC configuration as a separately commissioned physical audio path, not proof that audio is synchronized merely because the node says it generated timecode.
+Use [Set Up a Video Node](../../guides/set-up-a-video-node/) for the sender side. Configure LTC separately from the NDI source and mapping; see [SMPTE / LTC](../smpte-ltc/) for timecode behavior.
 
 ## Recovery boundary
 
-ShowMesh can record known Arena state and offer manual or opt-in automatic recovery after a detected restart. Test recovery with the intended composition on a non-show machine first. The settle delay is a code default, not a measured guarantee for every Arena host.
+ShowMesh can record known Arena state and offer manual or opt-in automatic recovery after a detected restart. Test recovery with the intended composition on a non-show machine first. The settle delay is configurable in the integration settings.
 
 ShowMesh does not change Arena preferences, load a composition, manage shortcuts or presets, or start, stop, restart, or signal the Arena process. Those remain operator responsibilities and manual fallbacks.

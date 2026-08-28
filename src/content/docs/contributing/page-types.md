@@ -1,10 +1,10 @@
 ---
-title: Page-type contracts
-description: Minimum content contracts for each kind of ShowMesh documentation page.
+title: Page types
+description: Minimum reader information for each kind of ShowMesh documentation page.
 pageType: reference
 ---
 
-Every page declares one of the following `pageType` values. A contract defines information the reader must receive, not mandatory heading text. Combine sections when that improves the page, but do not omit the underlying requirement.
+Every page declares one of the following `pageType` values. The type identifies information the reader needs, not mandatory heading text. Combine sections when that improves the page, but do not omit the underlying information.
 
 ## Procedure
 
@@ -69,7 +69,7 @@ Do not bury a complete operational workflow inside a concept page.
 
 Use `reference` when readers already know what they need and want exact information.
 
-Include the applicable syntax, defaults, constraints, permissions, errors, exit behavior, compatibility, and deprecation information. Name the normative upstream contract when the page summarizes rather than owns it.
+Include the applicable syntax, defaults, constraints, permissions, errors, exit behavior, compatibility, and deprecation information. Name the upstream API or schema when the page summarizes rather than owns it.
 
 Prefer generated or linked normative material over a copied inventory that can silently drift.
 
@@ -83,4 +83,4 @@ State who the section serves, what is usable now, where to start, and where know
 
 Use `roadmap` for a present-versus-future capability view.
 
-Separate what works, what is experimental, what requires commissioning, and what is planned. Never turn planned architecture into runnable instructions. Link readers back to the available path.
+Separate what works, what is experimental, and what is planned. Never turn planned architecture into runnable instructions. Link readers back to the available path.

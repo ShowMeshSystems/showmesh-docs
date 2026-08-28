@@ -31,7 +31,7 @@ JSON output is produced from the CLI's decoded types. Unknown fields from a newe
 - Configuration and discovery: `config`, `discover`, `declare`, `undeclare`.
 - Shows: `show`, `surface`, `cue`, `playlist`, `action`, `macro`, `run`, and `night`.
 - Native media: `render`, `audio`, `cuecatalog`, and `fppconnect` settings/status.
-- Current operation: `current-runs` and `show mode`.
+- Current operation: `show mode`.
 - Resolume: `resolume composition`, `resolume action`, `resolume status`, and recovery commands.
 - Assets: `assets list|get|upload|fetch|manifest` and settings.
 - Identity: `session`, `audit`, `principal`, and `token`.

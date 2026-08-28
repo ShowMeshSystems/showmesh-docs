@@ -2,11 +2,12 @@
 title: Maturity and complexity
 description: Stable meanings for capability maturity and reader complexity across public documentation.
 pageType: reference
+maturity: experimental-active
 ---
 
 Maturity describes whether documented functionality is available and stable enough to use. Complexity describes the knowledge or operational care expected from the reader. They are separate dimensions.
 
-These labels do not replace the main repository's research evidence levels, build-track statuses, or release lifecycle.
+These labels describe public documentation. They do not replace the product release lifecycle.
 
 ## Maturity
 
@@ -18,15 +19,19 @@ Implemented, supported for current use, and suitable for normal users in the doc
 
 Implemented enough to exist or be exercised, but still changing materially. Behavior, configuration, or interfaces may move. Readers must not depend on stability.
 
+Experimental features might not yet have been tested with the hardware used in your installation.
+
 ### Experimental — Ready for Testing
 
 Substantially complete for its current scope and intentionally available for real-world testing and feedback, but not yet broadly supported or stable.
+
+Experimental features might not yet have been tested with the hardware used in your installation.
 
 ### Planned
 
 Design-approved or intended future functionality that is not available. A Planned page must separate future intent from the working behavior available now. Planned material must not contain runnable steps that imply the future behavior exists.
 
-Keep Planned pages to prose, lists, links, and inline code. Do not use block code, raw HTML, or MDX components on a Planned page; those forms can make intended behavior look like an available procedure and are rejected by the content gate.
+Keep Planned pages to prose, lists, links, and inline code. Do not use block code, raw HTML, or MDX components on a Planned page; those forms can make intended behavior look like an available procedure and are rejected by the content check.
 
 ### Deprecated
 

@@ -1,17 +1,13 @@
 ---
 title: Audio Nodes
-description: Experimental audience-audio software behavior and its uncommissioned physical-output boundary.
+description: Experimental audience-audio settings, sessions, routes, and output behavior.
 pageType: concept
 maturity: experimental-testing
 ---
 
 An **audio node** is the ShowMesh authority for node-local audience-audio playback on configured outputs. Current source includes session, gain, output, routing, and LTC command/configuration paths. It holds complete audio files locally, rather than carrying real-time PCM through the coordinator or MQTT.
 
-:::caution[Experimental software, not a commissioned audio system]
-No physical audio interface, route, receiver lock, or complete public installation workflow has been commissioned. Treat configuration and software evidence as insufficient proof that program audio or LTC is reaching the intended equipment.
-:::
-
-See [Audio Node Preview](../../../guides/set-up-an-audio-node/) for the operational boundary. It is not an installation guide or a release candidate.
+See [SMPTE / LTC](../../../integrations/smpte-ltc/) for timecode rates and receiver details.
 
 ## Current software responsibilities
 
@@ -29,17 +25,30 @@ The audio-node role provides configuration and command paths for:
 
 Linux is the reference platform. GStreamer performs media decoding and rendering while ShowMesh owns session state, synchronization policy, supervision, health, and operator-visible evidence.
 
+## Configure an audio node
+
+Audio settings set the engine-wide drift threshold, fade curve and duration, background gain ceiling, announcement duck target, LTC frame rate, and default LTC start offset. Audio-node settings choose a program route and ordered program channels, then optionally a separate LTC channel on that same route with a declared clock-domain name and provenance.
+
+```sh
+showmeshctl audio settings get
+showmeshctl audio settings set --help
+showmeshctl audio node list
+showmeshctl audio node set <node-id> --help
+```
+
+The node must advertise the selected program and LTC routes. A program-only node omits the LTC route and channel. Writes replace the full settings object, so read the current values before changing them.
+
 ## Data-flow boundary
 
 1. ShowMesh synchronizes exact audio assets to the node before a session begins.
 2. The engine probes the local file and checks the required advertised route/output capabilities.
 3. FPP remains the schedule and show-timeline authority. The node performs local audio work; it does not receive a continuous media stream from ShowMesh.
 4. Program audio and LTC are configured as separate outputs in one declared clock domain where LTC is used.
-5. The node publishes session and output evidence. That evidence is not proof of a physical route or downstream lock.
+5. The node publishes session and output evidence for the selected role.
 
 ## Failure behavior
 
-Audio-device loss is designed to **fail silent**. ShowMesh will not automatically return audience audio to FPP or select an unverified standby node. Recovery must verify the intended route, gain, channel separation, clock relationship, required assets, and current session position before sound resumes.
+Audio-device loss is designed to **fail silent**. ShowMesh will not automatically return audience audio to FPP or select a standby node. Recovery restores the intended route, gain, channel separation, clock relationship, required assets, and current session position before sound resumes.
 
 A running local session is intended to survive coordinator or broker loss when all required media and state are already present. A later transition that requires unavailable authority should fail visibly rather than guess.
 
@@ -47,12 +56,12 @@ A running local session is intended to survive coordinator or broker loss when a
 
 The audio role is broader than any single connector. Local program output, FM feed, LTC, and possible future transports are separate capabilities with their own readiness evidence. Dante is not a requirement for the initial role, and a possible future Dante bridge is not currently a supported node type.
 
-Likewise, an audio-capable machine should not be considered ready merely because Linux lists an interface. Operational readiness still requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, commissioned physical separation, supported session operations, and fresh engine evidence.
+Likewise, an audio-capable machine should not be considered ready merely because Linux lists an interface. Readiness requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, supported session operations, and fresh engine evidence.
 
 ## Deliberate boundaries
 
 - FPP owns the schedule; the audio node owns local playback and its output clock.
 - The coordinator orchestrates and observes but never streams program audio.
-- Resolume receives LTC through the physical audio path; “LTC generated” is not proof that Resolume received or locked to it.
+- Resolume receives LTC through the configured audio path.
 - Automatic or sample-transparent failover is not promised.
 - Real-time audio transport between ShowMesh nodes and real third-party synchronized-audio services are outside the initial role.

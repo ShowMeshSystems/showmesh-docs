@@ -19,14 +19,14 @@ Every native node starts with the same available agent functions:
 - an allowlisted command channel with recorded outcomes;
 - node-local asset inventory, hash-verified asset fetching, and readiness reporting.
 
-Those functions make a machine visible and manageable, but they do not make it a media node by themselves. The agent can detect its supported GStreamer/NDI path, but it does not render pixels or play audio until a compatible media role is configured and commissioned.
+Those functions make a machine visible and manageable, but they do not make it a media node by themselves. The agent can detect its supported GStreamer/NDI path, but it does not render pixels or play audio until a compatible media role is configured.
 
 ## Approved roles
 
 | Role | Purpose | Current maturity |
 | --- | --- | --- |
-| [Render node](./render-nodes/) | Follow the FPP timeline, extract a surface from node-local FSEQ data, and send video to a configured output transport. | Experimental — hardware commissioning required |
-| [Audio node](./audio-nodes/) | Play and mix node-local audience audio, provide controlled fades and announcements, and generate LTC on a discrete same-clock output. | Experimental software; physical-output commissioning required |
+| [Render node](./render-nodes/) | Follow the FPP timeline, extract a surface from node-local FSEQ data, and send video to a configured output transport. | Experimental |
+| [Audio node](./audio-nodes/) | Play and mix node-local audience audio, provide controlled fades and announcements, and generate LTC on a discrete same-clock output. | Experimental |
 
 These are workload profiles, not exclusive machine classes. ShowMesh should only assign a role when the node advertises the required capabilities and its fresh evidence satisfies that role's readiness rules.
 

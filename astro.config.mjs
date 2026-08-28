@@ -20,7 +20,6 @@ const gettingStarted = {
 		{ label: 'Requirements', link: '/getting-started/requirements/' },
 		{ label: 'Architecture Overview', link: '/getting-started/architecture/' },
 		{ label: 'Install the Coordinator', link: '/getting-started/installation/' },
-		{ label: 'Roadmap', link: '/getting-started/roadmap/' },
 		{ label: 'Your First Show', link: '/getting-started/your-first-show/' },
 	],
 };
@@ -31,6 +30,7 @@ const usingShowMesh = {
 		{ label: 'Using ShowMesh', link: '/using-showmesh/' },
 		{ label: 'Actions and Macros', link: '/using-showmesh/actions-and-macros/' },
 		{ label: 'Assets', link: '/using-showmesh/assets/' },
+		{ label: 'Cues', link: '/using-showmesh/cues/' },
 		{ label: 'Nodes', link: '/using-showmesh/nodes/' },
 		{
 			label: 'Node Types',
@@ -41,6 +41,8 @@ const usingShowMesh = {
 			],
 		},
 		{ label: 'Shows', link: '/using-showmesh/shows/' },
+		{ label: 'Playlists', link: '/using-showmesh/playlists/' },
+		{ label: 'Show Night', link: '/using-showmesh/show-night/' },
 		{ label: 'Surfaces', link: '/using-showmesh/surfaces/' },
 	],
 };
@@ -81,7 +83,7 @@ export default defineConfig({
 				section('Guides', 'guides'),
 				section('Troubleshooting', 'troubleshooting'),
 				section('Developer Guide', 'developer-guide'),
-				section('Reference', 'reference'),
+		section('Reference', 'reference'),
 				section('Contributing', 'contributing'),
 			],
 			lastUpdated: true,

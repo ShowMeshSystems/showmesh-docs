@@ -48,7 +48,7 @@ Some newer media settings are revisioned API configuration, not environment vari
 - `audio.settings` and `audio.node`: experimental local-audio/LTC settings and node output declarations.
 - `show.mode`, `show.cue`, `show.playlist`, and `night.session`: development-state show operation configuration.
 
-These records do not establish that physical media paths or FPP-host packaging have been commissioned. Do not invent environment variables for them; the OpenAPI schema and compiled CLI help are authoritative.
+Do not invent environment variables for these records; use the OpenAPI schema and compiled CLI help.
 
 ## Assets
 
