@@ -44,11 +44,11 @@ The node must advertise the selected program and LTC routes. A program-only node
 2. The engine probes the local file and checks the required advertised route/output capabilities.
 3. FPP remains the schedule and show-timeline authority. The node performs local audio work; it does not receive a continuous media stream from ShowMesh.
 4. Program audio and LTC are configured as separate outputs in one declared clock domain where LTC is used.
-5. The node publishes session and output evidence. That evidence is not proof of a physical route or downstream lock.
+5. The node publishes session and output evidence for the selected role.
 
 ## Failure behavior
 
-Audio-device loss is designed to **fail silent**. ShowMesh will not automatically return audience audio to FPP or select an unverified standby node. Recovery must verify the intended route, gain, channel separation, clock relationship, required assets, and current session position before sound resumes.
+Audio-device loss is designed to **fail silent**. ShowMesh will not automatically return audience audio to FPP or select a standby node. Recovery restores the intended route, gain, channel separation, clock relationship, required assets, and current session position before sound resumes.
 
 A running local session is intended to survive coordinator or broker loss when all required media and state are already present. A later transition that requires unavailable authority should fail visibly rather than guess.
 
