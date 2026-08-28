@@ -27,4 +27,4 @@ Integration suites that use Mosquitto containers can collide when run concurrent
 
 ## Claim discipline
 
-A passing unit test is not hardware verification. If a test is intended to prevent a regression, temporarily break the behavior and confirm the test fails. Report the exact gates run; do not generalize a macOS result to Linux or a container result to a live show network.
+A passing unit test is not hardware verification. If a test is intended to prevent a regression, temporarily break the behavior and confirm the test fails. Report the exact checks run; do not generalize a macOS result to Linux or a container result to a live show network.

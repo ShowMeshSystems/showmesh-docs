@@ -16,7 +16,7 @@ Start here in order:
 5. Use the [Reference roadmap](/reference/roadmap/) to see current development priorities and remaining release work.
 
 :::caution[Development-state documentation]
-These pages track the current `main` development state, not a stable release or versioned documentation set. Check the source revision and `showmeshctl version` before following an experimental procedure.
+These pages describe the current `main` development state, not a stable release or versioned documentation set. Check the source revision and `showmeshctl version` before following an experimental procedure.
 :::
 
 ## What works now

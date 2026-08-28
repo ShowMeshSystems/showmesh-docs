@@ -10,10 +10,10 @@ The standard is intentionally practical. It defines the information a reader nee
 
 ## Put information in the right repository
 
-- Put ADRs, architecture specifications, research, protocol contracts, tests, implementation plans, and agent instructions in the main `showmesh` repository.
+- Put ADRs, architecture specifications, research, protocol definitions, tests, implementation plans, and agent instructions in the main `showmesh` repository.
 - Put human task guides, operator procedures, integration usage, troubleshooting, and public reference in `showmesh-docs`.
 
-Public documentation translates engineering truth into a usable path. It does not copy the main repository's engineering history or supersede its contracts.
+Public documentation translates engineering truth into a usable path. It does not copy the main repository's engineering history or supersede its defined interfaces.
 
 ## Verify behavioral claims during review
 

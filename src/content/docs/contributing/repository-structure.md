@@ -1,6 +1,6 @@
 ---
 title: Repository structure
-description: Where implementation, contracts, tests, engineering decisions, deployment, and public docs belong.
+description: Where implementation, APIs, tests, engineering decisions, deployment, and public docs belong.
 pageType: concept
 ---
 
