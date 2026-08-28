@@ -71,6 +71,6 @@ Use [Set Up a Video Node](../../guides/set-up-a-video-node/) for the sender side
 
 ## Recovery boundary
 
-ShowMesh can record known Arena state and offer manual or opt-in automatic recovery after a detected restart. Test recovery with the intended composition on a non-show machine first. The settle delay is a code default, not a measured guarantee for every Arena host.
+ShowMesh can record known Arena state and offer manual or opt-in automatic recovery after a detected restart. Test recovery with the intended composition on a non-show machine first. The settle delay is configurable in the integration settings.
 
 ShowMesh does not change Arena preferences, load a composition, manage shortcuts or presets, or start, stop, restart, or signal the Arena process. Those remain operator responsibilities and manual fallbacks.
