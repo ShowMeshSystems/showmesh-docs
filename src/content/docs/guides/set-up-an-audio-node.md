@@ -7,6 +7,10 @@ maturity: experimental-testing
 
 ShowMesh has experimental audio-node software for configuration, session commands, gain and output control, and LTC generation. This overview explains the model before you configure a node.
 
+## Before you start
+
+Have a registered native node with the audio role available, the audio assets for the intended session, and the program route names supplied by that node.
+
 ## What the audio node does
 
 The current design and software behavior establish these boundaries:
@@ -26,6 +30,10 @@ The current design and software behavior establish these boundaries:
 5. Start and observe the session through the audio-node commands.
 
 Audio files remain local to the node. ShowMesh coordinates the session and observes its state; it does not stream real-time PCM over MQTT or through the coordinator.
+
+## Confirm the setup
+
+The node should display the selected routes and current engine evidence, and the session should report the expected asset and playback state.
 
 ## Where to go next
 
