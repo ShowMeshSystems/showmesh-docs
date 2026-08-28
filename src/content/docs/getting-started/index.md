@@ -26,8 +26,10 @@ These pages track the current `main` development state, not a stable release or 
 - FPP REST and MQTT observation, plus eight evidence-confirmed playlist and volume controls.
 - Resolume composition import, observation, actions, and optional recovery.
 - Experimental render nodes that turn node-local FSEQ data into an NDI source on the tested Debian 13 amd64 path.
-- Revisioned shows, surfaces, logical actions, macros, an active-show pointer, and an asset store.
+- Revisioned shows, surfaces, logical actions, macros, an active-show pointer, an asset store, cues, and playlists.
+- Experimental xLights FPP Connect ingestion for node-targeted sequence content.
+- Experimental audio-node and LTC software paths with no commissioned physical-output workflow.
 
 ## What does not work yet
 
-ShowMesh does not yet provide a production-commissioned render path, HDMI output, xLights/FPP Connect ingestion, audience-audio playback, or verified SMPTE/LTC operation. The NDI render path needs real-installation commissioning; the audio-node material is a Planned, non-deployable preview.
+ShowMesh does not yet provide a production-commissioned render path, HDMI output, a supported FPP Connect deployment, audience-audio playback on commissioned hardware, or verified SMPTE/LTC operation. The NDI render, FPP Connect, and audio/LTC paths need real-installation commissioning.

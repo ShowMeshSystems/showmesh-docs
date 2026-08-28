@@ -39,6 +39,17 @@ This page lists the supported runtime entry points. Secrets should come from the
 - `SHOWMESH_RESOLUME_POLL_INTERVAL`, `SHOWMESH_RESOLUME_WEBSOCKET_DISABLED`: Resolume collection tuning.
 - `SHOWMESH_RESOLUME_RECOVERY_SETTLE`: recovery settle delay, default `8s`, maximum `60s`. The default is a ShowMesh hypothesis, not a measured production value.
 
+## Revisioned media configuration
+
+Some newer media settings are revisioned API configuration, not environment variables. Use the API or `showmeshctl` to inspect the exact schema in the binary you run:
+
+- `fppconnect.settings`: enablement and storage limits for experimental node-side FPP Connect ingestion.
+- `render.settings`: render-node defaults and limits.
+- `audio.settings` and `audio.node`: experimental local-audio/LTC settings and node output declarations.
+- `show.mode`, `show.cue`, `show.playlist`, and `night.session`: development-state show operation configuration.
+
+These records do not establish that physical media paths or FPP-host packaging have been commissioned. Do not invent environment variables for them; the OpenAPI schema and compiled CLI help are authoritative.
+
 ## Assets
 
 - `SHOWMESH_ASSET_DIR`: coordinator asset-byte root; on the agent, node-local asset root (agent default `./assets`).

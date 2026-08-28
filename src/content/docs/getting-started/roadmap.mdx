@@ -49,9 +49,9 @@ flowchart LR
     The Debian 13 amd64 sender path is built and has transport evidence. The complete FSEQ → MultiSync → NDI → Resolume → wall path still needs timing, pacing, recovery, and real-installation evidence. [Commission a video node →](/guides/set-up-a-video-node/)
   </Card>
   <Card title="Audio node" icon="warning">
-    <StatusBadge status="planned" label="Planned — do not deploy" />
+    <StatusBadge status="experimental-testing" label="Experimental — do not deploy" />
 
-    The intended audio authority and safety boundaries are documented, but ShowMesh has no supported sound-producing installation path or commissioned hardware workflow. [Read the audio preview →](/guides/set-up-an-audio-node/)
+    Audio-node software covers configuration, session control, gain/output control, and LTC generation, but ShowMesh has no supported sound-producing installation path or commissioned hardware workflow. [Read the audio preview →](/guides/set-up-an-audio-node/)
   </Card>
   <Card title="Night-session operation" icon="open-book">
     The night-session operating path and public operator guide are not available. They remain day-0 work and require real-installation observation before publication.
@@ -65,7 +65,7 @@ The first public release needs more than source code. It needs an installation p
 - the recorded Debian NDI plugin build recipe and tested runtime versions;
 - Resolume screenshots and per-version setup notes;
 - real-installation render, NDI, FPP, and recovery evidence;
-- an audio guide only after the implementation lands and hardware commissioning proves its routing, LTC alignment, and failure behavior;
+- an audio installation guide after hardware commissioning proves routing, LTC alignment, and failure behavior;
 - secure remote/TLS deployment, backup/restore drills, compatibility policy, and FPP/xLights commissioning guidance;
 - the night-session operator procedure after the complete loop has been observed on real hardware.
 

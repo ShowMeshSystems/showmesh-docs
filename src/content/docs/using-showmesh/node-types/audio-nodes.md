@@ -1,21 +1,21 @@
 ---
 title: Audio Nodes
-description: The planned audience-audio role and the limits of the current non-deployable preview.
-pageType: roadmap
-maturity: planned
+description: Experimental audience-audio software behavior and its uncommissioned physical-output boundary.
+pageType: concept
+maturity: experimental-testing
 ---
 
-An **audio node** is the planned authority for audience-facing audio playback on its assigned outputs. It is intended to hold complete audio files locally, play them on its own stable audio clock, mix background, show, and announcement sources, and generate LTC on a discrete output in the same clock domain as program audio.
+An **audio node** is the ShowMesh authority for node-local audience-audio playback on configured outputs. Current source includes session, gain, output, routing, and LTC command/configuration paths. It holds complete audio files locally, rather than carrying real-time PCM through the coordinator or MQTT.
 
-:::caution[Preview only — do not deploy]
-ShowMesh has no released, sound-producing audio-node workflow. No physical audio interface or complete public installation path has been commissioned. Treat configuration or isolated implementation behavior as insufficient evidence for playback or LTC readiness.
+:::caution[Experimental software, not a commissioned audio system]
+No physical audio interface, route, receiver lock, or complete public installation workflow has been commissioned. Treat configuration and software evidence as insufficient proof that program audio or LTC is reaching the intended equipment.
 :::
 
-The preview is useful for reviewing the intended authority and safety boundaries. It is not an installation guide or a release candidate. See [Audio Node Preview](../../../guides/set-up-an-audio-node/) for the public boundary and the work required before a runnable guide exists.
+See [Audio Node Preview](../../../guides/set-up-an-audio-node/) for the operational boundary. It is not an installation guide or a release candidate.
 
-## Planned responsibilities
+## Current software responsibilities
 
-The audio-node role is intended to provide:
+The audio-node role provides configuration and command paths for:
 
 - node-local playback of exact ShowMesh asset hashes;
 - media probing before a file is admitted to a playback session;
@@ -27,16 +27,15 @@ The audio-node role is intended to provide:
 - explicit command outcomes for start, stop, pause, resume, seek, restart, fades, and source changes;
 - safe supervision and manual recovery when a device or pipeline fails.
 
-Linux is the reference platform for the initial role. GStreamer is intended to perform media decoding and rendering while ShowMesh owns session state, synchronization policy, supervision, health, and operator-visible evidence.
+Linux is the reference platform. GStreamer performs media decoding and rendering while ShowMesh owns session state, synchronization policy, supervision, health, and operator-visible evidence.
 
-## Planned data flow
+## Data-flow boundary
 
-1. ShowMesh would synchronize the exact audio assets to the node before an operating session begins.
-2. The audio engine would probe the local file and verify that the required route and output capabilities are available.
-3. FPP would remain the schedule and show-timeline authority. The node would align at start and at explicit correction points rather than continuously changing playback rate.
-4. The node would play and mix audio locally. Neither the coordinator nor MQTT would carry real-time PCM audio.
-5. Program audio and LTC would leave through separate outputs backed by the same hardware clock.
-6. The node would publish fresh session and output evidence for the coordinator and Operator UI.
+1. ShowMesh synchronizes exact audio assets to the node before a session begins.
+2. The engine probes the local file and checks the required advertised route/output capabilities.
+3. FPP remains the schedule and show-timeline authority. The node performs local audio work; it does not receive a continuous media stream from ShowMesh.
+4. Program audio and LTC are configured as separate outputs in one declared clock domain where LTC is used.
+5. The node publishes session and output evidence. That evidence is not proof of a physical route or downstream lock.
 
 ## Failure behavior
 
@@ -48,7 +47,7 @@ A running local session is intended to survive coordinator or broker loss when a
 
 The audio role is broader than any single connector. Local program output, FM feed, LTC, and possible future transports are separate capabilities with their own readiness evidence. Dante is not a requirement for the initial role, and a possible future Dante bridge is not currently a supported node type.
 
-Likewise, an audio-capable machine should not be considered ready merely because Linux lists an interface. The planned readiness contract also requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, commissioned physical separation, supported session operations, and fresh engine evidence.
+Likewise, an audio-capable machine should not be considered ready merely because Linux lists an interface. Operational readiness still requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, commissioned physical separation, supported session operations, and fresh engine evidence.
 
 ## Deliberate boundaries
 

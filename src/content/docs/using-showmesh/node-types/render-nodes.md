@@ -30,7 +30,7 @@ The coordinator is not in the timing or frame path. It assigns configuration, di
 
 ## How a surface reaches the screen
 
-1. xLights creates the sequence data. Until FPP Connect support is built, the correct node-specific FSEQ variant is uploaded through ShowMesh's manual asset path.
+1. xLights creates the sequence data. [FPP Connect ingestion](../../../integrations/xlights/) can target a native render node experimentally; the manual ShowMesh asset path remains a valid fallback.
 2. ShowMesh synchronizes the exact content hash to the assigned node before playback.
 3. A [`show.surface`](../../surfaces/) object identifies the show, declared node, channel range, canvas geometry, frame rate, and intended transport.
 4. FPP remains the schedule and playback authority. Its MultiSync packets tell the render node which sequence position should be presented.
@@ -64,6 +64,6 @@ The upcoming hardware test still needs to establish the complete path: correct F
 - Track B ends when a usable video source reaches Resolume. Resolume control belongs to the separate integration.
 - NDI support is dynamically detected. A missing runtime must degrade the render capability without preventing the rest of the agent from starting.
 - HDMI remains represented by the surface model but is not part of the initial tested Track B operating profile.
-- Automatic xLights/FPP Connect ingestion is separate future work; manual targeted asset upload remains the current ingestion path.
+- FPP Connect ingestion is experimental; manual targeted asset upload remains a valid fallback until deployment compatibility is commissioned.
 
 For the operator procedure, including NDI runtime checks, surface authoring, and the exact hardware evidence still owed, see [Set Up a Video Node](../../../guides/set-up-a-video-node/).
