@@ -1,16 +1,20 @@
 ---
 title: SMPTE / LTC
-description: Planned timecode integration and the current absence of a runtime control path.
+description: Experimental audio-node LTC configuration and the uncommissioned physical timing boundary.
 pageType: integration
-maturity: planned
+maturity: experimental-testing
 ---
 
-:::note[Planned]
-The current build has no SMPTE/LTC input, decoder, clock-domain runtime, timecode-following playback, or operator controls.
+:::caution[Physical timecode behavior is unverified]
+Current source has audio-node LTC configuration and an LTC-generation path. It does not establish a commissioned physical route, a receiving-device lock, signal-loss behavior, or a supported production timing workflow.
 :::
 
-SMPTE/LTC appears in ShowMesh's intended architecture because coordinated media systems often need a shared timing reference. That design intent is not runnable functionality.
+Audio settings include an LTC frame rate and start offset. An audio-node declaration can include a program route and an LTC route/channel in one declared clock domain; a program-only declaration omits the LTC route and channel. The coordinator refuses a declaration whose selected routes are not advertised by that node.
 
-For now, keep timecode routing and synchronization inside the systems that already implement it, such as FPP or Resolume workflows. ShowMesh can observe and control supported device state, but it cannot verify or enforce timecode lock.
+The current software contract does not prove an LTC receiver is locked. Keep timing and recovery decisions inside the system that owns the physical connection until an installation has verified frame rate, channel separation, clock relationship, signal loss, and recovery.
 
-Future documentation belongs here only after code and tests establish supported frame rates, drop-frame behavior, signal-loss behavior, clock ownership, and recovery semantics.
+## What a future installation must verify
+
+Before treating this path as operational, verify the selected frame rate and offset, program/LTC channel separation, receiver lock, signal-loss behavior, and recovery on the intended equipment. Until then, a successful configuration write or node observation is not a timing acceptance result.
+
+Use this material as an implementation boundary, not an installation recipe. A future operating guide needs real-host acceptance evidence before it can prescribe cabling or show-time recovery.

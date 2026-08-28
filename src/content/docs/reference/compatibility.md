@@ -11,6 +11,8 @@ This is a development-state compatibility boundary, not a release support matrix
 
 - Coordinator and native agent communicate through Mosquitto-compatible MQTT broker URLs using `tcp`, `ssl`, `tls`, `mqtt`, `mqtts`, `ws`, or `wss` schemes.
 - FPP is observed through its HTTP API and optionally FPP MQTT topics; eight playlist/volume commands are implemented with evidence-based outcomes.
+- Native nodes have experimental xLights FPP Connect ingestion and report per-node channel-range outcomes.
+- Native audio nodes have experimental configuration and command paths for local playback, gain/output control, and LTC generation.
 - Resolume Arena is observed and controlled through its REST API, with a WebSocket used only as a change signal. Composition metadata is uploaded from an `.avc` file.
 - External clients use HTTP API version 1 and Server-Sent Events.
 
@@ -22,12 +24,18 @@ This is a development-state compatibility boundary, not a release support matrix
 - Resolume OSC is not implemented.
 - The experimental NDI render path has sender evidence on Debian 13 amd64. Its real FSEQ-to-wall timing, pacing, recovery, arm64, and Ubuntu boundaries are not yet verified.
 
+## Implemented, not production-verified
+
+- FPP Connect ingestion has source and automated coverage, but no supported deployed xLights/FPP compatibility claim or real-show commissioning result.
+- Audio and LTC have software configuration and command paths, but no commissioned physical route, receiver lock, signal-loss, or recovery evidence.
+- `showmesh-fpp-plugin` is a bench-tested FPP-host macro runner. Its package/install path, permissions, FPP-version compatibility, and real-host behavior are not verified.
+
 ## Not currently available
 
 - HDMI surface output.
-- Audio playback, mixing, or LTC generation.
-- xLights/FPP Connect ingestion.
-- A supported SDK or plugin/provider development kit.
+- A supported public audio/LTC operating path.
+- A supported FPP Connect deployment path.
+- A supported FPP plugin/provider development kit or packaged plugin installation.
 - Documentation version selection.
 
 The presence of a surface configuration is not evidence that a renderer is producing output. NDI requires a prepared render node, a ready node-local FSEQ asset, an applied surface, a working transport probe, and fresh pipeline evidence.

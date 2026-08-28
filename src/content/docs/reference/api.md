@@ -12,11 +12,13 @@ Base path: `/api/v1`
 
 ## State and evidence
 
-`/snapshot`, `/nodes`, `/observations`, `/events`, `/stream`, `/fpp`, and `/resolume/instances` expose current and historical evidence. A filter matching no observations returns an empty collection, not `404`.
+`/snapshot`, `/nodes`, `/observations`, `/events`, `/stream`, `/fpp`, `/current-runs`, and `/resolume/instances` expose current and historical evidence. FPP playlist-entry and playlist-definition routes preserve imported evidence separately from FPP REST/MQTT collection. A filter matching no observations returns an empty collection, not `404`.
 
 ## Configuration and operation
 
-`/config/*` routes expose revisioned configuration for FPP endpoints/MQTT, Resolume instances/composition/recovery, assets, shows, surfaces, actions, macros, and the active show. Macro run, FPP command, Resolume action, asset, discovery, and declaration routes perform operations.
+`/config/*` routes expose revisioned configuration for FPP endpoints/MQTT, FPP Connect settings, Resolume instances/composition/recovery, assets, render settings, audio settings/nodes, shows, surfaces, cues, playlists, actions, macros, night sessions, active pointers, and show mode. Macro run, FPP command, Resolume action, asset, render/audio session, discovery, declaration, cue-catalog, and FPP Connect routes perform operations.
+
+The FPP Connect, audio/LTC, playlist/cue, and night-session route groups are current development contract surfaces. The OpenAPI description remains authoritative for their required scopes, payloads, and evidence semantics.
 
 ## Identity and accountability
 

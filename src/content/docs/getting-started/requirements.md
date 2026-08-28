@@ -36,5 +36,5 @@ Nodes run natively rather than in the coordinator bundle so they can use local G
 - FPP is implemented through REST polling/control and optional MQTT status collection.
 - Resolume Arena is implemented through its REST API and WebSocket update stream, with polling fallback.
 - The render-node/NDI path is on current `main` but experimental. Its only sustained NDI evidence is Debian 13 amd64; the NDI runtime is user-installed and its GStreamer element must currently be source-built.
-- Audio playback and LTC generation do not have a supported public operating path. Audio-node material is a Planned preview only.
-- xLights/FPP Connect ingestion, HDMI output, and production-tested SMPTE/LTC operation are not available.
+- Audio playback and LTC generation have experimental software paths but no supported public operating path or commissioned physical-output evidence.
+- xLights/FPP Connect ingestion is experimental and has no supported deployed compatibility path. HDMI output and production-tested SMPTE/LTC operation are not available.

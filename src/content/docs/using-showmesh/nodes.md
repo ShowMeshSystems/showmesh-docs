@@ -23,7 +23,7 @@ An FPP instance or Resolume host is not automatically a ShowMesh node merely bec
 ShowMesh does not assign each node one fixed class. Nodes advertise versioned capabilities, and those capabilities determine which workloads the node can support. The currently approved media-node roles are:
 
 - [Render nodes](../node-types/render-nodes/), which turn node-local FSEQ data into a video surface. This role is experimental and requires hardware commissioning.
-- [Audio nodes](../node-types/audio-nodes/), which will play node-local audio, mix show sources, and generate LTC. This role is planned and not implemented.
+- [Audio nodes](../node-types/audio-nodes/), which have experimental local-audio, mixing, and LTC software paths. Physical-output commissioning and a supported installation workflow remain open.
 
 See [Node Types](../node-types/) for the shared agent foundation, why roles can eventually compose on one machine, and which ShowMesh components are not nodes.
 

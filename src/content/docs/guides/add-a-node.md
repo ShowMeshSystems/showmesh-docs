@@ -6,7 +6,7 @@ maturity: experimental-active
 complexity: advanced
 ---
 
-This guide installs the shared native-agent foundation used by render and future audio nodes. The agent runs directly on the node host so it can access local media hardware; it is not another Compose service.
+This guide installs the shared native-agent foundation used by render and experimental audio nodes. The agent runs directly on the node host so it can access local media hardware; it is not another Compose service. It is not an audio-node installation procedure.
 
 :::note[Current distribution boundary]
 ShowMesh has no published agent package or installer yet. This guide builds from source and uses a small systemd unit as a starting point. Review it against any local GPU, audio, or device-access policy before production use.

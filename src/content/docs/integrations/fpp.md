@@ -40,6 +40,12 @@ These writes require `fpp:command`. ShowMesh sends FPP's own command and waits f
 3. Confirm the configured endpoint URL reaches the expected player.
 4. For playlist operations, confirm the playlist exists and the player state permits the transition.
 
-## Plugin status
+## Playlist evidence and readiness
 
-The source builds a `showmesh-fpp-plugin` binary, but this snapshot does not provide a verified production packaging/install path for an FPP host. Do not make it part of the standard installation yet.
+ShowMesh also stores FPP playlist definitions and accepts playlist-entry observations through machine-scoped API routes. Those records support reconciliation and the read-only `showmeshctl fpp playlist-readiness <playlist-id>` check. They do not replace FPP's schedule or prove that a playlist is runnable without current FPP and node evidence.
+
+Use `showmeshctl fpp playlist-definitions --help` and `showmeshctl fpp playlist-entry-observations --help` for the exact read commands in the binary you run.
+
+## FPP-host plugin
+
+The experimental [FPP Plugin](../fpp-plugin/) submits ShowMesh macro runs from an FPP host and leaves a host-local status record. It is not a standard installation path, and it does not make ShowMesh the FPP scheduler.

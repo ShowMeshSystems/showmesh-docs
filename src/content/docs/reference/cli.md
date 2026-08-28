@@ -27,9 +27,11 @@ JSON output is produced from the CLI's decoded types. Unknown fields from a newe
 ## Command groups
 
 - Inventory and state: `nodes`, `node`, `snapshot`, `events`, `watch`.
-- FPP: `fpp`, eight `fpp` control verbs, and `fpp-mqtt` configuration.
+- FPP: `fpp`, eight `fpp` control verbs, `fpp-mqtt`, stored playlist definitions, playlist-entry reconciliation, and playlist readiness.
 - Configuration and discovery: `config`, `discover`, `declare`, `undeclare`.
-- Shows: `show`, `surface`, `action`, `macro`, `run`.
+- Shows: `show`, `surface`, `cue`, `playlist`, `action`, `macro`, `run`, and `night`.
+- Native media: `render`, `audio`, `cuecatalog`, and `fppconnect` settings/status.
+- Current operation: `current-runs` and `show mode`.
 - Resolume: `resolume composition`, `resolume action`, `resolume status`, and recovery commands.
 - Assets: `assets list|get|upload|fetch|manifest` and settings.
 - Identity: `session`, `audit`, `principal`, and `token`.
