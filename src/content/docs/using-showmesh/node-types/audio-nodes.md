@@ -7,7 +7,7 @@ maturity: experimental-testing
 
 An **audio node** is the ShowMesh authority for node-local audience-audio playback on configured outputs. Current source includes session, gain, output, routing, and LTC command/configuration paths. It holds complete audio files locally, rather than carrying real-time PCM through the coordinator or MQTT.
 
-See [SMPTE / LTC](../../../integrations/smpte-ltc/) for timecode rates, receiver limits, and the remaining physical-output warning.
+See [SMPTE / LTC](../../../integrations/smpte-ltc/) for timecode rates and receiver details.
 
 ## Current software responsibilities
 
@@ -62,6 +62,6 @@ Likewise, an audio-capable machine should not be considered ready merely because
 
 - FPP owns the schedule; the audio node owns local playback and its output clock.
 - The coordinator orchestrates and observes but never streams program audio.
-- Resolume receives LTC through the physical audio path; “LTC generated” is not proof that Resolume received or locked to it.
+- Resolume receives LTC through the configured audio path.
 - Automatic or sample-transparent failover is not promised.
 - Real-time audio transport between ShowMesh nodes and real third-party synchronized-audio services are outside the initial role.
