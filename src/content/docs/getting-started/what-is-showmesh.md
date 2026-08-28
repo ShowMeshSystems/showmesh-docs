@@ -22,6 +22,6 @@ This is an active development build, not a released appliance. Its strongest usa
 ## What ShowMesh is not
 
 - It is not a replacement scheduler for FPP.
-- It is not a production-commissioned video or pixel renderer. The experimental NDI path is documented separately and does not yet establish real-wall timing or recovery.
+- It is not a video or pixel renderer for every output transport. The experimental NDI path is documented separately; HDMI does not currently have a runtime output path.
 - It does not make an offline node equivalent to a stopped show. A lost management connection is evidence about the control plane, not proof that local playback stopped.
 - It is not a TLS terminator. Keep it on a trusted show network or place your own TLS reverse proxy in front of the UI.

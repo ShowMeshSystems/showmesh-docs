@@ -19,7 +19,7 @@ Every native node starts with the same available agent functions:
 - an allowlisted command channel with recorded outcomes;
 - node-local asset inventory, hash-verified asset fetching, and readiness reporting.
 
-Those functions make a machine visible and manageable, but they do not make it a media node by themselves. The agent can detect its supported GStreamer/NDI path, but it does not render pixels or play audio until a compatible media role is configured and commissioned.
+Those functions make a machine visible and manageable, but they do not make it a media node by themselves. The agent can detect its supported GStreamer/NDI path, but it does not render pixels or play audio until a compatible media role is configured.
 
 ## Approved roles
 
