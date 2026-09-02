@@ -6,7 +6,7 @@ maturity: available
 complexity: advanced
 ---
 
-This page lists the supported runtime entry points. Secrets should come from the deployment secret mechanism, not committed environment files.
+This page lists the supported runtime entry points. Take secrets from the deployment secret mechanism, not from committed environment files.
 
 ## Coordinator basics
 
@@ -61,7 +61,7 @@ Do not invent environment variables for these records; use the OpenAPI schema (`
 - `SHOWMESH_ASSET_SYNC_INTERVAL`: legacy/startup coordinator sync interval; default `5m`.
 - `SHOWMESH_ASSET_INVENTORY_INTERVAL`: legacy/startup inventory cadence; default `2m`.
 
-The four `SHOWMESH_ASSET_*` settings above migrate as one group into revisioned `assets.settings`; when any is set, store-backed asset edits are blocked. `SHOWMESH_ASSET_DIR` does **not** migrate and remains environment-only. See [Install the Coordinator](../../getting-started/installation/#confirm-legacy-migration-before-removing-its-environment-values) for the deferred-migration and disagreement procedure.
+The four `SHOWMESH_ASSET_*` settings in this section migrate as one group into revisioned `assets.settings`; when any is set, store-backed asset edits are blocked. `SHOWMESH_ASSET_DIR` does **not** migrate and remains environment-only. See [Install the coordinator](../../getting-started/installation/#confirm-legacy-migration-before-removing-its-environment-values) for the deferred-migration and disagreement procedure.
 
 ## Native agent
 
@@ -75,7 +75,7 @@ The agent has no config file and no command-line flags: every setting is an envi
 | `SHOWMESH_MQTT_BROKER` | `tcp://localhost:1883` | Control-plane broker. |
 | `SHOWMESH_MQTT_CLIENT_ID` | `showmesh-agent-<node-id>` | Must be unique; two agents sharing a client ID disconnect each other. |
 | `SHOWMESH_ASSET_DIR` | `./assets` | Node-local downloaded assets and the agent's own durable state (render assignments, audio sessions). Set this explicitly; the default is relative to the process's working directory. |
-| `SHOWMESH_AGENT_API_TOKEN` | empty | Bearer token this agent sends to the coordinator. Required on any node that will ever receive an FPP Connect upload: registering the resulting asset is a write gated by `asset:write`, and this listener binds on every node regardless of the coordinator's read policy. Also needed for `asset.fetch`'s own read from the coordinator when the coordinator has closed anonymous reads (`SHOWMESH_API_CLOSE_READS=true`); a node with reads left open needs no token for that half. Only the `admin` role currently carries `asset:write`. |
+| `SHOWMESH_AGENT_API_TOKEN` | empty | Bearer token this agent sends to the coordinator. Required on any node that will ever receive an FPP Connect upload: registering the resulting asset is a write gated by `asset:write`, and this listener binds on every node regardless of the coordinator's read policy. Also needed for `asset.fetch`'s own read from the coordinator when the coordinator has closed anonymous reads (`SHOWMESH_API_CLOSE_READS=true`); a node with reads left open needs no token for that half. Only the `admin` role carries `asset:write` in the documented build. |
 | `SHOWMESH_ASSET_INVENTORY_INTERVAL` | `2m` | Periodic asset-inventory publication. |
 | `SHOWMESH_RENDER_REPORT_INTERVAL` | `15s` | Render-report publication cadence. |
 | `SHOWMESH_AUDIO_REPORT_INTERVAL` | `15s` | Audio-report publication cadence. |
@@ -84,7 +84,7 @@ The agent has no config file and no command-line flags: every setting is an envi
 | `SHOWMESH_FPPCONNECT_LISTEN_ADDR` | `:80` | Listen address for the node's FPP Connect compatibility listener. It binds on every node; port 80 is what xLights expects, which is why the service unit grants `CAP_NET_BIND_SERVICE`. |
 | `SHOWMESH_LOG_LEVEL` | `info` | `debug`, `info`, `warn`, or `error`. |
 
-The agent also accepts the shared `SHOWMESH_MQTT_USERNAME`/`SHOWMESH_MQTT_PASSWORD` variables listed above.
+The agent also accepts the shared `SHOWMESH_MQTT_USERNAME`/`SHOWMESH_MQTT_PASSWORD` variables listed in the Coordinator basics section.
 
 ### Render-node diagnostic output
 

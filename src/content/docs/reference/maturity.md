@@ -47,7 +47,7 @@ Ordinary pages do not need a “Standard” badge. Omission means the page is wr
 
 ## When labels are required
 
-Procedures, integrations, references, and roadmaps that describe product behavior require maturity. Concepts and landing pages use maturity when the label changes how readers should interpret the subject. Governance and timeless contribution policy may omit it when no product capability is being described.
+Procedures, integrations, references, and roadmaps that describe product behavior require maturity. Concepts and landing pages use maturity when the label changes how readers interpret the subject. Governance and timeless contribution policy may omit it when no product capability is being described.
 
 Troubleshooting pages normally inherit the maturity of the capability they diagnose and do not need a separate label unless the diagnostic path itself is experimental or deprecated.
 

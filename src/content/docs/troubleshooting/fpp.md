@@ -11,7 +11,7 @@ showmeshctl fpp
 showmeshctl config get
 ```
 
-An instance must be configured in `fpp.endpoints`. Confirm its ID and base URL, then test reachability from the coordinator host. A configured but unreachable FPP instance should remain visible with collection-failure evidence; it should not disappear or make the coordinator itself unready.
+An instance must be configured in `fpp.endpoints`. Confirm its ID and base URL, then test reachability from the coordinator host. A configured but unreachable FPP instance remains visible with collection-failure evidence; it does not disappear or make the coordinator itself unready.
 
 ## Symptom: a command returns unconfirmed
 
@@ -22,7 +22,7 @@ An HTTP success is not enough for ShowMesh to call a device command successful. 
 3. Confirm the FPP API remains reachable throughout the operation.
 4. For playlist commands, check whether a different playlist or stale evidence caused a deliberate conflict.
 
-Exit `9` means the request path worked but evidence did not confirm the effect. Exit `10` is a deliberate state conflict. They are not transport failures and should not be handled as though the coordinator vanished.
+Exit `9` means the request path worked but evidence did not confirm the effect. Exit `10` is a deliberate state conflict. They are not transport failures; do not handle them as though the coordinator vanished.
 
 ## Symptom: MQTT observations do not appear
 
@@ -56,7 +56,7 @@ The plugin is not a supported production installation path. Do not attempt a bro
 showmeshctl fpp playlist-readiness <playlist-id>
 ```
 
-Read the reported failing condition; the ten defined conditions and what each one means:
+Read the reported failing condition. The defined conditions, in the order readiness checks them, and what each one means:
 
 - `definition-missing`: no stored FPP playlist definition matches this binding.
 - `definition-superseded`: a newer stored definition exists for the same instance and playlist name. This means the FPP playlist was edited, independent of playback.
@@ -68,6 +68,9 @@ Read the reported failing condition; the ten defined conditions and what each on
 - `node-render-unassigned`: a referenced Cue declares a render output, and a node holding the relevant surface has no confirmed render assignment for it. The reported reason distinguishes a node that is not reporting at all from one that is online with no assignment, or one whose evidence has aged past its window.
 - `node-catalog-stale`: a node holding a resolved output for this Playlist's Show has not acknowledged the exact catalog revision the active Show requires right now. Skipped when this Playlist's Show is not the active Show.
 - `exclusive-claim-conflict`: two Cues this Show's Playlists could concurrently run hold a colliding exclusive resource claim.
+- `audio-ltc-emitter-ambiguous`: more than one `audio.node` holds the `program+ltc` role.
+- `audio-target-unbound`: a Cue's audio, LTC, or announcement output names a target node that has no `audio.node` object.
+- `audio-target-unresolved`: a Cue's output names no target and the installation has no single node to resolve it to.
 - `assets-missing`: a node that must render or play a Cue in this Playlist does not hold an asset that has been uploaded and resolved to it.
 
 Fix the named cause, then rerun `fpp playlist-readiness` and confirm it reports ready before relying on the Playlist in a show.

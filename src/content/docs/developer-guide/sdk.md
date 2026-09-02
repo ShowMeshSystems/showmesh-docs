@@ -5,7 +5,7 @@ pageType: roadmap
 maturity: planned
 ---
 
-ShowMesh does not currently ship a supported SDK, generated client package, plugin ABI, or provider development kit.
+ShowMesh does not ship a supported SDK, generated client package, plugin ABI, or provider development kit.
 
 Today, build against the versioned HTTP API and its OpenAPI description. For live state, use the documented Server-Sent Events bootstrap and reconnection rules. Keep generated or handwritten clients tolerant of additive response fields.
 

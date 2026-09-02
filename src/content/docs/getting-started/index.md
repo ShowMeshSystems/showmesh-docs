@@ -1,5 +1,5 @@
 ---
-title: Getting Started
+title: Getting started
 description: Understand ShowMesh, install the current development build, and learn where the usable path ends today.
 pageType: landing
 maturity: experimental-active
@@ -12,7 +12,7 @@ Start here in order:
 1. Read [What is ShowMesh?](./what-is-showmesh/) for the problem it solves and the current limits.
 2. Check [Requirements](./requirements/) before changing a show computer.
 3. Follow [Installation](./installation/) to start the coordinator, broker, and Operator UI.
-4. Read [Your First Show](./your-first-show/) before authoring show objects. It explains which parts of that workflow are usable and which are not yet a playback pipeline.
+4. Read [Your first show](./your-first-show/) before authoring show objects. It explains which parts of that workflow are usable and which are not yet a playback pipeline.
 5. Use the [Reference roadmap](/reference/roadmap/) to see current development priorities and remaining release work.
 
 :::caution[Development-state documentation]

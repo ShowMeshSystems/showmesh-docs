@@ -27,7 +27,7 @@ A Show Night session moves through a closed set of states:
 | `night final-show` | Closes admission after one final complete show. Accepted even while the session is degraded. |
 | `night fade-out` | Fades the active presentation out and stops FPP. Accepted even while degraded. |
 | `night power-down` | Closes the session after playback and the fade have stopped. Accepted even while degraded. |
-| `night end-session` | A provisional operator-recovery action: abandons the current session, reaching `stopped` without clearing its degraded record. The only lifecycle command besides the three above that is accepted while degraded. |
+| `night end-session` | A provisional operator-recovery action: abandons the current session, reaching `stopped` without clearing its degraded record. The only lifecycle command besides `final-show`, `fade-out`, and `power-down` that is accepted while degraded. |
 
 ```sh
 showmeshctl night status
@@ -57,11 +57,11 @@ To recover a degraded session, run `night end-session`, then `night prepare-site
 | --- | --- |
 | `26` | A lifecycle command was refused because a precondition it needs is not yet met (no open preparation epoch, or no fresh readiness result from the current epoch). Run the missing prerequisite command. |
 | `27` | A lifecycle command was refused by the closed state table for the session's current state: the command is not simply early, it is not valid from here at all. |
-| `28` | A lifecycle command was refused because the session is degraded. See recovery above. |
+| `28` | A lifecycle command was refused because the session is degraded. See the Degraded state and recovery section. |
 
 ## Background audio and Transition Steps
 
-Background audio can contain ordered items with a repeat policy (`none`, `item`, or `playlist`), a resume policy (`resume` or `restart`), and a transition (`sequential`, `gapless`, or `crossfade`). A crossfade can include its own duration and a maximum gain. The bed starts when the session enters a resting state and continues through pre-show; at the show boundary it fades toward silence (configurable `fadeOutMs`/`fadeInMs`, both required together or both omitted for an instant cut as before) rather than being cut. `GET /night/session` reports the pinned maximum gain the current configuration applies to the bed.
+Background audio can contain ordered items with a repeat policy (`none`, `item`, or `playlist`), a resume policy (`resume` or `restart`), and a transition (`sequential`, `gapless`, or `crossfade`). A crossfade can include its own duration and a maximum gain. The bed starts when the session enters a resting state and continues through pre-show; at the show boundary it fades toward silence (configurable `fadeOutMs` and `fadeInMs`, set both or omit both for an instant cut) rather than being cut. `GET /night/session` reports the pinned maximum gain the current configuration applies to the bed.
 
 A background bed and an announcement can each target more than one `audio.node` at once, such as a porch zone and a garage zone both playing the same background music.
 
@@ -91,4 +91,4 @@ showmeshctl night set <night-id> --help
 
 `siteControl` and `interlocks` are entirely optional; a deployment that omits both runs the whole night loop unchanged. Every cross-object reference this configuration carries (cue actions, the resting timeline asset, every background-audio item, every siteControl action, every interlock signal) must belong to this session's own Show.
 
-See [Emergency Stop](../emergency-stop/) for stopping playout immediately without waiting on this lifecycle; `stop-power-down` and `hard-stop` both force this session toward `stopped` directly.
+See [Emergency stop](../emergency-stop/) for stopping playout immediately without waiting on this lifecycle; `stop-power-down` and `hard-stop` both force this session toward `stopped` directly.

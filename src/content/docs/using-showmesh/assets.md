@@ -7,7 +7,7 @@ maturity: available
 
 An **asset** is an exact file revision that ShowMesh can distribute to native nodes. The coordinator stores the uploaded bytes by content hash and records which show, sequence ID, media type, and target the file belongs to.
 
-Assets answer “which bytes should this node have?” rather than “what should play now?” ShowMesh can synchronize and verify the file's hash, but the asset record does not define a schedule, playlist, surface, or playback command.
+Assets answer “which bytes must this node hold?” rather than “what plays now?” ShowMesh can synchronize and verify the file's hash, but the asset record does not define a schedule, playlist, surface, or playback command.
 
 ## Identity and targeting
 
@@ -20,7 +20,7 @@ The sequence ID is a logical name used to group the file within a show; it is no
 
 ## Upload and inspect
 
-Use the UI or CLI. The CLI requires all upload metadata:
+Use the Operator UI or the CLI. The CLI requires all upload metadata:
 
 ```sh
 showmeshctl assets upload \

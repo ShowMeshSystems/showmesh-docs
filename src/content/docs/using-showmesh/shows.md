@@ -30,10 +30,10 @@ Creating, updating, and activating shows requires `config:write`.
 
 ## What activation does
 
-Only one show can be active. Activation stores a revisioned `show.active` pointer, and the asset manifest uses that pointer to determine which show's current assets declared nodes should hold. In practical terms, activation changes the coordinator's desired synchronization set.
+Only one show can be active. Activation stores a revisioned `show.active` pointer, and the asset manifest uses that pointer to determine which show's current assets declared nodes must hold. In practical terms, activation changes the coordinator's desired synchronization set.
 
 Activation does **not** start playback, schedule FPP, select a Resolume composition, or begin rendering. Put implemented device operations in actions/macros and test those separately.
 
 :::tip[Think “prepare,” not “play”]
-Activating `winter-2026` tells ShowMesh which asset set should converge on nodes. It does not press play on any device.
+Activating `winter-2026` tells ShowMesh which asset set to converge on nodes. It does not press play on any device.
 :::

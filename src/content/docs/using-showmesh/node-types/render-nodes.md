@@ -1,5 +1,5 @@
 ---
-title: Render Nodes
+title: Render nodes
 description: How an experimental render node turns FSEQ surface data into synchronized video output.
 pageType: concept
 maturity: experimental-testing
@@ -31,7 +31,7 @@ The coordinator is not in the timing or frame path. It assigns configuration, di
 1. xLights creates the sequence data. [FPP Connect ingestion](../../../integrations/xlights/) can target a native render node experimentally; the manual ShowMesh asset path remains a valid fallback.
 2. ShowMesh synchronizes the exact content hash to the assigned node before playback.
 3. A [`show.surface`](../../surfaces/) object identifies the show, declared node, channel range, canvas geometry, frame rate, and intended transport.
-4. FPP remains the schedule and playback authority. Its MultiSync packets tell the render node which sequence position should be presented.
+4. FPP remains the schedule and playback authority. Its MultiSync packets tell the render node which sequence position to present.
 5. The renderer extracts that frame locally and feeds an agent-supervised GStreamer pipeline.
 6. The NDI sender publishes the surface. Resolume receives and composes it downstream.
 
@@ -41,9 +41,9 @@ An apply resolves its FSEQ by media type: it filters to the sequence's current `
 
 ## Drawing state and idle output
 
-The frame writer reports one of four drawing states: drawing real content, idle, an extraction failure, or **stale**. Stale means the MultiSync timeline reports a sequence filename that no longer matches the FSEQ the writer is currently holding, which happens when FPP moves on to a sequence the surface has no content for; the writer stops drawing that mismatched content rather than continuing to paint a sequence FPP has already left. An empty timeline filename is not treated as a mismatch, since it means nothing has been observed yet.
+The frame writer reports one of four drawing states: drawing real content, idle, an extraction failure, or **stale**. Stale means the MultiSync timeline reports a sequence filename that no longer matches the FSEQ the writer holds, which happens when FPP moves on to a sequence the surface has no content for; the writer stops drawing that mismatched content rather than continuing to paint a sequence FPP has already left. An empty timeline filename is not treated as a mismatch, since it means nothing has been observed yet.
 
-When an assignment carries no usable FSEQ content at all, the node reports **idle** output honestly through `render.settings.idleOutput` rather than falling back to a silent test pattern with no reported mode or failure.
+When an assignment carries no usable FSEQ content at all, the node reports **idle** output through `render.settings.idleOutput` rather than falling back to a silent test pattern with no reported mode or failure.
 
 A [Cue catalog](../../cues/#cue-catalog) deploy that leaves a surface's resolved sequence and content hash unchanged skips restarting the frame writer, avoiding a visible stop-then-start for a deploy that changed nothing the surface draws. An empty content hash on either side of that comparison is never treated as a match.
 
@@ -72,4 +72,4 @@ The first deployment profile concentrates on Linux/x86 hardware, one active surf
 - HDMI remains represented by the surface model but is not part of the current operating profile.
 - FPP Connect ingestion is experimental; manual targeted asset upload remains a valid fallback.
 
-For the operator procedure, including NDI runtime checks and surface authoring, see [Set Up a Video Node](../../../guides/set-up-a-video-node/).
+For the operator procedure, including NDI runtime checks and surface authoring, see [Set up a video node](../../../guides/set-up-a-video-node/).

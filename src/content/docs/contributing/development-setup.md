@@ -6,7 +6,7 @@ pageType: procedure
 
 ## Before you start
 
-- Go 1.25 or newer in the repository's supported range (`go.mod` currently requires `go 1.25.0`).
+- Go 1.25 or newer in the repository's supported range (`go.mod` requires `go 1.25.0`).
 - Node 22, matching `.nvmrc`.
 - Docker for Compose and integration suites.
 - `make`.
@@ -44,11 +44,11 @@ Use only synthetic or isolated integration targets during development. Never poi
 
 ## Run components
 
-The coordinator is primarily deployed with Docker Compose. The node agent runs natively because media hardware needs direct access to the host. The UI is an independent client of the public API and is not required for the coordinator or CLI to operate.
+The coordinator is primarily deployed with Docker Compose. The node agent runs natively because media hardware needs direct access to the host. The Operator UI is an independent client of the public API and is not required for the coordinator or CLI to operate.
 
 ## Required checks before merge to main
 
-The CI workflow's `lint`, `vuln`, `ui`, `docker`, and `test-gate` jobs are required by exact job name. The Docker-backed integration suites and the separate FPP bench-integration workflow are advisory: they run in CI but do not currently block a merge. Check the main repository's CONTRIBUTING.md and `.github/workflows/` for the current list before relying on this summary.
+The CI workflow's `lint`, `vuln`, `ui`, `docker`, and `test-gate` jobs are required by exact job name. The Docker-backed integration suites and the separate FPP bench-integration workflow are advisory: they run in CI but do not block a merge. Check the main repository's CONTRIBUTING.md and `.github/workflows/` for the current list before relying on this summary.
 
 ## If setup fails
 

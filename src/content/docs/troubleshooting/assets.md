@@ -13,7 +13,7 @@ showmeshctl assets manifest
 showmeshctl assets manifest --require-ready
 ```
 
-The manifest compares what each node should hold for the active show with the node's reported inventory. Readiness is three-valued:
+The manifest compares what each node must hold for the active show with the node's reported inventory. Readiness is three-valued:
 
 - `ready`: the required content is present and matches.
 - `not_ready`: current evidence names a missing or mismatched asset.

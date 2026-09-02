@@ -33,7 +33,7 @@ Nodes are told the current mode so later work can read it at the point of decisi
 ## What it never does
 
 - It never gates who may act; it changes what the system does, not who is authorized to do it. Authorization stays a separate scope check.
-- It never refuses, delays, or degrades blackout, stop, or power-off. [Emergency Stop](../emergency-stop/) is accepted in either mode.
+- It never refuses, delays, or degrades blackout, stop, or power-off. [Emergency stop](../emergency-stop/) is accepted in either mode.
 - It is not a lock: configuration edits remain possible in either mode, although Show Mode can hold a Cue edit back from nodes until the show restarts.
 - It is not a scheduler: nothing derives it from a clock or from a playlist running. An operator sets it.
 

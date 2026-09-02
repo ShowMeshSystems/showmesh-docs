@@ -1,5 +1,5 @@
 ---
-title: Developer Guide
+title: Developer guide
 description: Build clients and integrations against ShowMesh's public API without modifying ShowMesh itself.
 pageType: landing
 maturity: experimental-active
@@ -15,7 +15,7 @@ This section is for software that uses ShowMesh: operator tools, automation clie
 - Configuration, control, audit, discovery, identity, FPP, Resolume, show, macro, and asset resources.
 - RFC 9457-style structured errors.
 
-Start with the [API guide](./api/), then read [Events and live state](./events/) before building a stateful client. [Actions and capabilities](./actions-and-capabilities/) explains the two vocabularies that are easy to confuse.
+Start with the [API guide](./api/), then read [Events and live state](./events/) before building a stateful client. [Actions and capabilities](./actions-and-capabilities/) explains the two vocabularies that are often confused.
 
 ## Extension boundary
 

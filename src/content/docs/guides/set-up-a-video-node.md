@@ -1,5 +1,5 @@
 ---
-title: Set Up a Video Node
+title: Set up a video node
 description: Set up the experimental FSEQ-to-NDI render path without confusing a configured surface for a working screen.
 pageType: procedure
 maturity: experimental-testing
@@ -16,7 +16,7 @@ A render node listens for FPP MultiSync on UDP `32320`; it must not share that p
 
 The documented transport profile is a native node on Debian 13 amd64, one active surface, 40 fps, and NDI. HDMI output is not available.
 
-Install the node first with [Install a Native Node](../add-a-node/). Give it local storage for the node-targeted FSEQ assets and network reachability to the broker.
+Install the node first with [Install a native node](../add-a-node/). Give it local storage for the node-targeted FSEQ assets and network reachability to the broker.
 
 ## 2. Install and prove the NDI prerequisites
 
@@ -52,10 +52,10 @@ Start the agent through its service unit, then use an administrator-scoped CLI:
 
 ```sh
 showmeshctl node <node-id>
-showmeshctl declare -label "<descriptive label>" <node-id>
+showmeshctl declare --label "<descriptive label>" <node-id>
 ```
 
-After a successful NDI pipeline probe, the node should advertise both `render.surface` and `transport.ndi.send`. If NDI is unavailable, the agent should still start and advertise the non-NDI portion of its role; that is expected degradation, not an excuse to configure an NDI surface.
+After a successful NDI pipeline probe, the node advertises both `render.surface` and `transport.ndi.send`. If NDI is unavailable, the agent still starts and advertises the non-NDI portion of its role; that is expected degradation, not an excuse to configure an NDI surface.
 
 If the node has more than one suitable network interface, use `SHOWMESH_MULTISYNC_INTERFACE` to restrict its multicast join deliberately. The default joins suitable interfaces. Do not set `SHOWMESH_MULTISYNC_LISTEN_ADDR` to a different port in a production deployment; the normal render path listens on `:32320`.
 
@@ -70,7 +70,7 @@ This never displaces a surface that already holds a real render assignment; a su
 Asset synchronization and render apply both require an active show. Create the show once and make it active before staging the FSEQ:
 
 ```sh
-showmeshctl show set -name "Holiday 2026" holiday-2026
+showmeshctl show set --name "Holiday 2026" holiday-2026
 showmeshctl show activate holiday-2026
 showmeshctl show active
 ```
@@ -82,11 +82,11 @@ showmeshctl assets settings set \
   --content-base-url http://<node-reachable-coordinator>:8080
 ```
 
-Use an HTTP(S) URL that the node can actually resolve and reach, not `localhost` unless the coordinator and node are the same machine. If the coordinator closes anonymous API reads, create a dedicated `machine` principal with the `viewer` role and put its issued token in `SHOWMESH_AGENT_API_TOKEN`; never copy an administrator token to the node. [Install a Native Node](../add-a-node/) has the exact issuance commands.
+Use an HTTP(S) URL that the node can actually resolve and reach, not `localhost` unless the coordinator and node are the same machine. If the coordinator closes anonymous API reads, create a dedicated `machine` principal with the `viewer` role and put its issued token in `SHOWMESH_AGENT_API_TOKEN`; never copy an administrator token to the node. [Install a native node](../add-a-node/) has the exact issuance commands.
 
 ## 5. Create one surface and stage its FSEQ asset
 
-Create a show and a surface whose channel math matches the actual canvas. For a 64 × 64 RGB screen, the channel count is `64 × 64 × 3 = 12288`:
+Create a surface whose channel math matches the actual canvas. For a 64 × 64 RGB screen, the channel count is `64 × 64 × 3 = 12288`:
 
 ```sh
 showmeshctl surface set \
@@ -139,7 +139,7 @@ In Resolume, select the exact NDI source name configured on the surface and rout
 
 ## 7. Make the evidence meaningful
 
-Use a dedicated bench FPP or containerized bench `fppd` to play a real sequence. Watch a sharp event—such as a blackout or color snap—on the physical lights and the projected surface at the same time. A screen recording reviewed later is not a substitute for a live timing observation.
+Use a dedicated bench FPP or containerized bench `fppd` to play a real sequence. Watch a sharp event, such as a blackout or color snap, on the physical lights and the projected surface at the same time. A screen recording reviewed later is not a substitute for a live timing observation.
 
 Record the render host, NDI runtime/plugin versions, FPP and Arena versions, canvas geometry, achieved frame rate, late/dropped frames, CPU utilization, run length, and the direct visual result. Current evidence does not yet establish:
 

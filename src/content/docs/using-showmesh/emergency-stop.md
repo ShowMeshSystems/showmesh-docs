@@ -1,5 +1,5 @@
 ---
-title: Emergency Stop
+title: Emergency stop
 description: Stop playout immediately at one of three levels, and recover afterward.
 pageType: procedure
 maturity: available
@@ -12,13 +12,17 @@ Emergency Stop stops playout on every configured FPP instance immediately. It ha
 
 - A principal token that carries `show:emergencystop:invoke`.
 - To configure follow-up actions, a separate token or role that carries `config:write` (admin).
-- Know which level you need. Stopping playout is show-affecting: it interrupts whatever FPP is currently doing on every configured instance, with no confirmation prompt.
+- Know which level you need. Stopping playout is show-affecting: it interrupts whatever FPP is doing on every configured instance, with no confirmation prompt.
 
 ## The three levels
 
-1. **`stop`**: stop playout immediately on every configured FPP instance, then run that level's own configured follow-up actions. It has no effect on an active Show Night session.
-2. **`stop-power-down`**: everything `stop` does, plus forcing an active Show Night session's own standard graceful shutdown ([`power-down`](../show-night/)) to start now instead of waiting for its ordinary trigger.
-3. **`hard-stop`**: everything `stop` does, plus abandoning an active Show Night session straight to the `stopped` state with no wait, reusing the same decision `night end-session` uses. This is the level a retry or a redelivered command must never be able to fire twice, so it is gated by an arm/fire sequence instead of one command.
+Each level does everything the level before it does, plus one more effect on the active Show Night session:
+
+| Level | Effect on FPP playout | Effect on an active Show Night session |
+| --- | --- | --- |
+| `stop` | Stops playout immediately on every configured FPP instance, then runs this level's follow-up actions. | None. |
+| `stop-power-down` | Same as `stop`. | Forces the session's own standard graceful shutdown ([`power-down`](../show-night/)) to start now instead of waiting for its ordinary trigger. |
+| `hard-stop` | Same as `stop`. | Abandons the session straight to the `stopped` state with no wait, the same decision `night end-session` makes. Gated by an arm/fire sequence so a retry or a redelivered command can never fire it twice. |
 
 Show Mode never gates any of these: being in Show Mode or Program Mode makes no difference to whether a stop is accepted.
 

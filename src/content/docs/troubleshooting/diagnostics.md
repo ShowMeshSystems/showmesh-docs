@@ -5,7 +5,7 @@ pageType: reference
 maturity: available
 ---
 
-Use these checks before changing configuration. They separate “the process is serving,” “the coordinator can operate,” and “a device was observed healthy”—three different facts in ShowMesh.
+Use these checks before changing configuration. They separate “the process is serving,” “the coordinator can operate,” and “a device was observed healthy”: three different facts in ShowMesh.
 
 ## Health endpoints
 

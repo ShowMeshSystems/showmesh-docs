@@ -1,5 +1,5 @@
 ---
-title: Actions and Macros
+title: Actions and macros
 description: Build reusable logical controls and inspect every step of an asynchronous macro run.
 pageType: concept
 maturity: available
@@ -14,7 +14,7 @@ Actions are not schedules or UI buttons by themselves. In the current CLI, actio
 
 ## Available action integrations
 
-ShowMesh currently accepts three action target types:
+ShowMesh accepts three action target types:
 
 | Integration | What an action can describe |
 | --- | --- |
@@ -70,7 +70,7 @@ Invoke a stored action directly, outside of any macro run:
 showmeshctl action invoke <action-id>
 ```
 
-This requires the `show:action:invoke` scope and uses the action's own stored target; the command passes no parameters of its own. Pass `--revision` to pin the exact action revision a queued or durable caller should execute; an interactive caller can omit it to run whichever revision is active right now.
+This requires the `show:action:invoke` scope and uses the action's own stored target; the command passes no parameters of its own. Pass `--revision` to pin the exact action revision a queued or durable caller must execute; an interactive caller can omit it to run whichever revision is active right now.
 
 ## What a macro adds
 
@@ -78,7 +78,7 @@ A **macro** is a saved, ordered recipe of action IDs. Each step adds a step ID a
 
 For example, a macro could reference actions that select a Resolume deck, launch a clip, and start an FPP playlist. The run dispatches those steps in order and records the outcome of each. It does not make the operations simultaneous, and acceptance of the run does not mean every device operation has completed.
 
-The current runtime supports action execution through FPP, Resolume, and configured integration MQTT brokers. Target and parameter validation happens when configuration is written, so an invalid action should fail before showtime.
+The current runtime supports action execution through FPP, Resolume, and configured integration MQTT brokers. Target and parameter validation happens when configuration is written, so an invalid action fails before showtime.
 
 ## Run safely
 
