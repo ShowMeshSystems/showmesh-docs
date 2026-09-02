@@ -26,7 +26,18 @@ curl -sS \
   http://showmesh.local:8080/api/v1/session
 ```
 
-Do not place credentials in URLs or query strings. The coordinator rejects a query string carrying the token prefix. Reads are open by default but can be closed by deployment configuration; writes always require a principal and the relevant scope.
+Do not place credentials in URLs or query strings. The coordinator rejects a query string carrying the token prefix with a `400 credential-in-url` problem. Reads are open by default but can be closed by deployment configuration; writes always require a principal and the relevant scope.
+
+`POST /api/v1/session` and `POST /api/v1/bootstrap` additionally require a `Sec-Fetch-Site: same-origin` request header, or an `Origin` header naming the host the request was addressed as, and refuse the request without one; this closes cross-site forgery against the two endpoints that create or mint a credential. A browser sends this automatically, so the Operator UI needs nothing; a script does not, so a direct call must add it:
+
+```sh
+curl -sS -X POST http://showmesh.local:8080/api/v1/session \
+  -H 'Content-Type: application/json' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -d '{"name":"<principal name>","password":"<password>"}'
+```
+
+Every cookie-authenticated write is checked this way, but a bearer-token request to a route other than `/session` or `/bootstrap` is exempt. `/session` and `/bootstrap` themselves have no bearer-token exemption, because they are how a credential comes to exist in the first place.
 
 ## Resource groups
 
@@ -35,8 +46,10 @@ The current API covers:
 - Snapshot, nodes, discovery, observations, event history, and live stream.
 - FPP instances and commands.
 - Sessions, audit records, principals, and API tokens.
-- Revisioned FPP, FPP MQTT, Resolume, asset, show, surface, action, macro, and active-show configuration.
-- Macro runs and Resolume actions/recovery.
+- Revisioned FPP, FPP MQTT, Resolume, asset, show, surface, cue, playlist, action, macro, show mode, emergency-stop, and active-show configuration.
+- Macro runs, action invocations and binding checks, and Resolume actions/recovery.
+- Show Night session configuration and lifecycle commands, and emergency-stop trigger routes.
+- Cue catalogs, FPP Connect settings/status, and signed FPP fallback programs.
 - Asset metadata, bytes, manifests, and node inventories.
 
 Use the OpenAPI document for exact schemas and status codes. Do not infer a write operation from a read route; no state change is reachable by `GET`.

@@ -25,6 +25,7 @@ Do not restart everything before capturing the snapshot and the readiness respon
 - [FPP is unreachable or a command is unconfirmed](./fpp/)
 - [A macro or action did not complete](./actions/)
 - [Assets are not ready](./assets/)
+- [A show night lifecycle command is refused](./show-night/)
 - [Logs, health, events, and evidence](./diagnostics/)
 
 ## What belongs here later

@@ -46,9 +46,12 @@ Some newer media settings are revisioned API configuration, not environment vari
 - `fppconnect.settings`: enablement and storage limits for experimental node-side FPP Connect ingestion.
 - `render.settings`: render-node defaults and limits.
 - `audio.settings` and `audio.node`: experimental local-audio/LTC settings and node output declarations.
-- `show.mode`, `show.cue`, `show.playlist`, and `night.session`: development-state show operation configuration.
+- `show.mode`: the installation-wide operating mode (`program` or `show`).
+- `show`, `show.surface`, `show.cue`, `show.playlist`, `show.action`, `show.macro`, and `show.active`: show authoring objects and the active-show pointer.
+- `show.emergencystop`: each emergency-stop level's optional follow-up action list.
+- `night.session` and `night.session.active`: Show Night session objects and the active-session pointer.
 
-Do not invent environment variables for these records; use the OpenAPI schema and compiled CLI help.
+Do not invent environment variables for these records; use the OpenAPI schema (`api/openapi.yaml`) and compiled CLI help.
 
 ## Assets
 
@@ -62,18 +65,44 @@ The four `SHOWMESH_ASSET_*` settings above migrate as one group into revisioned 
 
 ## Native agent
 
+The agent has no config file and no command-line flags: every setting is an environment variable, read once at process start (`internal/agent/config/config.go`).
+
 | Variable | Default | Purpose |
 |---|---|---|
-| `SHOWMESH_NODE_ID` | OS hostname | Stable node ID. |
-| `SHOWMESH_NODE_LABEL` | empty | Human-readable label. |
-| `SHOWMESH_NODE_CAPABILITIES` | empty | Explicit `id` or `id:version` overrides, comma-separated. |
+| `SHOWMESH_NODE_ID` | OS hostname | Stable node ID (lowercase letters, digits, internal hyphens). Must equal the broker username provisioned for this node. |
+| `SHOWMESH_NODE_LABEL` | empty | Human-readable label shown alongside the node ID. |
+| `SHOWMESH_NODE_CAPABILITIES` | empty | Explicit `id` or `id:version` overrides, comma-separated. When set, the agent skips its own capability probing and advertises exactly this list; leave it unset in production so the agent probes its real GStreamer/NDI/audio support on every connect. |
 | `SHOWMESH_MQTT_BROKER` | `tcp://localhost:1883` | Control-plane broker. |
-| `SHOWMESH_MQTT_CLIENT_ID` | derived from node ID | Must be unique. |
-| `SHOWMESH_ASSET_DIR` | `./assets` | Node-local downloaded assets. |
-| `SHOWMESH_AGENT_API_TOKEN` | empty | Bearer token for asset reads when reads are closed. |
-| `SHOWMESH_ASSET_INVENTORY_INTERVAL` | `2m` | Periodic inventory publication. |
+| `SHOWMESH_MQTT_CLIENT_ID` | `showmesh-agent-<node-id>` | Must be unique; two agents sharing a client ID disconnect each other. |
+| `SHOWMESH_ASSET_DIR` | `./assets` | Node-local downloaded assets and the agent's own durable state (render assignments, audio sessions). Set this explicitly; the default is relative to the process's working directory. |
+| `SHOWMESH_AGENT_API_TOKEN` | empty | Bearer token this agent sends to the coordinator. Required on any node that will ever receive an FPP Connect upload: registering the resulting asset is a write gated by `asset:write`, and this listener binds on every node regardless of the coordinator's read policy. Also needed for `asset.fetch`'s own read from the coordinator when the coordinator has closed anonymous reads (`SHOWMESH_API_CLOSE_READS=true`); a node with reads left open needs no token for that half. Only the `admin` role currently carries `asset:write`. |
+| `SHOWMESH_ASSET_INVENTORY_INTERVAL` | `2m` | Periodic asset-inventory publication. |
+| `SHOWMESH_RENDER_REPORT_INTERVAL` | `15s` | Render-report publication cadence. |
+| `SHOWMESH_AUDIO_REPORT_INTERVAL` | `15s` | Audio-report publication cadence. |
+| `SHOWMESH_MULTISYNC_LISTEN_ADDR` | `:32320` | Local `host:port` the MultiSync listener binds (FPP's fixed control port). |
+| `SHOWMESH_MULTISYNC_INTERFACE` | every suitable interface | Restrict the MultiSync multicast join to one named network interface. |
+| `SHOWMESH_FPPCONNECT_LISTEN_ADDR` | `:80` | Listen address for the node's FPP Connect compatibility listener. It binds on every node; port 80 is what xLights expects, which is why the service unit grants `CAP_NET_BIND_SERVICE`. |
+| `SHOWMESH_LOG_LEVEL` | `info` | `debug`, `info`, `warn`, or `error`. |
 
-The agent also accepts the shared MQTT username, password, and log-level variables listed above.
+The agent also accepts the shared `SHOWMESH_MQTT_USERNAME`/`SHOWMESH_MQTT_PASSWORD` variables listed above.
+
+### Render-node diagnostic output
+
+These variables draw a moving diagnostic bar on a named surface as soon as the agent starts, with no coordinator, broker, FPP master, or assigned sequence required:
+
+- `SHOWMESH_RENDER_DIAGNOSTIC_SURFACE`: names the surface. Empty (the default) disables the feature entirely; it never takes a surface a real assignment already owns.
+- `SHOWMESH_RENDER_DIAGNOSTIC_WIDTH`, `SHOWMESH_RENDER_DIAGNOSTIC_HEIGHT`, `SHOWMESH_RENDER_DIAGNOSTIC_FRAME_RATE`: geometry and tick rate, default `1920`x`1080` at `40` fps. Setting any of these without `SHOWMESH_RENDER_DIAGNOSTIC_SURFACE` is refused at startup.
+- `SHOWMESH_RENDER_DIAGNOSTIC_NDI_SOURCE_NAME`: the NDI source name it sends on. Left empty, the pipeline still runs into a fake sink and reports that honestly in its render report.
+
+### GStreamer and tooling overrides
+
+Only needed on the `build-agent-native` (cgo) build, and only when the binary is not on `PATH` under its normal name or a test needs to substitute a non-hardware sink:
+
+- `SHOWMESH_GST_LAUNCH`, `SHOWMESH_GST_DISCOVERER`: override the resolved `gst-launch-1.0`/`gst-discoverer-1.0` paths.
+- `GST_PLUGIN_PATH`: only needed on a render node that also needs the NDI output element (`ndisink`), which this project does not build or ship; set it to the directory holding a separately built `libgstndi.so`.
+- `SHOWMESH_GST_AUDIO_SINK_FACTORY`: substitutes a non-hardware GStreamer sink factory (for example `fakesink`) for the production `alsasink`. Test and bench use only; setting this on a real node makes it report audio success without opening a real device.
+
+`SHOWMESH_HW_ALSA_DEVICE`, `SHOWMESH_HW_CHANNELS`, and `SHOWMESH_HW_RATE` are not agent configuration. They gate one manual, opt-in Go test (`go test -tags showmesh_hwdevice`) that opens a real ALSA device and are not read by the agent binary itself.
 
 ## CLI
 

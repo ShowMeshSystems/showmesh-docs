@@ -233,7 +233,7 @@ showmeshctl playlist get main-fpp-playlist
 showmeshctl fpp playlist-readiness main-fpp-playlist
 ```
 
-For an audio-runner Playlist, use `--runner showmesh-audio` with `--showmesh-audio-json` instead of `--fpp-json`. See [Cues](../../using-showmesh/cues/) and [Playlists](../../using-showmesh/playlists/) for output rules, FPP bindings, mismatch behavior, and complete JSON shapes.
+For an audio-runner Playlist, use `--runner showmesh-audio` with `--showmesh-audio-json` instead of `--fpp-json`. If a Cue's audio, LTC, or announcement output should reach a specific audio node rather than the installation's default, add a `"target"` naming that `audio.node` id inside the relevant output object. See [Cues](../../using-showmesh/cues/) and [Playlists](../../using-showmesh/playlists/) for output rules, FPP bindings, mismatch behavior, and complete JSON shapes.
 
 ## 7. Create actions and macros
 
@@ -283,6 +283,27 @@ showmeshctl night power-down
 
 Use `showmeshctl night end-session` only when the documented lifecycle calls for ending a current session. See [Show Night](../../using-showmesh/show-night/) for Transition Steps, lifecycle state, and degraded-state behavior.
 
+## 9. Switch to Show Mode and confirm Emergency Stop
+
+Before running the night, switch the installation to Show Mode. This reduces edit surface for the run and pins Cue activation authorization to the current Show and generation:
+
+```sh
+showmeshctl show mode set show
+showmeshctl show mode get
+```
+
+Switch back to `program` when you need to resume live Cue editing between shows.
+
+:::caution[Emergency Stop is show-affecting]
+Confirm you can reach [Emergency Stop](../../using-showmesh/emergency-stop/) and know which level you would use before a night runs. A confirmed stop silences FPP playout on every configured instance immediately, and Show Mode never delays or degrades it.
+:::
+
+```sh
+showmeshctl emergency-stop config get
+```
+
+Do not run `showmeshctl emergency-stop stop` (or a higher level) against a live production unless you intend to stop it; use this step only to confirm the command is reachable and its optional follow-up actions, if any, are configured as intended.
+
 ## Confirm the show is prepared
 
 Before operating a production, inspect the selected configuration and its evidence:
@@ -327,12 +348,15 @@ Nodes and Show configuration
   playlist list|get|set|revisions
   cuecatalog get|acknowledge|deploy
 
-Actions, Macros, and Show Night
+Actions, Macros, Show Night, and Emergency Stop
   action list|show|put|check|invoke
   macro list|show|put|run
   run show|list
   night list|get|set|revisions|revision|active|activate|deactivate|status
   night prepare-site|readiness|preshow|start|final-show|fade-out|power-down|end-session
+  emergency-stop stop|stop-power-down
+  emergency-stop hard-stop arm|fire
+  emergency-stop config get|set|revisions
 
 Resolume
   resolume instance list|set|remove

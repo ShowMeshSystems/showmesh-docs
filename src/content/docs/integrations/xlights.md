@@ -11,6 +11,14 @@ Current source includes an FPP Connect listener on native nodes and revisioned c
 
 ShowMesh can accept FPP Connect sequence content for a native render node. The node remains its own xLights upload target; ShowMesh does not become FPP's scheduler, playlist editor, or playback authority.
 
+The listener is an unauthenticated compatibility shim for xLights, not part of the public ShowMesh API: it accepts no ShowMesh credential, serves only the paths xLights itself calls, and is absent from the OpenAPI description by intent. Run it only on an isolated show network, the same trust boundary FPP itself assumes.
+
+## Required credential for upload registration
+
+`SHOWMESH_AGENT_API_TOKEN` is **required** on any node that will ever receive an xLights upload. The listener binds unconditionally on every node regardless of this setting, so any node can receive an upload; without a token that carries `asset:write` (only the admin role carries that scope today), the node still assembles and holds the upload but never registers it with the coordinator. That upload is retried indefinitely rather than failing outright, and nothing is visible to the operator except a field in the node's own `assets/fppconnect-uploads/index.json`. Set the token and restart the agent to let a stalled upload register on its next retry; do not expect a coordinator-side alert.
+
+The listener binds on `SHOWMESH_FPPCONNECT_LISTEN_ADDR` (default `:80`, matching where xLights itself expects to find FPP Connect hosts). Binding a privileged port requires the `CAP_NET_BIND_SERVICE` capability, which the packaged systemd unit grants explicitly. A node that cannot bind the listener still renders and still answers other agent traffic; check node status for the bind failure.
+
 ## What is configured
 
 The revisioned `fppconnect.settings` object controls whether ingestion is enabled and its storage limits. It is managed through the API or these CLI commands:
@@ -32,3 +40,5 @@ After a controlled development upload, inspect `fppconnect status` for every tar
 - Supported xLights versions, FPP Connect compatibility, and an end-to-end deployed upload path are not yet documented as verified.
 - Manual ShowMesh asset upload remains a valid fallback for node-local FSEQ content.
 - FPP remains responsible for schedule, playlist order, and playhead; the render node follows the local FPP timeline after content is available.
+
+A hardware session against a real xLights client found that xLights calls the listener's models endpoint unconditionally as part of an ordinary upload, before any file transfer starts, regardless of whether the operator uses xLights' models feature. That call is now answered rather than left unimplemented, so an otherwise-successful upload no longer surfaces as an error in xLights on account of it. This closes one defect found during that session; it does not establish a verified end-to-end xLights-to-FPP path.

@@ -38,6 +38,20 @@ showmeshctl audio node set <node-id> --help
 
 The node must advertise the selected program and LTC routes. A program-only node omits the LTC route and channel. Writes replace the full settings object, so read the current values before changing them.
 
+## Roles and zones
+
+An installation may declare more than one `audio.node`. Each carries a role: `program` (program audio only), `program+ltc` (program audio and this installation's sole LTC emitter), or `zone` (an independent local speaker zone, never program or LTC for the main mix). A `zone` node also carries an operator-facing `zone` name; that field is refused on any other role. Role is optional on the wire, and an audio node with no declared role defaults to `program+ltc`, which is what a single-node installation's node already implicitly was before roles existed.
+
+At most one `audio.node` may carry `program+ltc` at a time: authoring a second one is refused at write time, and readiness separately checks that the deployed configuration still has exactly one LTC-carrying node before a show is called ready. No installation on record has run more than one audio node; treat multi-node behavior as unverified beyond configuration and readiness checks until it has been exercised on real hardware.
+
+A [Cue](../../cues/)'s audio, LTC, and announcement outputs can each name a specific `audio.node` by ID instead of always resolving to the sole `program+ltc` node, and a Show Night's background bed and announcements can each fan out to more than one `audio.node` at once, such as a porch zone and a garage zone playing the same background music together.
+
+## Capability declarations and restore reporting
+
+An audio node's advertised output capabilities are derived from the bound session engine's real, current availability rather than a fixed list: what an installation can rely on for background-audio transitions and readiness is exactly what the engine has evidenced, not what the hardware is assumed to support.
+
+A session whose restore was deferred and re-queued (a build refusal, or no `audio.node` binding yet available) reports its state as `restore_pending` rather than silently continuing to report its last persisted state. This is reporting-only: the on-disk record keeps the state the session actually held, so a reboot before the next successful retry still resumes correctly, and a `restore_pending` session is retried automatically, backed off and bounded, whenever a matching `audio.node` binding becomes available.
+
 ## Data-flow boundary
 
 1. ShowMesh synchronizes exact audio assets to the node before a session begins.

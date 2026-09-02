@@ -24,10 +24,23 @@ FPP or Resolume being down does not make `/readyz` fail. Inspect those resources
 ## Capture state and history
 
 ```sh
+showmeshctl version
 showmeshctl snapshot --output json
 showmeshctl events --output json
 showmeshctl audit --output json
 ```
+
+`showmeshctl version` reports the client's own version and, on success, confirms it could reach and negotiate a compatible API version with the coordinator. Collect the following alongside the snapshot when the symptom touches a specific subsystem:
+
+```sh
+showmeshctl night status
+showmeshctl show mode
+showmeshctl render status <node-id>
+showmeshctl resolume status
+showmeshctl fppconnect status <node-id>
+```
+
+`night status` and `show mode` are open reads. `render status` exits `22` when a node has never published surface render evidence at all; a node that has reported, even stale or unknown evidence, prints normally. `fppconnect status` reports whether a node's most recently pushed FPP Connect channel range was formatted, empty (no surface configured), or dropped, and why.
 
 The snapshot is authoritative for the current view. Event history is ordered by its durable sequence number, but retained history can have a gap. The audit log requires the `audit:read` scope.
 

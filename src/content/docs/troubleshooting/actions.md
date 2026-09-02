@@ -23,6 +23,18 @@ A completed but unconfirmed run is not the same as an aborted run.
 
 The follow loop reached its idle timeout without an update. It is not a total-runtime limit and does not prove failure. Query the run ID again before submitting another run.
 
+## Symptom: `action check` reports a broken binding
+
+```sh
+showmeshctl action check <action-id>
+```
+
+This is a read; it dispatches nothing and needs no credential. It exits `29` when the checked binding is broken: the target no longer resolves, or resolves ambiguously, against current integration state. It never exits `29` for `unknown` (the check itself could not be performed). Fix the named cause before invoking the action or running a macro that references it, then rerun `action check` and confirm it no longer reports broken.
+
+## Symptom: `action invoke` is refused
+
+`showmeshctl action invoke <action-id>` requires the `show:action:invoke` scope. A `403` means the credential authenticated but the principal lacks that scope; run `showmeshctl session` and have an administrator adjust the role. This is a separate gate from the scopes a macro run uses; a principal that can run macros does not automatically get direct action invocation.
+
 ## Symptom: a Resolume action is refused, failed, or unconfirmable
 
 These are separate outcomes:

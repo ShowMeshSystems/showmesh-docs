@@ -51,6 +51,27 @@ An MQTT action specifies a configured broker, publish topic, payload, QoS, and r
 
 The coordinator validates the target when an action revision is written. FPP instance and primitive names, MQTT broker IDs, Resolume named references, parameter shapes, and safety-class rules must resolve before the revision is accepted.
 
+An action can also declare `idempotent`, a tri-state flag: undeclared (the default), or explicitly `true` or `false`. It is read only by a Show Night Transition Step's own first-outward-cue gate; an ordinary action used outside that gate can leave it undeclared indefinitely. Declaring `idempotent: true` tells that gate the action is safe to retry with the same effect; declaring it `false` tells the gate a retry is not safe.
+
+## Check and invoke an action directly
+
+Re-check a stored action's target against current integration state, without dispatching anything:
+
+```sh
+showmeshctl action check <action-id>
+showmeshctl action check --show <show-id>
+```
+
+This is a read: it requires no credential and dispatches nothing. It exits `29` if any checked binding is broken; an `unknown` result (the check could not be performed at all) never exits `29`.
+
+Invoke a stored action directly, outside of any macro run:
+
+```sh
+showmeshctl action invoke <action-id>
+```
+
+This requires the `show:action:invoke` scope and uses the action's own stored target; the command passes no parameters of its own. Pass `--revision` to pin the exact action revision a queued or durable caller should execute; an interactive caller can omit it to run whichever revision is active right now.
+
 ## What a macro adds
 
 A **macro** is a saved, ordered recipe of action IDs. Each step adds a step ID and policies for failed or uncertain outcomes; the action itself supplies the provider parameters. Macros can contain up to 32 steps.
@@ -77,8 +98,11 @@ Submitting a macro returns `202 Accepted`; without `--follow`, acceptance is not
 
 ```sh
 showmeshctl run list --macro <macro-id>
+showmeshctl run list --show <show-id>
 showmeshctl run show <run-id>
 ```
+
+`run list` never includes step detail; fetch one run with `run show` for that. An MQTT action dispatches through the same configured integration broker whether it runs as a macro step or through `action invoke` directly.
 
 ## Failure behavior
 

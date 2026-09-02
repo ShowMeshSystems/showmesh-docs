@@ -22,6 +22,8 @@ ShowMesh separates **what belongs to a production** from **what the system curre
 | [Cue](./cues/) | What should this point in a production present or play? | Belongs to a show and can combine render, audio, LTC, and announcement output. |
 | [Playlist](./playlists/) | Which Cues run in which order? | Belongs to a show and uses either FPP or ShowMesh audio as its runner. |
 | [Show Night](./show-night/) | How is one night prepared, run, and ended? | Selects a Show, FPP playlists, Transition Steps, optional audio, and safety actions. |
+| [Show Mode](./show-mode/) | Is the installation set up for editing, or set up to run a show? | One installation-wide value; read by the Resolume adapter and every node. |
+| [Emergency Stop](./emergency-stop/) | How do we stop playout immediately if something goes wrong? | Stops FPP directly; at higher levels, also moves the active Show Night. |
 
 These are references, not one large nested show file. For example, reading a show returns its name and notes; surfaces and actions that name that show remain separate revisioned objects.
 
@@ -35,5 +37,7 @@ This section covers:
 - [Cues](./cues/): define the render, audio, LTC, or announcement output for one moment in a Show.
 - [Playlists](./playlists/): arrange Cues for FPP or ShowMesh audio and check FPP-backed readiness.
 - [Show Night](./show-night/): prepare, start, monitor, and end a night without taking scheduling authority from FPP.
+- [Show Mode](./show-mode/): switch the installation between Program Mode and Show Mode without gating a stop.
+- [Emergency Stop](./emergency-stop/): stop playout at one of three levels, and know what each does and does not touch.
 
 For a quick health check, start with the dashboard and node/FPP/Resolume pages. Treat stale or failed collection as missing evidence, not as a safe value to act on.

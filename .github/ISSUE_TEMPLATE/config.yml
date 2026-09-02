@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a ShowMesh product bug or request a feature
+    url: https://github.com/ShowMeshSystems/showmesh/issues/new/choose
+    about: Problems with the coordinator, native agent, CLI, Operator UI, or an integration belong in the main ShowMesh repository.
+  - name: Report a security vulnerability privately
+    url: https://github.com/ShowMeshSystems/showmesh/security/advisories/new
+    about: Do not report vulnerabilities in a public issue. Follow the private process in the main repository's SECURITY.md.

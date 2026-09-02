@@ -71,6 +71,20 @@ Use [Set Up a Video Node](../../guides/set-up-a-video-node/) for the sender side
 
 ## Recovery boundary
 
-ShowMesh can record known Arena state and offer manual or opt-in automatic recovery after a detected restart. Test recovery with the intended composition on a non-show machine first. The settle delay is configurable in the integration settings.
+ShowMesh can record known Arena state and offer manual or opt-in automatic recovery after a detected restart. Test recovery with the intended composition on a non-show machine first.
+
+```sh
+showmeshctl resolume recovery status
+showmeshctl resolume recovery enable
+showmeshctl resolume recovery disable
+showmeshctl resolume recovery restore
+showmeshctl resolume recovery revisions
+```
+
+The auto-restore toggle (`enable`/`disable`) is store-backed configuration and requires `config:write`. The settle delay the automatic gate waits after Arena becomes reachable again, before issuing anything beyond the liveness probe that noticed the return, is a separate coordinator setting: `SHOWMESH_RESOLUME_RECOVERY_SETTLE` (default 8 seconds, 0-60 seconds). It is not part of the `resolume.recovery` store-backed configuration and changing it requires a coordinator restart. `resolume recovery restore` runs the same restore on demand, without the settle wait, regardless of the toggle.
 
 ShowMesh does not change Arena preferences, load a composition, manage shortcuts or presets, or start, stop, restart, or signal the Arena process. Those remain operator responsibilities and manual fallbacks.
+
+## Show Mode and the WebSocket connection
+
+ShowMesh holds its WebSocket connection to Arena open in Program Mode and closes it in Show Mode, reducing edit-time surface once a show is running. See [Show Mode](../../using-showmesh/show-mode/) for how the installation-wide mode is set and what else it changes.

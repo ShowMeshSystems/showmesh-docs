@@ -7,9 +7,9 @@ maturity: experimental-active
 
 ShowMesh has current development integrations for FPP and Resolume Arena. Some newer paths are experimental; their pages name the relevant limits directly.
 
-- [FPP](./fpp/) — REST observation/control, optional MQTT status, and playlist evidence/readiness surfaces.
-- [Experimental FPP Plugin](./fpp-plugin/) — FPP-host macro runner with host-local outcome evidence and retained delivery results.
-- [Resolume Arena](./resolume/) — composition import, observation, bounded actions, and recovery controls.
+- [FPP](./fpp/) — REST observation/control, optional MQTT status, playlist evidence/readiness surfaces, and an experimental coordinator-side signed fallback program.
+- [Experimental FPP Plugin](./fpp-plugin/) — FPP-host macro runner, brightness Action, and playlist-entry identity observer, tested against fakes only.
+- [Resolume Arena](./resolume/) — composition import, observation, bounded actions, recovery controls, and Show Mode's effect on the WebSocket connection.
 - [Integration MQTT](./mqtt/) — advanced action publishing to explicitly configured external brokers.
 - [xLights FPP Connect](./xlights/) — experimental node-targeted sequence ingestion and channel-range outcomes.
 - [SMPTE / LTC](./smpte-ltc/) — experimental audio-node LTC configuration, generation, and receiver limits.

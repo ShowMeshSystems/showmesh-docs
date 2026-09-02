@@ -29,6 +29,8 @@ Current event names are:
 - `macroRun.changed`
 - `resolume.changed`
 - `resolumeRecovery.changed`
+- `nightSession.changed`
+- `fppPlaylistEntry.changed`
 - `stream.reset`
 
 With the exact query `?deltas=1`, the stream may also emit `fpp.observations.changed`. Any other `deltas` value behaves as though the option were absent. A delta-aware client must still process `fpp.changed`, because structural FPP changes use that event.

@@ -27,12 +27,14 @@ These pages describe the current `main` development state, not a stable release 
 - Resolume composition import, observation, actions, and optional recovery.
 - Experimental render nodes that turn node-local FSEQ data into an NDI source on the tested Debian 13 amd64 path.
 - Revisioned shows, surfaces, logical actions, macros, an active-show pointer, an asset store, cues, and playlists.
+- An installation-wide operating mode (`program`/`show`) and an emergency-stop command surface, reachable from the Operator UI or `showmeshctl`.
+- Show Night session lifecycle commands (preparation, readiness, pre-show, start, fade-out, power-down).
 - Experimental xLights FPP Connect ingestion for node-targeted sequence content.
-- Experimental audio-node and LTC software paths.
+- Experimental audio-node and LTC software paths, including a contract for more than one audio node per installation.
 
 ## What does not work yet
 
-ShowMesh does not yet provide HDMI output or a supported FPP Connect deployment. Audio/LTC details are documented separately, including their timing and receiver limits.
+ShowMesh does not yet provide HDMI output or a supported FPP Connect deployment. Audio/LTC details are documented separately, including their timing and receiver limits. Signed FPP fallback programs exist on the coordinator side, but FPP-host execution of one has not been verified on a real FPP host. Multi-node audio has a contract but no installation has run more than one audio node.
 
 ## How to read a maturity label
 

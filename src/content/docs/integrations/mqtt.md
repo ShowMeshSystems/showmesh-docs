@@ -13,7 +13,7 @@ ShowMesh actions can publish to external MQTT brokers for integrations that do n
 Set a comma-separated list of IDs and URLs on the coordinator:
 
 ```sh
-SHOWMESH_INTEGRATION_BROKERS='home-automation=tcp://10.0.0.5:1883'
+SHOWMESH_INTEGRATION_BROKERS='home-automation=tcp://<broker-host>:1883'
 SHOWMESH_INTEGRATION_BROKER_HOME_AUTOMATION_USERNAME='showmesh'
 SHOWMESH_INTEGRATION_BROKER_HOME_AUTOMATION_PASSWORD='<password>'
 ```
