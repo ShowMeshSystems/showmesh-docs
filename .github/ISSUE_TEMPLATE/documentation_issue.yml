@@ -1,0 +1,55 @@
+name: Documentation issue
+description: Report a page that is wrong, missing, unclear, or out of date on docs.showmesh.systems.
+labels:
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep the documentation accurate. Do not include passwords, tokens, private keys, or other secrets. Product bugs belong in the main ShowMesh repository; use the links on the issue chooser.
+
+  - type: input
+    id: page
+    attributes:
+      label: Page URL or path
+      description: The docs.showmesh.systems URL or the source path under src/content/docs.
+      placeholder: https://docs.showmesh.systems/guides/add-a-node/
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of problem is it?
+      options:
+        - Incorrect or outdated behavior
+        - Missing information
+        - Unclear or hard to follow
+        - Broken link, image, or formatting
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong or missing?
+      description: Quote the sentence or step if possible, and say what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What did you observe?
+      description: If the page disagrees with the software, include the ShowMesh version or commit (for example from `showmeshctl version`), the command you ran, and what actually happened. Leave blank for editorial problems.
+    validations:
+      required: false
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix
+      description: Optional. Proposed wording or a pointer to the authoritative source.
+    validations:
+      required: false

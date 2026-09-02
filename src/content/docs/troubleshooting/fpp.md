@@ -49,3 +49,40 @@ showmesh-fpp-plugin status
 `refused` means the plugin credential was rejected; `rejected` means the coordinator declined the requested macro; `unreachable` means the coordinator could not be reached or returned a server error; and `local_error` means the host could not validate its own credential, configuration, or arguments. The command reads the host-local record and does not need a working coordinator connection.
 
 The plugin is not a supported production installation path. Do not attempt a broad FPP restart as a substitute for diagnosing its local status and credential boundary.
+
+## Symptom: a Playlist reports not ready
+
+```sh
+showmeshctl fpp playlist-readiness <playlist-id>
+```
+
+Read the reported failing condition; the ten defined conditions and what each one means:
+
+- `definition-missing`: no stored FPP playlist definition matches this binding.
+- `definition-superseded`: a newer stored definition exists for the same instance and playlist name. This means the FPP playlist was edited, independent of playback.
+- `entry-not-in-definition`: an entry's section and position do not exist in the stored definition.
+- `entry-filename-mismatch`: an entry's expected filename does not match the definition at that position.
+- `cue-not-ready`: a referenced Cue does not exist, has never been activated, or belongs to a different Show than the Playlist.
+- `observation-hash-mismatch`: the latest accepted observation for this FPP instance carries a playlist hash different from the binding's. A warning rather than a failure when no observation has been received at all.
+- `evidence-unavailable`: an observation exists but could not establish identity, so it carries nothing to compare. Distinct from no observation at all: this is a check that had evidence and could not conclude anything from it.
+- `node-render-unassigned`: a referenced Cue declares a render output, and a node holding the relevant surface has no confirmed render assignment for it. The reported reason distinguishes a node that is not reporting at all from one that is online with no assignment, or one whose evidence has aged past its window.
+- `node-catalog-stale`: a node holding a resolved output for this Playlist's Show has not acknowledged the exact catalog revision the active Show requires right now. Skipped when this Playlist's Show is not the active Show.
+- `exclusive-claim-conflict`: two Cues this Show's Playlists could concurrently run hold a colliding exclusive resource claim.
+- `assets-missing`: a node that must render or play a Cue in this Playlist does not hold an asset that has been uploaded and resolved to it.
+
+Fix the named cause, then rerun `fpp playlist-readiness` and confirm it reports ready before relying on the Playlist in a show.
+
+## Symptom: the fallback program is missing, stale, or mismatched
+
+The coordinator's own side of the signed fallback program exists; there is no CLI for it yet, and FPP-host execution lives in the separate FPP plugin, unverified on real FPP hardware. Inspect the coordinator's record directly:
+
+```sh
+curl -fsS -H "Authorization: Bearer <token>" \
+  http://<coordinator-host>:8080/api/v1/fallback-programs
+curl -fsS -H "Authorization: Bearer <token>" \
+  http://<coordinator-host>:8080/api/v1/fallback-programs/<fpp-instance-id>
+```
+
+The list endpoint returns metadata only, never the signed payload. The per-instance endpoint returns the full signed program the coordinator most recently published for that FPP instance, plus `acknowledgedStatus` (`fallback-program-current`, `fallback-program-stale`, `fallback-program-rejected`, or `fallback-program-unacknowledged`) and, when set, the `acknowledgedPackageId` and `acknowledgedAt` a host last reported back through `POST /api/v1/fallback-programs/{fppInstanceId}/acknowledge`. `published: false` with no `program` or `signatureBase64` means this coordinator has never successfully compiled and published a program for this host at all. Publication itself runs as a background reconciliation loop on the coordinator; these endpoints only read what that loop has already written.
+
+Do not assume a real FPP host is actually running the program these endpoints describe: nothing in this path has been exercised against a real xLights, FPP, or the FPP plugin's own host-side execution.

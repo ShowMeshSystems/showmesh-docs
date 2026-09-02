@@ -23,9 +23,23 @@ showmeshctl playlist set <playlist-id> --help
 showmeshctl playlist revisions <playlist-id>
 ```
 
+## Import FPP playlist definitions
+
+An FPP-backed Playlist binds to an imported playlist definition rather than reading FPP live on every check. Import and inspect that definition, and the entry observations the coordinator has reconciled against it, with:
+
+```sh
+showmeshctl fpp playlist-definitions list
+showmeshctl fpp playlist-definitions get <instance-id> <playlist-hash>
+showmeshctl fpp playlist-definitions entries <instance-id> <playlist-hash>
+showmeshctl fpp playlist-entry-observations list
+showmeshctl fpp playlist-entry-observations reconciliation <instance-id>
+```
+
+These are read-only.
+
 ## What readiness does
 
-`showmeshctl fpp playlist-readiness <playlist-id>` checks an FPP-backed Playlist against the imported definition, Cue identity, current playback evidence, render assignment, and node state. It is a read-only preflight result. It does not start playback or change FPP.
+`showmeshctl fpp playlist-readiness <playlist-id>` checks an FPP-backed Playlist and reports the first of these conditions that fails, in order: the imported definition is present (`definition-missing`); the entry's position and filenames still match that definition (`entry-not-in-definition`, `entry-filename-mismatch`); the stored definition itself has not been superseded by a newer import (`definition-superseded`); the Cue behind the entry is ready (`cue-not-ready`); the latest FPP observation's playlist hash still matches the bound hash (`observation-hash-mismatch`); fresh evidence exists at all (`evidence-unavailable`); the assigned render node actually holds the entry's render assignment (`node-render-unassigned`); the node's Cue catalog is current (`node-catalog-stale`); no conflicting exclusive claim exists (`exclusive-claim-conflict`); the installation's LTC emitter is unambiguous (`audio-ltc-emitter-ambiguous`); and an audio output's `target` resolves to a real, bound node (`audio-target-unbound`, `audio-target-unresolved`) with its assets present (`assets-missing`). This is a read-only preflight result. It does not start playback or change FPP.
 
 ## What a Playlist does not do
 

@@ -34,4 +34,8 @@ Macros are asynchronous runs composed from logical actions. Submitting a run ret
 
 Surface objects describe geometry, channel ranges, node assignment, and an `ndi` or `hdmi` transport. Current `main` includes an experimental render-node runtime that consumes an applied NDI surface and node-local FSEQ asset. HDMI has no runtime output path. See the [render-node](../../using-showmesh/node-types/render-nodes/) page for the operating boundary.
 
-The separate [audio-node](../../using-showmesh/node-types/audio-nodes/) role provides experimental playback and LTC paths. Both roles build on the same native agent and advertise composable capabilities rather than belonging to a hardcoded node class.
+The separate [audio-node](../../using-showmesh/node-types/audio-nodes/) role provides experimental playback and LTC paths. Both roles build on the same native agent and advertise composable capabilities rather than belonging to a hardcoded node class. An installation can declare more than one `audio.node`, each with a role (`program`, `program+ltc`, or `zone`), but no installation has run with more than one audio node.
+
+## Show operation and safety
+
+An installation-wide operating mode (`program` or `show`) and a show-scoped emergency-stop command surface are implemented at the coordinator's API and CLI. Emergency stop is not gated by mode: no mode may refuse, delay, or degrade blackout, stop, or power-off. Show Night session objects and their lifecycle commands (preparation, readiness, pre-show, start, fade-out, power-down) are also implemented. Signed FPP fallback programs are stored and served by the coordinator; the FPP-host component that would execute one lives in the separate `showmesh-fpp-plugin` repository and has not been installed on a real FPP host.

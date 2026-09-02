@@ -52,11 +52,13 @@ Do not create broker users by hand in the repository. Use the bundled scripts so
 ## 4. Start and verify the stack
 
 ```sh
-docker compose up -d --build
+make -C .. deploy-up
 docker compose ps
 curl -fsS http://localhost:8080/healthz
 curl -fsS http://localhost:8080/readyz
 ```
+
+`docker compose up -d --build`, run directly instead of through `make -C .. deploy-up`, refuses to start: `deploy/docker-compose.yml` requires `VERSION`, `COMMIT`, and `BUILD_DATE` build arguments and names the `make` targets in its error rather than falling back to placeholder values. `make -C .. deploy-up` sets them from the source checkout and starts the stack; `make -C .. deploy-build` builds the same image without starting it.
 
 Open `http://<coordinator-host>:8081` from the trusted management network. The expected first result is:
 
@@ -182,8 +184,7 @@ Current upgrades are source checkouts plus a rebuild, not image-tag changes:
 ```sh
 git fetch --tags
 git checkout <reviewed-ref>
-cd deploy
-docker compose up -d --build
+make deploy-up
 ```
 
 SQLite migrations are forward-only. Take a volume backup first: returning to an older source ref after a newer ref migrated the database requires restoring the matching pre-upgrade backup.

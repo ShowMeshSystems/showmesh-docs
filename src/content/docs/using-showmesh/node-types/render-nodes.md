@@ -37,6 +37,20 @@ The coordinator is not in the timing or frame path. It assigns configuration, di
 
 This is file-based local rendering, not a live matrix stream from the coordinator or FPP. Keeping the FSEQ on the node removes the coordinator and ordinary control traffic from the real-time media path.
 
+An apply resolves its FSEQ by media type: it filters to the sequence's current `fseq` asset specifically, never to whatever asset happens to be current for that sequence and target. If a sequence has current assets but none of them is an `fseq`, the coordinator refuses the apply and names the mismatch, rather than sending a non-FSEQ file downstream for the node to reject.
+
+## Drawing state and idle output
+
+The frame writer reports one of four drawing states: drawing real content, idle, an extraction failure, or **stale**. Stale means the MultiSync timeline reports a sequence filename that no longer matches the FSEQ the writer is currently holding, which happens when FPP moves on to a sequence the surface has no content for; the writer stops drawing that mismatched content rather than continuing to paint a sequence FPP has already left. An empty timeline filename is not treated as a mismatch, since it means nothing has been observed yet.
+
+When an assignment carries no usable FSEQ content at all, the node reports **idle** output honestly through `render.settings.idleOutput` rather than falling back to a silent test pattern with no reported mode or failure.
+
+A [Cue catalog](../../cues/#cue-catalog) deploy that leaves a surface's resolved sequence and content hash unchanged skips restarting the frame writer, avoiding a visible stop-then-start for a deploy that changed nothing the surface draws. An empty content hash on either side of that comparison is never treated as a match.
+
+## Diagnostic surface
+
+Set `SHOWMESH_RENDER_DIAGNOSTIC_SURFACE` (plus `SHOWMESH_RENDER_DIAGNOSTIC_WIDTH`, `_HEIGHT`, `_FRAME_RATE`, and `_NDI_SOURCE_NAME`) on the agent to run a node-local diagnostic idle surface, independent of any coordinator-assigned surface. It is for confirming a node's own transport path works before wiring it into a show.
+
 ## Current scope
 
 The implementation in current `main` includes:

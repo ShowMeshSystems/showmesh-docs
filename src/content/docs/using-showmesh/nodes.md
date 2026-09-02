@@ -60,17 +60,13 @@ cd deploy
 ./mosquitto/add-agent-credential.sh <node-id>
 ```
 
-Set that node's agent environment:
+The installer writes this node's agent environment to `/etc/showmesh/agent.env` (created from `deploy/node/agent.env.example` only if it does not already exist) and installs the `showmesh-agent.service` systemd unit. Edit the installed `/etc/showmesh/agent.env`, not the template, then restart the service:
 
 ```sh
-export SHOWMESH_NODE_ID=yard-left
-export SHOWMESH_NODE_LABEL='Yard left player'
-export SHOWMESH_MQTT_BROKER=tcp://coordinator-host:1883
-export SHOWMESH_MQTT_USERNAME=yard-left
-export SHOWMESH_MQTT_PASSWORD='<printed password>'
-export SHOWMESH_ASSET_DIR=/var/lib/showmesh/assets
-./bin/showmesh-agent
+systemctl restart showmesh-agent
 ```
+
+See [Install a Native Node](../../guides/add-a-node/) for the full installation path. At minimum, set `SHOWMESH_NODE_ID` and the broker credentials issued by `add-agent-credential.sh` above.
 
 Node IDs accept lowercase letters, digits, and internal hyphens. The agent defaults to the OS hostname, but startup fails with a useful message if that hostname is invalid.
 
@@ -83,10 +79,10 @@ showmeshctl assets settings set \
   --content-base-url http://<node-reachable-coordinator>:8080
 ```
 
-Use the coordinator's network hostname rather than `localhost` for a separate node. If the coordinator closes anonymous API reads, create a separate `machine` principal with the `viewer` role and issue a token for that node; place that token in `SHOWMESH_AGENT_API_TOKEN`. Do not reuse a human administrator token—the viewer role has the `node:read` permission the asset endpoint needs. [Install a Native Node](../../guides/add-a-node/) includes the exact issuance commands.
+`assets settings set` changes only the flags you pass; an omitted flag leaves its stored or default value alone. Use the coordinator's network hostname rather than `localhost` for a separate node. If the coordinator closes anonymous API reads, create a separate `machine` principal with the `viewer` role and issue a token for that node; place that token in `SHOWMESH_AGENT_API_TOKEN`. Do not reuse a human administrator token—the viewer role has the `node:read` permission the asset endpoint needs. [Install a Native Node](../../guides/add-a-node/) includes the exact issuance commands.
 
 ## Read health correctly
 
 `controlPlane.state: offline` means the coordinator lost the agent's MQTT connection. It is not proof that the computer is powered off or local playback stopped. Check observation age, last error, and device-local state before intervening.
 
-Likewise, `discoveryState: not_seen` means a completed discovery run did not see a declared node. `unknown` means the available run did not establish presence or absence, including when no complete run is available. Neither verdict should be silently promoted into a claim about playback.
+Likewise, `discoveryState` is one of four values: `present` (the most recent complete discovery run saw this declared node), `not_seen` (a completed discovery run did not see it), `unknown` (the available run did not establish presence or absence, including when no complete run is available), or `not_applicable` (the node is not declared at all). Neither `not_seen` nor `unknown` should be silently promoted into a claim about playback.

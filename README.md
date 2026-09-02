@@ -21,6 +21,10 @@ npm run check
 
 That command builds the production site, generates Pagefind search data, and checks generated internal links.
 
+## Reporting a documentation problem
+
+Use the [documentation issue form](https://github.com/ShowMeshSystems/showmesh-docs/issues/new/choose). Product bugs and feature requests belong in the [main ShowMesh repository](https://github.com/ShowMeshSystems/showmesh/issues/new/choose). Security reports follow [SECURITY.md](SECURITY.md).
+
 ## Content
 
 Pages live in `src/content/docs`. The sidebar is intentionally limited to eight top-level sections. Use Starlight components for standard notes, cautions, cards, and tabs.
@@ -49,7 +53,7 @@ The site is a static Astro build and does not require a runtime adapter.
 - Build output directory: `dist`
 - Node.js version: `22.12` or newer
 
-Connect the private GitHub repository to Cloudflare Pages when publishing is authorized. Do not store Cloudflare credentials in this repository. `wrangler.toml` records the output directory for local Cloudflare tooling; deployment remains a separate, outward-facing action.
+The site builds and deploys to https://docs.showmesh.systems automatically when changes land on `main`. Do not store Cloudflare credentials in this repository. `wrangler.toml` records the output directory for local Cloudflare tooling.
 
 ## Versioning
 

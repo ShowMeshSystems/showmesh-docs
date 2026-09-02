@@ -45,4 +45,6 @@ Surface geometry must stay within the coordinator's safety limit: the last chann
 
 Use `showmeshctl render apply <node-id> <surface-id> <sequence-id>` only after the exact FSEQ asset is ready on that node. Then run `showmeshctl render probe <node-id> <surface-id>` to make a real GStreamer transport transition, followed by `showmeshctl render status <node-id>` to inspect the fresh pipeline and transport evidence. `render apply` alone intentionally does not establish transport availability; the coordinator does not substitute a configuration write for that evidence.
 
+See [Render Nodes](../node-types/render-nodes/) for what `render status` reports when a surface has no usable content, when FPP has moved past the sequence the surface holds, and when a Cue catalog deploy skips restarting a surface's frame writer.
+
 See [Set Up a Video Node](../../guides/set-up-a-video-node/) for the experimental setup procedure.

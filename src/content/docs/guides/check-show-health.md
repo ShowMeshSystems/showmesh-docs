@@ -30,16 +30,28 @@ showmeshctl fpp
 showmeshctl resolume status
 ```
 
-## 3. Check the active show and assets
+## 3. Check the active show, mode, and assets
 
 ```sh
 showmeshctl show active
+showmeshctl show mode
 showmeshctl assets manifest --require-ready
 ```
 
-A non-ready manifest means expected bytes are not confirmed on a node. It does not prove playback has failed, and a ready manifest does not prove media can be decoded.
+`show mode` reports the installation-wide `program` or `show` mode. It is one value for the whole installation, never per-node or per-subsystem; today it changes only whether the Resolume WebSocket wake-up channel is held open (`program`) or closed (`show`). A non-ready manifest means expected bytes are not confirmed on a node. It does not prove playback has failed, and a ready manifest does not prove media can be decoded.
 
-## 4. Inspect recent history
+## 4. Check show night status and readiness
+
+If the installation runs a night session, check its lifecycle state and current readiness before assuming a night command will be accepted:
+
+```sh
+showmeshctl night status
+showmeshctl night readiness
+```
+
+`night readiness` is rejected when no preparation epoch is open. Read every check name and reason it returns before trusting it as a complete pre-flight; a plain `unknown` outcome does not by itself block a night command, but a missing or stale readiness result does.
+
+## 5. Inspect recent history
 
 ```sh
 showmeshctl events

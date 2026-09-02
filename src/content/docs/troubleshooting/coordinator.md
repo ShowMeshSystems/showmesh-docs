@@ -25,3 +25,39 @@ Do not diagnose FPP or Resolume from `/readyz`: those integrations expose their 
 - `403` means authentication succeeded but the principal lacks the required scope. Run `showmeshctl session` and have an administrator adjust the role if appropriate.
 
 Reads are open by default unless `SHOWMESH_API_CLOSE_READS=true`; writes always require authentication.
+
+## Symptom: `docker compose up` refuses to start, naming `SHOWMESH_VERSION`/`SHOWMESH_COMMIT`/`SHOWMESH_BUILD_DATE`
+
+`deploy/docker-compose.yml` requires all three build-arg variables and refuses to build without them, because a deployed coordinator that cannot say which commit it is running is not a safe default. Do not set them by hand. Use the wrapping make target instead, run from the repository root:
+
+```sh
+make deploy-up
+```
+
+This derives all three from the checked-out git ref automatically (`make deploy-build` builds only the image, without starting the stack). After it is running, confirm the commit actually deployed:
+
+```sh
+curl -s http://localhost:8080/version
+```
+
+## Symptom: the FPP MQTT collector reports connected but no data
+
+Preserve the collector state before restarting anything:
+
+```sh
+showmeshctl snapshot --output json
+```
+
+Look for the `fpp-mqtt` entry in the `collectors` list. A state of `connected_no_data` means the collector's broker connection is up but it has received no message on any subscribed topic for at least 30 seconds since that connection came up. This states only what was observed, never why: a silently denied broker read grant looks identical here to a genuinely idle topic.
+
+Check, in order:
+
+1. The topic prefix: `showmeshctl fpp-mqtt get` reports the configured prefix. The default is `falcon/player`; confirm it matches what the real FPP publishes to on this broker.
+2. The host map: every MQTT host mapping in `fpp.mqtt` must refer to an FPP endpoint that exists in `fpp.endpoints`, and the mapped `HostName` must match FPP's own reported hostname exactly.
+3. FPP's own MQTT publisher credential and its ACL on this broker: a broker connection that authenticates but is denied read on the relevant topics produces exactly this state.
+
+`showmeshctl fpp-mqtt set` changes take effect without a coordinator restart; the collector follows within about ten seconds.
+
+### Confirm recovery
+
+Rerun `showmeshctl snapshot --output json` and confirm the `fpp-mqtt` collector's state has returned to `running`, and that at least one `fpp.*` signal from this source carries a fresh observation time.

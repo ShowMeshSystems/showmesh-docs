@@ -21,3 +21,7 @@ The main `showmesh` repository owns implementation, OpenAPI definitions, tests, 
 Public documentation may summarize architecture, but it does not supersede an ADR, specification, API description, test, or the code. Conversely, engineering notes are not copied wholesale into this site: human readers need a usable path and explicit operational boundaries.
 
 There is no automated linked-PR or documentation release check yet. Those workflows are intentionally deferred until ShowMesh has its first release process.
+
+## Report a problem
+
+File a documentation issue in this repository's own issue tracker. File an implementation issue or feature request in the main `showmesh` repository's issue tracker. Report a security vulnerability through the main repository's `SECURITY.md` process, not a public issue. Public issues may be mirrored into an internal tracker for planning; internal tracker identifiers, links, and discussion must never be copied into a public issue, pull request, or documentation page.

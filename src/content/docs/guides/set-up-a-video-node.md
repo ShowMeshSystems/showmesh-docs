@@ -22,7 +22,7 @@ Install the node first with [Install a Native Node](../add-a-node/). Give it loc
 
 Install the NDI runtime from its vendor source on the render node. ShowMesh loads that runtime dynamically; it does not package or redistribute it.
 
-Debian 13 does not package GStreamer's `ndisink` element. The working bench path builds it from `gst-plugins-rs`, but the exact source revision and build commands have not yet been captured in a reproducible public recipe. Use a known-good local build and record its version, plugin path, and runtime version before depending on it.
+Debian 13 does not package GStreamer's `ndisink` element. The working bench path builds it from `gst-plugins-rs`, but the exact source revision and build commands have not yet been captured in a reproducible public recipe. Use a known-good local build and record its version, plugin path, and runtime version before depending on it. Once built, point `GST_PLUGIN_PATH` at the directory containing the compiled plugin in the node's `agent.env`, so GStreamer's registry can find it.
 
 First check that GStreamer sees the element:
 
@@ -58,6 +58,12 @@ showmeshctl declare -label "<descriptive label>" <node-id>
 After a successful NDI pipeline probe, the node should advertise both `render.surface` and `transport.ndi.send`. If NDI is unavailable, the agent should still start and advertise the non-NDI portion of its role; that is expected degradation, not an excuse to configure an NDI surface.
 
 If the node has more than one suitable network interface, use `SHOWMESH_MULTISYNC_INTERFACE` to restrict its multicast join deliberately. The default joins suitable interfaces. Do not set `SHOWMESH_MULTISYNC_LISTEN_ADDR` to a different port in a production deployment; the normal render path listens on `:32320`.
+
+### Optional: prove output with the node-local diagnostic surface
+
+Before wiring up a coordinator, broker, FPP, or an assigned sequence, you can confirm that a surface can draw at all. Set `SHOWMESH_RENDER_DIAGNOSTIC_SURFACE` to the surface ID in the node's `agent.env`, then restart the agent. The node draws a moving diagnostic bar on that surface from the moment it starts, using `SHOWMESH_RENDER_DIAGNOSTIC_WIDTH`, `_HEIGHT`, and `_FRAME_RATE` (default 1920x1080 at 40 fps) and, for NDI, `SHOWMESH_RENDER_DIAGNOSTIC_NDI_SOURCE_NAME`. Leaving the NDI source name empty still runs the pipeline, into a fakesink, and reports that in the render report rather than claiming a working output.
+
+This never displaces a surface that already holds a real render assignment; a surface with an active assignment draws the diagnostic pattern only while its timeline is idle, not instead of assigned content.
 
 ## 4. Create and activate the show
 
@@ -124,6 +130,10 @@ showmeshctl render status <node-id>
 ```
 
 `render apply` configures the assignment but does not itself prove that a frame can leave the node. `render probe` performs the real GStreamer transport transition and creates the fresh transport evidence to inspect in `render status`. Confirm the surface pipeline state and transport availability after the probe. An accepted request is not proof that the pipeline is producing frames.
+
+`render apply`, `clear`, and `restart` exit `9` when the coordinator's own confirmation wait ends with no evidence either way, and exit `23` specifically when fresh evidence shows the surface's pipeline in its `failed` state: exit `23` is the sharper signal, a direct failure rather than an absence of confirmation. `render status`, `render probe`, and `render transport` exit `22` when the surface has no transport evidence, or when transport is confirmed unavailable.
+
+If the surface reports `Drawing: stale`, the MultiSync timeline has moved on to a sequence this surface holds no assignment for; the surface goes black rather than continuing to draw the wrong content, and recovers automatically once its own sequence is playing again. Do not confuse a stale surface with a failed one: `render status` distinguishes them.
 
 In Resolume, select the exact NDI source name configured on the surface and route it into the intended composition. ShowMesh does not create Arena's source routing, mapping, or projection output.
 

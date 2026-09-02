@@ -15,6 +15,8 @@ Audio settings choose the default LTC frame rate and start offset. Supported rat
 
 The coordinator checks the selected route against the node's advertised program/LTC capabilities. It refuses a route the node has not reported and refuses an LTC route that differs from the program route.
 
+An installation may declare more than one audio node, but exactly one may carry the `program+ltc` role: program audio and LTC share one clock domain, so there is exactly one LTC generator for the whole installation. Writing a second `audio.node` with the `program+ltc` role is refused at authoring time, naming both node IDs. Other nodes carry the `program` role (program audio only, no LTC) or the `zone` role (an independent local speaker zone, never program or LTC for the main mix).
+
 ```sh
 showmeshctl audio settings get
 showmeshctl audio settings set --help

@@ -38,6 +38,12 @@ flowchart LR
   <Card title="Resolume Arena control" icon="desktop">
     One Arena instance, composition identity import, observation, supported named actions, and recovery controls. Arena continues to own its composition and mapping. [Configure Arena →](/integrations/resolume/)
   </Card>
+  <Card title="Show Mode and emergency stop" icon="warning">
+    One installation-wide Program Mode/Show Mode value that subsystems read and react to, and an emergency-stop action every operator surface can reach. [Read Show Mode →](/using-showmesh/show-mode/)
+  </Card>
+  <Card title="Node installer" icon="setting">
+    A scripted native-node install for a Debian 13 host, including systemd unit installation and preflight checks. [Install a native node →](/guides/add-a-node/)
+  </Card>
 </CardGrid>
 
 ## What is next
@@ -58,6 +64,16 @@ flowchart LR
   </Card>
   <Card title="FPP Connect" icon="setting">
     Native nodes accept experimental xLights FPP Connect content and report channel-range outcomes. [Read the FPP Connect guide →](/integrations/xlights/)
+  </Card>
+  <Card title="Multi-node audio" icon="warning">
+    <StatusBadge status="experimental-active" />
+
+    An installation can declare more than one audio node with a role: program, program-and-LTC, or an independent zone. Cross-node sample sync is not part of this work. [Read about audio nodes →](/using-showmesh/node-types/audio-nodes/)
+  </Card>
+  <Card title="Signed FPP fallback program" icon="puzzle">
+    <StatusBadge status="experimental-active" />
+
+    The coordinator can build and sign a per-FPP fallback program so a previously authorized Cue path can survive a coordinator outage during a scheduled show. This exists on the coordinator today; the FPP-side executor that would act on a delivered program is not established as verified. [Read about FPP →](/integrations/fpp/)
   </Card>
 </CardGrid>
 

@@ -27,9 +27,15 @@ The Compose bundle builds the coordinator and UI locally; there is no published-
 
 ## Native node hosts
 
-The native agent is a Go binary built by `make build`. There is no published package or vendor-provided service unit yet. Each agent needs a valid lowercase node ID, its own broker credential, a writable asset directory, and network access to the broker and—when asset downloads are used—the coordinator.
+The native agent is a Go binary. `make build` produces a `CGO_ENABLED=0` agent with no audio engine at all. A node that plays audio or generates LTC needs the separate `make build-agent-native` build instead, which links go-gst (GStreamer) and libltc and also shells out to the `gst-launch-1.0` and `gst-discoverer-1.0` command-line tools.
 
-Nodes run natively rather than in the coordinator bundle so they can use local GPUs, displays, audio devices, and NDI runtimes. Use a host service manager such as systemd to keep the agent running after reboot. The [native-node installation guide](../../guides/add-a-node/) provides a reviewed starting unit and verification path.
+The audio-capable (`build-agent-native`) build has a measured platform floor: **Debian 13 (trixie) or newer**. Its cgo build fails on Debian 12 because that release's GLib is missing symbols the build depends on. `deploy/node/install.sh` and `deploy/node/preflight.sh` both check the host's `/etc/os-release` and refuse on an older release rather than producing a confusing link failure.
+
+NDI output is not part of this build or its install path. The GStreamer `ndisink` element comes from a separately built gst-plugins-rs NDI plugin that this project does not build, vendor, or ship; a render node that needs NDI output must build that plugin itself and point `GST_PLUGIN_PATH` at it.
+
+Each agent needs a valid lowercase node ID, its own broker credential, a writable asset directory, and network access to the broker and, when asset downloads are used, the coordinator. `make package-node-agent` builds a platform-named, distributable tarball of the native agent plus its install files; because it is a cgo build linking host C libraries, a tarball can only target the platform it was built on. An arm64 tarball built this way has been installed on a Raspberry Pi 3B+ as a program-only audio node; that is the only hardware install on record for this build.
+
+Nodes run natively rather than in the coordinator bundle so they can use local GPUs, displays, audio devices, and NDI runtimes. `deploy/node/install.sh` installs the binary, creates the `showmesh` system user, and installs a systemd unit; it is idempotent and safe to re-run for an upgrade. The [native-node installation guide](../../guides/add-a-node/) provides a reviewed starting unit and verification path.
 
 ## Supported integrations in this snapshot
 

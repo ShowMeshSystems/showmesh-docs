@@ -1,154 +1,133 @@
 ---
 title: Install a Native Node
-description: Build a native ShowMesh agent, give it one broker identity, make it survive reboot, and verify it is visible.
+description: Build the native agent from the supported flow, install it with install.sh, give it a broker identity, and verify it is visible.
 pageType: procedure
 maturity: experimental-active
 complexity: advanced
 ---
 
-This guide installs the shared native-agent foundation used by render and experimental audio nodes. The agent runs directly on the node host so it can access local media hardware; it is not another Compose service. It is not an audio-node installation procedure.
+This guide installs the shared native-agent foundation used by render and audio nodes, using the packaged installer and preflight checks in `deploy/node/`. The agent runs directly on the node host so it can access local media hardware; it is not another Compose service.
 
-:::note[Current distribution boundary]
-ShowMesh has no published agent package or installer yet. This guide builds from source and uses a small systemd unit as a starting point. Review it against any local GPU, audio, or device-access policy before production use.
+:::note[Platform floor]
+The agent's cgo build requires Debian 13 (trixie) or newer: Debian 12's GLib is too old and the build fails with undefined symbols rather than a clear error. `preflight.sh` and `install.sh` both refuse plainly on an older Debian. Any other distribution is unverified; the installer proceeds with a warning rather than refusing.
 :::
 
-## 1. Choose a stable identity and host path
+## Before you start
 
-Choose a node ID made from lowercase letters, digits, and internal hyphens, such as `yard-left`. The ID is both the MQTT username and the durable identity in ShowMesh, so do not reuse it for a different machine.
+Have root access on the target host, a reachable coordinator and broker, and a node ID chosen from lowercase letters, digits, and internal hyphens. `coordinator`, `fpp`, and `healthcheck` are reserved. The only hardware evidence on record is a Raspberry Pi 3B+ installed from a prebuilt arm64 tarball as a program-only audio node; nothing here is verified on any other hardware.
 
-The bundled broker reserves `coordinator`, `fpp`, and `healthcheck`; do not use those names. Choose an absolute asset directory on local storage—for example `/var/lib/showmesh/assets`—rather than relying on the agent's relative default.
+## 1. Provision a broker credential
 
-## 2. Provision one broker credential
-
-On the coordinator source checkout, create the node's credential:
+From the coordinator's source checkout:
 
 ```sh
 cd deploy
-./mosquitto/add-agent-credential.sh yard-left
+./mosquitto/add-agent-credential.sh <node-id>
 ```
 
-Copy the generated password when it is printed. It is shown once. The script also updates the broker access-control list, so do not substitute a shared credential or edit Mosquitto files by hand.
+This prints a password once; the broker's access-control list trusts the username to equal the node ID exactly. Copy the password now.
 
-## 3. Build and place the agent on the node
+## 2. Build the native agent
 
-On a systemd-based Linux node, create the dedicated service account first if it does not already exist:
-
-```sh
-sudo useradd --system --user-group \
-  --home-dir /var/lib/showmesh --create-home \
-  --shell /usr/sbin/nologin showmesh
-```
-
-Then obtain the reviewed ShowMesh source revision and build the binaries:
+Build on the node itself, or on a build host running the identical Debian release. The plain `make build` agent (`CGO_ENABLED=0`) has no audio engine at all; do not use it for a media node.
 
 ```sh
+apt-get update && apt-get install -y \
+  build-essential pkg-config \
+  libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libltc-dev
+# Install Go from https://go.dev/dl/ and put it on PATH; Debian 13's
+# packaged golang-go is older than this project's go.mod requires.
+
 git clone https://github.com/ShowMeshSystems/showmesh.git
 cd showmesh
-make build
-sudo install -d -o showmesh -g showmesh -m 0750 \
-  /etc/showmesh /var/lib/showmesh/assets
-sudo install -m 0755 ./bin/showmesh-agent /usr/local/bin/showmesh-agent
+make build-agent-native
 ```
 
-If your host manages service accounts another way, use its equivalent before running the installation commands. Ensure that account can write the asset directory and access any hardware the node role requires.
+This produces `bin/showmesh-agent-native`. To build a distributable, platform-named tarball instead, run `make package-node-agent`. Because this is a cgo build linking host C libraries, the tarball can only target the platform it was built on; build on an arm64 Debian 13 host or an arm64 `debian:13` container to package for a Raspberry Pi class node.
 
-## 4. Write the node environment
-
-Create `/etc/showmesh/agent.env`, owned by root and readable only by the service account:
-
-```ini
-SHOWMESH_NODE_ID=yard-left
-SHOWMESH_NODE_LABEL=Yard left player
-SHOWMESH_MQTT_BROKER=tcp://<coordinator-host>:1883
-SHOWMESH_MQTT_USERNAME=yard-left
-SHOWMESH_MQTT_PASSWORD=<generated password>
-SHOWMESH_ASSET_DIR=/var/lib/showmesh/assets
-```
-
-Then protect it:
+## 3. Install the runtime packages on the node
 
 ```sh
-sudo chown root:showmesh /etc/showmesh/agent.env
-sudo chmod 0640 /etc/showmesh/agent.env
+apt-get install -y \
+  alsa-utils gstreamer1.0-tools \
+  gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
+  gstreamer1.0-plugins-base-apps gstreamer1.0-alsa libltc11
 ```
 
-`SHOWMESH_MQTT_BROKER` must include a supported URL scheme such as `tcp://`. A password without a username is rejected. If the coordinator closes anonymous API reads, create a dedicated machine viewer token from an administrator CLI session—do not reuse a human administrator token:
+`alsasink` ships in `gstreamer1.0-alsa`, not in `gstreamer1.0-plugins-base-apps`.
+
+## 4. Run the installer
 
 ```sh
-showmeshctl principal create \
-  --name "yard-left asset fetch" \
-  --kind machine \
-  --role viewer
-# Copy the principal ID printed by the preceding command.
-showmeshctl token issue \
-  --label "yard-left asset fetch" \
-  <principal-id>
+sudo ./install.sh /path/to/showmesh-agent-native
 ```
 
-Add the issued value as `SHOWMESH_AGENT_API_TOKEN` in this node's environment. The viewer role has the `node:read` permission the asset endpoint needs, without administrator control or configuration access.
+`install.sh` is idempotent. On a fresh host it:
 
-For any node that must receive assets, an administrator also needs to configure `assets.settings.contentBaseUrl` to an HTTP(S) coordinator URL reachable **from the node**. The default is empty, so asset synchronization is deliberately disabled until an operator sets it:
+- runs `preflight.sh --runtime-only` and refuses to continue if a runtime dependency is missing, naming the exact apt package;
+- creates the `showmesh` system user and group;
+- creates `/etc/showmesh` and writes `/etc/showmesh/agent.env` (mode 0600, root:root) from the template, only if that file does not already exist;
+- creates `/var/lib/showmesh` as the state directory (assets, render state, audio sessions), owned by `showmesh`;
+- installs the binary and the `showmesh-agent.service` unit, and enables it.
+
+Re-running `install.sh` on an upgrade replaces the binary and unit and restarts the service; it never touches an existing `/etc/showmesh/agent.env` or anything already written under `/var/lib/showmesh`.
+
+:::caution[Refuses to adopt a colliding account]
+If a `showmesh` account already exists but does not match the shape this installer creates (a system UID, a nologin-equivalent shell, home at `/var/lib/showmesh`), `install.sh` refuses outright rather than running the agent as an unrelated human login account. Rename or remove the colliding account, or edit `SERVICE_USER`/`SERVICE_GROUP` in `install.sh` to use a different name, then re-run.
+:::
+
+## 5. Configure and start
+
+Edit `/etc/showmesh/agent.env`: set at minimum `SHOWMESH_NODE_ID` (the ID from step 1), `SHOWMESH_MQTT_BROKER`, `SHOWMESH_MQTT_USERNAME`, and `SHOWMESH_MQTT_PASSWORD`.
+
+If this node will ever be an FPP Connect (xLights) upload target, also provision `SHOWMESH_AGENT_API_TOKEN` now. The node's FPP Connect HTTP listener accepts uploads unconditionally regardless of the coordinator's read policy, and registering an upload requires the `asset:write` scope. Only the admin role carries that scope in the documented build, so the issued token is a full administrative credential:
 
 ```sh
-showmeshctl assets settings set \
-  --content-base-url http://<node-reachable-coordinator>:8080
+showmeshctl principal create --name "<node-id> agent" --kind machine --role admin
+showmeshctl token issue --label "<node-id> agent" <principal-id>
 ```
 
-Do not use `localhost` for a separate node host.
-
-## 5. Start under systemd
-
-Create `/etc/systemd/system/showmesh-agent.service`:
-
-```ini
-[Unit]
-Description=ShowMesh native agent
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-Type=simple
-User=showmesh
-Group=showmesh
-EnvironmentFile=/etc/showmesh/agent.env
-ExecStart=/usr/local/bin/showmesh-agent
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Load and start the service:
+Paste the printed value as `SHOWMESH_AGENT_API_TOKEN` in `/etc/showmesh/agent.env`. Skipping this is not fatal: `install.sh` and `preflight.sh` both warn rather than refuse, but every FPP Connect upload this node ever receives will accept, assemble, and hash correctly, then fail to register, permanently, with nothing visible at upload time.
 
 ```sh
-sudo systemctl daemon-reload
-sudo systemctl enable --now showmesh-agent
+sudo systemctl start showmesh-agent
 sudo systemctl status showmesh-agent
-journalctl -u showmesh-agent -f
+sudo journalctl -u showmesh-agent -f
 ```
 
-The first agent log should say it connected to the broker and published its hello. Treat a running service as a local-process check only; complete the coordinator-side verification next.
+## 6. Verify the install
 
-## 6. Admit and verify the node
+```sh
+sudo ./preflight.sh
+systemctl status showmesh-agent
+journalctl -u showmesh-agent -n 50
+```
 
-From a machine with an administrator token:
+`preflight.sh` is safe and read-only; re-run it any time. A healthy agent logs its broker hello publish and does not crash-loop. If it logs `mqtt broker rejected connection: not authorized`, the credential in `agent.env` does not match what `add-agent-credential.sh` provisioned.
+
+From a machine with an administrator token, confirm the coordinator side:
 
 ```sh
 showmeshctl nodes
-showmeshctl node yard-left
+showmeshctl node <node-id>
 showmeshctl discover
-showmeshctl declare -label "Yard left player" yard-left
+showmeshctl declare --label "<descriptive label>" <node-id>
 ```
 
 The node should have fresh control-plane evidence and become declared. Declaration is required before a surface can target the node or ShowMesh can evaluate its show-targeted asset readiness.
 
+## What this install does NOT verify
+
+- Real audio output through a physical interface. `preflight.sh` checks that ALSA tooling and GStreamer elements exist, not that sound comes out of a real DAC.
+- Real NDI output. `ndisink` element resolution is reported as informational only; this repository does not build, vendor, or verify that element. A render node that needs NDI must build the `gst-plugins-rs` NDI plugin separately and set `GST_PLUGIN_PATH` in `agent.env`, then re-run preflight.
+- That the systemd unit boots correctly on real hardware. It has been checked for syntactic validity and exercised inside a container, but a container does not run systemd as PID 1, so no verification here proves the service actually starts under systemd on a real machine.
+
 ## If the node does not appear
 
-- **`mqtt broker rejected connection: not authorized`:** the username must exactly equal the node ID. Recheck the generated password and provision a replacement deliberately if it was lost.
+- **`install.sh` refuses on the platform check:** the host is not Debian 13 or newer. There is no supported workaround on Debian 12.
+- **`mqtt broker rejected connection: not authorized`:** the username must exactly equal the node ID. Provision a replacement credential deliberately if it was lost.
 - **The agent keeps retrying its broker connection:** verify the coordinator hostname, port, firewall, and `tcp://` scheme from the node host.
-- **The service starts but exits:** run `journalctl -u showmesh-agent -e`; startup validation names the invalid environment variable.
-- **The node becomes offline immediately:** check for a duplicate node ID or MQTT client ID. One MQTT client displaces the other.
+- **Uploads accept but never register:** see [Node troubleshooting](../../troubleshooting/nodes/) for the `SHOWMESH_AGENT_API_TOKEN` diagnosis.
 - **Assets never become ready:** verify the asset-directory permissions and, when reads are closed, `SHOWMESH_AGENT_API_TOKEN`.
 
 See [Nodes](../../using-showmesh/nodes/) for the evidence and declaration model, and [Node troubleshooting](../../troubleshooting/nodes/) for diagnosis after installation.
