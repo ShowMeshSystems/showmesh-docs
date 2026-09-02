@@ -14,7 +14,7 @@ A surface belongs to one show and records:
 
 - its assigned node;
 - a start channel and channel count;
-- width, height, and the currently supported `rgb` pixel format;
+- width, height, and the `rgb` pixel format (the only supported format);
 - frame rate from 1 through 120;
 - an intended `ndi` source name or `hdmi` display.
 
@@ -24,7 +24,7 @@ The channel count must exactly match the canvas: `width × height × 3` for `rgb
 
 A surface defines **where and how pixel channels are intended to appear**. It does not contain media bytes, a sequence, an FPP playlist, or an action. Assets provide files; actions operate integrations; a render node consumes the surface only after the operator applies it with a specific sequence assignment.
 
-The UI and CLI can create, list, inspect, and revise these objects:
+The Operator UI and the CLI can create, list, inspect, and revise these objects:
 
 ```sh
 showmeshctl surface list --show <show-id>
@@ -45,6 +45,6 @@ Surface geometry must stay within the coordinator's safety limit: the last chann
 
 Use `showmeshctl render apply <node-id> <surface-id> <sequence-id>` only after the exact FSEQ asset is ready on that node. Then run `showmeshctl render probe <node-id> <surface-id>` to make a real GStreamer transport transition, followed by `showmeshctl render status <node-id>` to inspect the fresh pipeline and transport evidence. `render apply` alone intentionally does not establish transport availability; the coordinator does not substitute a configuration write for that evidence.
 
-See [Render Nodes](../node-types/render-nodes/) for what `render status` reports when a surface has no usable content, when FPP has moved past the sequence the surface holds, and when a Cue catalog deploy skips restarting a surface's frame writer.
+See [Render nodes](../node-types/render-nodes/) for what `render status` reports when a surface has no usable content, when FPP has moved past the sequence the surface holds, and when a Cue catalog deploy skips restarting a surface's frame writer.
 
-See [Set Up a Video Node](../../guides/set-up-a-video-node/) for the experimental setup procedure.
+See [Set up a video node](../../guides/set-up-a-video-node/) for the experimental setup procedure.

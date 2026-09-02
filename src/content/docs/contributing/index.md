@@ -4,7 +4,7 @@ description: Build ShowMesh itself while preserving evidence, APIs, and the boun
 pageType: landing
 ---
 
-This section is for people modifying ShowMesh. If you are building a client or integration against the public API, use the [Developer Guide](/developer-guide/).
+This section is for people modifying ShowMesh. If you are building a client or integration against the public API, use the [Developer guide](/developer-guide/).
 
 ## Start here
 

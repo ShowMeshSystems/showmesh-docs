@@ -1,5 +1,5 @@
 ---
-title: Experimental FPP Plugin
+title: Experimental FPP plugin
 description: An FPP-host plugin with a macro-run helper, a local brightness engine, and a playlist-entry identity observer, none of it installed on real FPP hardware yet.
 pageType: integration
 maturity: experimental-active
@@ -15,7 +15,7 @@ FPP invokes the plugin through its own command and Action mechanisms. The plugin
 ## What exists
 
 - **A Go macro helper** submits a ShowMesh macro run and records the result locally. Acceptance means the coordinator accepted the run request, not that every macro step has completed.
-- **A host-neutral C++ core** compiled locally against the host's installed FPP headers. It supplies a two-value brightness engine, exposed to FPP as an Action: a fadeable ceiling combined with a transition gain, producing an effective output the FPP host applies without overwriting the currently scheduled ceiling.
+- **A host-neutral C++ core** compiled locally against the host's installed FPP headers. It supplies a two-value brightness engine, exposed to FPP as an Action: a fadeable ceiling combined with a transition gain, producing an effective output the FPP host applies without overwriting the scheduled ceiling.
 - **A playlist-entry identity observer** that publishes an atomic, versioned playlist-entry identity event from FPP's own `playlistCallback`. The coordinator ingests this through the read-only playlist-definition and playlist-entry-observation surfaces described in [FPP](../fpp/).
 - **Two FPP version adapters**: one for FPP 9.4 through 9.x (unversioned ABI, relies on destructor teardown) and one for FPP 10.x (versioned ABI, checked at load time). FPP 8 is not supported.
 

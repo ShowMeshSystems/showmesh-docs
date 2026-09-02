@@ -1,5 +1,5 @@
 ---
-title: Check Show Health Quickly
+title: Check show health
 description: A short triage path for the coordinator, evidence freshness, nodes, FPP, Resolume, and assets.
 pageType: procedure
 maturity: available
@@ -22,7 +22,7 @@ If health fails, check the coordinator container/process. Do not infer that loca
 
 ## 2. Find missing or stale evidence
 
-Open the dashboard, then Nodes, FPP, and Resolume. Prioritize collection failures and stale/unknown-age observations over cosmetic configuration differences.
+In the Operator UI, open the dashboard, then the Nodes, FPP, and Resolume pages. Prioritize collection failures and stale/unknown-age observations over cosmetic configuration differences.
 
 ```sh
 showmeshctl nodes

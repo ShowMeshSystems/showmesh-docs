@@ -1,5 +1,5 @@
 ---
-title: Build Your First Show
+title: Build your first show
 description: Build and operate a first ShowMesh production from the command line, from coordinator setup through FPP, Resolume, assets, and Show Night.
 pageType: procedure
 maturity: experimental-active
@@ -12,10 +12,10 @@ This guide deliberately does not cover the Operator UI. A separate UI workflow w
 
 ## Before you start
 
-Complete [Install the Coordinator](../installation/) first. You need:
+Complete [Install the coordinator](../installation/) first. You need:
 
 - a healthy coordinator and MQTT broker, with `/readyz` returning success;
-- a ShowMesh administrator token with the configuration, asset, node, FPP, Resolume, macro, and Show Night scopes used below;
+- a ShowMesh administrator token with the configuration, asset, node, FPP, Resolume, macro, and Show Night scopes used in this guide;
 - one reachable FPP player and, if you use video, one reachable Resolume Arena instance;
 - native agents for any render or audio nodes you plan to use; and
 - the FSEQ, audio, and media files that belong to the production.
@@ -31,7 +31,7 @@ export SHOWMESH_CTL_TOKEN='<issued token>'
 ./bin/showmeshctl session
 ```
 
-The examples below use `showmeshctl`. Use `./bin/showmeshctl` instead when the binary is not on your `PATH`.
+The examples in this guide use `showmeshctl`. Use `./bin/showmeshctl` instead when the binary is not on your `PATH`.
 
 ## 1. Connect FPP
 
@@ -69,7 +69,7 @@ showmeshctl fpp-mqtt set \
 showmeshctl fpp-mqtt get
 ```
 
-Confirm that ShowMesh is collecting state before using a control. The command names below are the complete direct FPP control set:
+Confirm that ShowMesh is collecting state before using a control. This list is the complete direct FPP control set:
 
 ```sh
 showmeshctl fpp start-playlist fpp-main '<playlist name>'
@@ -122,10 +122,10 @@ showmeshctl nodes
 
 Do not use `undeclare` during normal configuration: it removes the declaration and requires `--confirm`. Use the detailed procedures for the media role itself:
 
-- [Install a Native Node](../../guides/add-a-node/)
-- [Set Up a Video Node](../../guides/set-up-a-video-node/)
-- [Audio Node Overview](../../guides/set-up-an-audio-node/)
-- [Nodes](../../using-showmesh/nodes/) and [Node Types](../../using-showmesh/node-types/)
+- [Install a native node](../../guides/add-a-node/)
+- [Set up a video node](../../guides/set-up-a-video-node/)
+- [Audio node overview](../../guides/set-up-an-audio-node/)
+- [Nodes](../../using-showmesh/nodes/) and [Node types](../../using-showmesh/node-types/)
 
 For a render node, the later render commands are `render settings`, `render status`, `render apply`, `render clear`, `render restart`, `render probe`, and `render transport`. For an audio node, configure `audio settings` and `audio node` before using `audio session`, `audio gain`, or `audio output` commands.
 
@@ -233,7 +233,7 @@ showmeshctl playlist get main-fpp-playlist
 showmeshctl fpp playlist-readiness main-fpp-playlist
 ```
 
-For an audio-runner Playlist, use `--runner showmesh-audio` with `--showmesh-audio-json` instead of `--fpp-json`. If a Cue's audio, LTC, or announcement output should reach a specific audio node rather than the installation's default, add a `"target"` naming that `audio.node` id inside the relevant output object. See [Cues](../../using-showmesh/cues/) and [Playlists](../../using-showmesh/playlists/) for output rules, FPP bindings, mismatch behavior, and complete JSON shapes.
+For an audio-runner Playlist, use `--runner showmesh-audio` with `--showmesh-audio-json` instead of `--fpp-json`. If a Cue's audio, LTC, or announcement output must reach a specific audio node rather than the installation's default, add a `"target"` naming that `audio.node` id inside the relevant output object. See [Cues](../../using-showmesh/cues/) and [Playlists](../../using-showmesh/playlists/) for output rules, FPP bindings, mismatch behavior, and complete JSON shapes.
 
 ## 7. Create actions and macros
 
@@ -256,7 +256,7 @@ An action can target FPP, Resolume, or a configured integration MQTT broker. A M
 showmeshctl run show --follow <run-id>
 ```
 
-Use [Actions and Macros](../../using-showmesh/actions-and-macros/) for the target formats, available primitives, step policy, and outcome meanings.
+Use [Actions and macros](../../using-showmesh/actions-and-macros/) for the target formats, available primitives, step policy, and outcome meanings.
 
 ## 8. Create and operate a Show Night
 
@@ -295,7 +295,7 @@ showmeshctl show mode get
 Switch back to `program` when you need to resume live Cue editing between shows.
 
 :::caution[Emergency Stop is show-affecting]
-Confirm you can reach [Emergency Stop](../../using-showmesh/emergency-stop/) and know which level you would use before a night runs. A confirmed stop silences FPP playout on every configured instance immediately, and Show Mode never delays or degrades it.
+Confirm you can reach [Emergency stop](../../using-showmesh/emergency-stop/) and know which level you would use before a night runs. A confirmed stop silences FPP playout on every configured instance immediately, and Show Mode never delays or degrades it.
 :::
 
 ```sh

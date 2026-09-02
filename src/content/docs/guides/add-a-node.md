@@ -1,5 +1,5 @@
 ---
-title: Install a Native Node
+title: Install a native node
 description: Build the native agent from the supported flow, install it with install.sh, give it a broker identity, and verify it is visible.
 pageType: procedure
 maturity: experimental-active
@@ -114,7 +114,7 @@ showmeshctl discover
 showmeshctl declare --label "<descriptive label>" <node-id>
 ```
 
-The node should have fresh control-plane evidence and become declared. Declaration is required before a surface can target the node or ShowMesh can evaluate its show-targeted asset readiness.
+The node has fresh control-plane evidence and becomes declared. Declaration is required before a surface can target the node or ShowMesh can evaluate its show-targeted asset readiness.
 
 ## What this install does NOT verify
 

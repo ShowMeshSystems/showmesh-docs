@@ -1,6 +1,6 @@
 ---
 title: Compatibility
-description: What the captured development build is known to integrate with—and what it does not yet provide.
+description: What the captured development build is known to integrate with, and what it does not yet provide.
 pageType: reference
 maturity: experimental-active
 ---
@@ -20,7 +20,7 @@ This is a development-state compatibility boundary, not a release support matrix
 
 ## Important limits
 
-- No runtime path should call Resolume's full `GET /composition`; ShowMesh uses an uploaded `.avc` map and targeted live reads.
+- No runtime path calls Resolume's full `GET /composition`; ShowMesh uses an uploaded `.avc` map and targeted live reads.
 - Resolume OSC is not implemented.
 - The experimental NDI render path supports NDI output; HDMI output is not available.
 - FPP Connect is experimental. Its page names the deployment limitation.
@@ -28,7 +28,7 @@ This is a development-state compatibility boundary, not a release support matrix
 - `showmesh-fpp-plugin` is experimental and does not yet have a supported packaged installation. It has not been installed on a real FPP host.
 - The native audio-capable agent build (`make build-agent-native`) requires Debian 13 (trixie) or newer; the plain agent build has no audio engine.
 
-## Not currently available
+## Not available
 
 - HDMI surface output.
 - A supported public audio/LTC operating path.

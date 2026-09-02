@@ -52,7 +52,7 @@ Resolve duplicate names in the `.avc` composition before relying on them in acti
 
 ## 4. Test one low-impact action
 
-First confirm current state and choose a reversible target on a test composition or test layer. Then use the UI, an action/macro, or `showmeshctl resolume action ...` to exercise one supported operation:
+First confirm current state and choose a reversible target on a test composition or test layer. Then use the Operator UI, an action or macro, or `showmeshctl resolume action ...` to exercise one supported operation:
 
 - launch a clip or column;
 - clear a layer;
@@ -61,13 +61,13 @@ First confirm current state and choose a reversible target on a test composition
 - set layer bypass;
 - set a layer master value.
 
-The action path requires the `resolume:action` scope and reports the observed outcome, not just that an HTTP request was sent. Follow [Test a Control Safely](../../guides/test-a-control/) for how to interpret a command that is accepted but not confirmed.
+The action path requires the `resolume:action` scope and reports the observed outcome, not only that an HTTP request was sent. Follow [Test a control safely](../../guides/test-a-control/) for how to interpret a command that is accepted but not confirmed.
 
 ## 5. Bring in a video surface or LTC deliberately
 
 For a ShowMesh render node, configure the NDI source and mapping in Arena after the node advertises the source. ShowMesh does not create that routing for you.
 
-Use [Set Up a Video Node](../../guides/set-up-a-video-node/) for the sender side. Configure LTC separately from the NDI source and mapping; see [SMPTE / LTC](../smpte-ltc/) for timecode behavior.
+Use [Set up a video node](../../guides/set-up-a-video-node/) for the sender side. Configure LTC separately from the NDI source and mapping; see [SMPTE / LTC](../smpte-ltc/) for timecode behavior.
 
 ## Recovery boundary
 

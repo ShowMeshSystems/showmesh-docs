@@ -1,5 +1,5 @@
 ---
-title: Architecture Overview
+title: Architecture overview
 description: How the current coordinator, UI, broker, native nodes, FPP, and Resolume pieces relate.
 pageType: concept
 maturity: experimental-active

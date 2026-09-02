@@ -1,5 +1,5 @@
 ---
-title: Audio Node Overview
+title: Audio node overview
 description: Understand experimental audio-node configuration, sessions, and output behavior.
 pageType: procedure
 maturity: experimental-testing
@@ -9,7 +9,7 @@ ShowMesh has experimental audio-node software for configuration, session command
 
 ## Before you start
 
-Install the node first with [Install a Native Node](../add-a-node/): the agent must be running and have already advertised its audio hardware before you can configure it as an audio node. Have the audio assets for the intended session and the route names the node's own capability report advertised.
+Install the node first with [Install a native node](../add-a-node/): the agent must be running and have already advertised its audio hardware before you can configure it as an audio node. Have the audio assets for the intended session and the route names the node's own capability report advertised.
 
 The only hardware evidence on record is a Raspberry Pi 3B+ installed as a program-only audio node with no LTC route; no installation has ever run two audio nodes. Treat anything beyond a single audio node as unverified.
 
@@ -27,7 +27,7 @@ The current design and software behavior establish these boundaries:
 
 Every audio.node object carries a role: `program` plays program audio only; `program+ltc` plays program audio and is this installation's sole LTC emitter; `zone` plays an independent local speaker zone and never carries program or LTC. Only one node across the installation may hold `program+ltc` at a time; a second is refused, naming both node IDs.
 
-`--role`, `--ltc-route`, and `--ltc-channel` are independent settings on `showmeshctl audio node set`. `--ltc-route` and `--ltc-channel` are optional together: omit both to declare a program-only interface that has no channel to spare for a discrete LTC signal. Omitting `--role` defaults it to `program+ltc`, the role every node had by implication before roles existed, regardless of whether an LTC route is given. Set `--role program` explicitly for a node that emits no LTC, rather than relying on the role default. `--zone` is accepted only with `--role zone`.
+`--role`, `--ltc-route`, and `--ltc-channel` are independent settings on `showmeshctl audio node set`. `--ltc-route` and `--ltc-channel` are optional together: omit both to declare a program-only interface that has no channel to spare for a discrete LTC signal. Omitting `--role` defaults it to `program+ltc`, regardless of whether an LTC route is given. Set `--role program` explicitly for a node that emits no LTC, rather than relying on the role default. `--zone` is accepted only with `--role zone`.
 
 ```sh
 showmeshctl audio node set \
@@ -63,8 +63,8 @@ Audio files remain local to the node. ShowMesh coordinates the session and obser
 showmeshctl audio node get <node-id>
 ```
 
-The node should display the selected routes, role, and current engine evidence, and the session should report the expected asset and playback state.
+The node displays the selected routes, role, and current engine evidence, and the session reports the expected asset and playback state.
 
 ## Where to go next
 
-Use [Audio Nodes](../../using-showmesh/node-types/audio-nodes/) for the full configuration model, and [SMPTE / LTC](../../integrations/smpte-ltc/) for timecode-specific behavior.
+Use [Audio nodes](../../using-showmesh/node-types/audio-nodes/) for the full configuration model, and [SMPTE / LTC](../../integrations/smpte-ltc/) for timecode-specific behavior.

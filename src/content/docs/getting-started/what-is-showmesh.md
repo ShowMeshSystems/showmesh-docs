@@ -5,7 +5,7 @@ pageType: concept
 maturity: experimental-active
 ---
 
-ShowMesh is a control and visibility layer for distributed show systems. It is designed to let an operator answer practical questions—what is online, what is playing, what evidence is stale, and whether a command actually took effect—without treating every player and media computer as an unrelated island.
+ShowMesh is a control and visibility layer for distributed show systems. It is designed to let an operator answer practical questions (what is online, what is playing, what evidence is stale, and whether a command actually took effect) without treating every player and media computer as an unrelated island.
 
 The current system has three main pieces:
 
@@ -22,6 +22,6 @@ This is an active development build, not a released appliance. Its strongest usa
 ## What ShowMesh is not
 
 - It is not a replacement scheduler for FPP.
-- It is not a video or pixel renderer for every output transport. The experimental NDI path is documented separately; HDMI does not currently have a runtime output path.
+- It is not a video or pixel renderer for every output transport. The experimental NDI path is documented separately; HDMI has no runtime output path.
 - It does not make an offline node equivalent to a stopped show. A lost management connection is evidence about the control plane, not proof that local playback stopped.
-- It is not a TLS terminator. Keep it on a trusted show network or place your own TLS reverse proxy in front of the UI.
+- It is not a TLS terminator. Keep it on a trusted show network or place your own TLS reverse proxy in front of the Operator UI.

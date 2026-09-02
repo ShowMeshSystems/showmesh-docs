@@ -14,7 +14,7 @@ The coordinator serves its public API at `/api/v1`. The machine-readable API des
 curl -sS http://showmesh.local:8080/api/v1/
 ```
 
-Every `/api/v1` response includes `ShowMesh-API-Version: 1`. Clients should tolerate additive JSON fields they do not recognize.
+Every `/api/v1` response includes `ShowMesh-API-Version: 1`. Clients must tolerate additive JSON fields they do not recognize.
 
 ## Authenticate writes
 

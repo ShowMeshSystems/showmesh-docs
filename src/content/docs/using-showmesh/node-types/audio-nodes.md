@@ -1,5 +1,5 @@
 ---
-title: Audio Nodes
+title: Audio nodes
 description: Experimental audience-audio settings, sessions, routes, and output behavior.
 pageType: concept
 maturity: experimental-testing
@@ -40,7 +40,7 @@ The node must advertise the selected program and LTC routes. A program-only node
 
 ## Roles and zones
 
-An installation may declare more than one `audio.node`. Each carries a role: `program` (program audio only), `program+ltc` (program audio and this installation's sole LTC emitter), or `zone` (an independent local speaker zone, never program or LTC for the main mix). A `zone` node also carries an operator-facing `zone` name; that field is refused on any other role. Role is optional on the wire, and an audio node with no declared role defaults to `program+ltc`, which is what a single-node installation's node already implicitly was before roles existed.
+An installation may declare more than one `audio.node`. Each carries a role: `program` (program audio only), `program+ltc` (program audio and this installation's sole LTC emitter), or `zone` (an independent local speaker zone, never program or LTC for the main mix). A `zone` node also carries an operator-facing `zone` name; that field is refused on any other role. Role is optional on the wire, and an audio node with no declared role defaults to `program+ltc`. Set `role: program` explicitly for a node that emits no LTC.
 
 At most one `audio.node` may carry `program+ltc` at a time: authoring a second one is refused at write time, and readiness separately checks that the deployed configuration still has exactly one LTC-carrying node before a show is called ready. No installation on record has run more than one audio node; treat multi-node behavior as unverified beyond configuration and readiness checks until it has been exercised on real hardware.
 
@@ -64,13 +64,13 @@ A session whose restore was deferred and re-queued (a build refusal, or no `audi
 
 Audio-device loss is designed to **fail silent**. ShowMesh will not automatically return audience audio to FPP or select a standby node. Recovery restores the intended route, gain, channel separation, clock relationship, required assets, and current session position before sound resumes.
 
-A running local session is intended to survive coordinator or broker loss when all required media and state are already present. A later transition that requires unavailable authority should fail visibly rather than guess.
+A running local session is intended to survive coordinator or broker loss when all required media and state are already present. A later transition that requires unavailable authority fails visibly rather than guessing.
 
 ## Role and output capabilities
 
-The audio role is broader than any single connector. Local program output, FM feed, LTC, and possible future transports are separate capabilities with their own readiness evidence. Dante is not a requirement for the initial role, and a possible future Dante bridge is not currently a supported node type.
+The audio role is broader than any single connector. Local program output, FM feed, LTC, and possible future transports are separate capabilities with their own readiness evidence. Dante is not a requirement for the initial role, and a possible future Dante bridge is not a supported node type.
 
-Likewise, an audio-capable machine should not be considered ready merely because Linux lists an interface. Readiness requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, supported session operations, and fresh engine evidence.
+Likewise, do not consider an audio-capable machine ready merely because Linux lists an interface. Readiness requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, supported session operations, and fresh engine evidence.
 
 ## Deliberate boundaries
 

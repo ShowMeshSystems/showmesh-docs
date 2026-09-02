@@ -10,7 +10,7 @@ A **node** is a computer running the native ShowMesh agent. Nodes are the machin
 The node record answers practical questions such as:
 
 - Which machine checked in, and which agent version and boot is it running?
-- Is its ShowMesh control-plane connection currently present?
+- Is its ShowMesh control-plane connection present?
 - When did its hello, heartbeat, and last-will evidence arrive?
 - Which capabilities did the agent advertise?
 - Which asset hashes does the agent report on disk?
@@ -20,12 +20,12 @@ An FPP instance or Resolume host is not automatically a ShowMesh node merely bec
 
 ## Node roles and capabilities
 
-ShowMesh does not assign each node one fixed class. Nodes advertise versioned capabilities, and those capabilities determine which workloads the node can support. The currently approved media-node roles are:
+ShowMesh does not assign each node one fixed class. Nodes advertise versioned capabilities, and those capabilities determine which workloads the node can support. The approved media-node roles are:
 
 - [Render nodes](../node-types/render-nodes/), which turn node-local FSEQ data into a video surface. This role is experimental.
 - [Audio nodes](../node-types/audio-nodes/), which have experimental local-audio, mixing, and LTC software paths.
 
-See [Node Types](../node-types/) for the shared agent foundation, why roles can eventually compose on one machine, and which ShowMesh components are not nodes.
+See [Node types](../node-types/) for the shared agent foundation, why roles can eventually compose on one machine, and which ShowMesh components are not nodes.
 
 ## What a node does today
 
@@ -40,7 +40,7 @@ A node without an applied media role does **not** render a surface, play an asse
 
 Declaration matters. A surface can only name a declared node, and show-targeted asset readiness is evaluated for declared nodes. Discovery helps find candidates; declaration is the step that admits one into managed configuration.
 
-Use the UI's node inventory or:
+Use the Operator UI node inventory, or run:
 
 ```sh
 showmeshctl nodes
@@ -66,7 +66,7 @@ The installer writes this node's agent environment to `/etc/showmesh/agent.env` 
 systemctl restart showmesh-agent
 ```
 
-See [Install a Native Node](../../guides/add-a-node/) for the full installation path. At minimum, set `SHOWMESH_NODE_ID` and the broker credentials issued by `add-agent-credential.sh` above.
+See [Install a native node](../../guides/add-a-node/) for the full installation path. At minimum, set `SHOWMESH_NODE_ID` and the broker credentials issued by `add-agent-credential.sh`.
 
 Node IDs accept lowercase letters, digits, and internal hyphens. The agent defaults to the OS hostname, but startup fails with a useful message if that hostname is invalid.
 
@@ -79,10 +79,10 @@ showmeshctl assets settings set \
   --content-base-url http://<node-reachable-coordinator>:8080
 ```
 
-`assets settings set` changes only the flags you pass; an omitted flag leaves its stored or default value alone. Use the coordinator's network hostname rather than `localhost` for a separate node. If the coordinator closes anonymous API reads, create a separate `machine` principal with the `viewer` role and issue a token for that node; place that token in `SHOWMESH_AGENT_API_TOKEN`. Do not reuse a human administrator token—the viewer role has the `node:read` permission the asset endpoint needs. [Install a Native Node](../../guides/add-a-node/) includes the exact issuance commands.
+`assets settings set` changes only the flags you pass; an omitted flag leaves its stored or default value alone. Use the coordinator's network hostname rather than `localhost` for a separate node. If the coordinator closes anonymous API reads, create a separate `machine` principal with the `viewer` role and issue a token for that node; place that token in `SHOWMESH_AGENT_API_TOKEN`. Do not reuse a human administrator token: the viewer role has the `node:read` permission the asset endpoint needs. [Install a native node](../../guides/add-a-node/) includes the exact issuance commands.
 
 ## Read health correctly
 
 `controlPlane.state: offline` means the coordinator lost the agent's MQTT connection. It is not proof that the computer is powered off or local playback stopped. Check observation age, last error, and device-local state before intervening.
 
-Likewise, `discoveryState` is one of four values: `present` (the most recent complete discovery run saw this declared node), `not_seen` (a completed discovery run did not see it), `unknown` (the available run did not establish presence or absence, including when no complete run is available), or `not_applicable` (the node is not declared at all). Neither `not_seen` nor `unknown` should be silently promoted into a claim about playback.
+Likewise, `discoveryState` is one of four values: `present` (the most recent complete discovery run saw this declared node), `not_seen` (a completed discovery run did not see it), `unknown` (the available run did not establish presence or absence, including when no complete run is available), or `not_applicable` (the node is not declared at all). Do not promote `not_seen` or `unknown` into a claim about playback.

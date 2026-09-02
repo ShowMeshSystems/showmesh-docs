@@ -1,5 +1,5 @@
 ---
-title: Node Types
+title: Node types
 description: Understand ShowMesh's capability-based node roles and the shared native-agent foundation.
 pageType: concept
 maturity: experimental-active
@@ -28,13 +28,13 @@ Those functions make a machine visible and manageable, but they do not make it a
 | [Render node](./render-nodes/) | Follow the FPP timeline, extract a surface from node-local FSEQ data, and send video to a configured output transport. | Experimental |
 | [Audio node](./audio-nodes/) | Play and mix node-local audience audio, provide controlled fades and announcements, and generate LTC on a discrete same-clock output. | Experimental |
 
-These are workload profiles, not exclusive machine classes. ShowMesh should only assign a role when the node advertises the required capabilities and its fresh evidence satisfies that role's readiness rules.
+These are workload profiles, not exclusive machine classes. ShowMesh assigns a role only when the node advertises the required capabilities and its fresh evidence satisfies that role's readiness rules.
 
 ## Capabilities are not roles
 
 The capability vocabulary includes media work such as rendering or audio, shared services such as media caching and process supervision, and output features such as NDI send, HDMI, local audio, FM, or LTC. An output capability describes one thing the node can do; it does not create another node type.
 
-Capability advertisement is evidence, not a wish list. Do not manually advertise a capability simply because the hardware is intended to support it. The implementation must actually provide the behavior, and operational readiness may require additional live checks.
+Capability advertisement is evidence, not a wish list. Do not manually advertise a capability only because the hardware is intended to support it. The implementation must actually provide the behavior, and operational readiness may require additional live checks.
 
 ## What is not a node type
 
@@ -43,4 +43,4 @@ Capability advertisement is evidence, not a wish list. Do not manually advertise
 - Projectors, displays, amplifiers, relays, and similar equipment are **controlled devices**. They do not run the native agent and cannot advertise node capabilities.
 - **NDI**, **HDMI**, **local audio**, **FM**, and **LTC** are transport or output capabilities, not standalone node roles.
 
-New node roles should only be documented here after their responsibility and authority boundaries are design-approved. A possible device or integration is not enough to invent a new role.
+Document a new node role here only after its responsibility and authority boundaries are design-approved. A possible device or integration is not enough to invent a new role.

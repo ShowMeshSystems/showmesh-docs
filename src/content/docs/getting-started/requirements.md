@@ -43,4 +43,4 @@ Nodes run natively rather than in the coordinator bundle so they can use local G
 - Resolume Arena is implemented through its REST API and WebSocket update stream, with polling fallback.
 - The render-node/NDI path is on current `main` but experimental. It requires a user-installed NDI runtime and a source-built GStreamer NDI element.
 - Audio playback and LTC generation have experimental software paths.
-- xLights/FPP Connect ingestion is experimental. HDMI does not currently have a runtime output path.
+- xLights/FPP Connect ingestion is experimental. HDMI has no runtime output path.

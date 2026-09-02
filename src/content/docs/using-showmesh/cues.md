@@ -16,9 +16,9 @@ A **Cue** is a revisioned `show.cue` object that describes what one point in a S
 
 LTC requires audio. Announcements also require audio, and one Cue cannot combine LTC and an announcement. These limits keep one Cue's audio behavior clear.
 
-Each of `outputs.audio`, `outputs.ltc`, and `outputs.announcement` also accepts an optional `target` naming an `audio.node` id. Omitted, a target resolves later to the installation's single `program+ltc` audio node, which keeps a one-node installation's Cues unchanged. A `target` naming an `audio.node` that does not exist is refused at write time. See [Audio Nodes](../node-types/audio-nodes/) for node roles.
+Each of `outputs.audio`, `outputs.ltc`, and `outputs.announcement` also accepts an optional `target` naming an `audio.node` id. Omitted, a target resolves later to the installation's single `program+ltc` audio node, which keeps a one-node installation's Cues unchanged. A `target` naming an `audio.node` that does not exist is refused at write time. See [Audio nodes](../node-types/audio-nodes/) for node roles.
 
-Use the UI or the CLI to manage Cues:
+Use the Operator UI or the CLI to manage Cues:
 
 ```sh
 showmeshctl cue list --show <show-id>

@@ -24,7 +24,7 @@ The native ShowMesh control-plane broker is deliberately **not** registered as a
 
 ## Author an action
 
-Use the ShowMesh action editor/API to define the broker ID, publish topic, payload, quality of service, retain behavior, and—where the device supports it—an expected response. ShowMesh validates the target shape when the action revision is written.
+Use the ShowMesh action editor/API to define the broker ID, publish topic, payload, quality of service, retain behavior, and, where the device supports it, an expected response. ShowMesh validates the target shape when the action revision is written.
 
 An action with no response expectation can only report that publishing succeeded; it cannot confirm that the device changed state. Prefer a device response on a dedicated topic when one exists, and test its negative and malformed replies before using the action in a show macro.
 

@@ -55,7 +55,7 @@ showmeshctl fpp playlist-entry-observations reconciliation <instance-id>
 showmeshctl fpp playlist-readiness <playlist-id>
 ```
 
-`playlist-entry-observations reconciliation` reports what the coordinator currently makes of one instance's latest accepted observation: `unbound`, `stale-import`, `unknown-entry`, `evidence-mismatch`, `cross-show`, or `resolved`. `playlist-readiness` reports whether one FPP-backed Playlist is ready. Neither replaces FPP's schedule or proves a playlist is runnable without current FPP and node evidence.
+`playlist-entry-observations reconciliation` reports what the coordinator makes of one instance's latest accepted observation: `unbound`, `stale-import`, `unknown-entry`, `evidence-mismatch`, `cross-show`, or `resolved`. `playlist-readiness` reports whether one FPP-backed Playlist is ready. Neither replaces FPP's schedule or proves a playlist is runnable without current FPP and node evidence.
 
 Two maintenance commands recover from an out-of-band change on the FPP side:
 

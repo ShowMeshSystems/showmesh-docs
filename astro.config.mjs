@@ -13,14 +13,14 @@ const section = (label, directory) => ({
 });
 
 const gettingStarted = {
-	label: 'Getting Started',
+	label: 'Getting started',
 	items: [
-		{ label: 'Getting Started', link: '/getting-started/' },
+		{ label: 'Getting started', link: '/getting-started/' },
 		{ label: 'What is ShowMesh?', link: '/getting-started/what-is-showmesh/' },
 		{ label: 'Requirements', link: '/getting-started/requirements/' },
-		{ label: 'Architecture Overview', link: '/getting-started/architecture/' },
-		{ label: 'Install the Coordinator', link: '/getting-started/installation/' },
-		{ label: 'Your First Show', link: '/getting-started/your-first-show/' },
+		{ label: 'Architecture overview', link: '/getting-started/architecture/' },
+		{ label: 'Install the coordinator', link: '/getting-started/installation/' },
+		{ label: 'Your first show', link: '/getting-started/your-first-show/' },
 	],
 };
 
@@ -28,17 +28,17 @@ const usingShowMesh = {
 	label: 'Using ShowMesh',
 	items: [
 		{ label: 'Using ShowMesh', link: '/using-showmesh/' },
-		{ label: 'Actions and Macros', link: '/using-showmesh/actions-and-macros/' },
+		{ label: 'Actions and macros', link: '/using-showmesh/actions-and-macros/' },
 		{ label: 'Assets', link: '/using-showmesh/assets/' },
 		{ label: 'Cues', link: '/using-showmesh/cues/' },
-		{ label: 'Emergency Stop', link: '/using-showmesh/emergency-stop/' },
+		{ label: 'Emergency stop', link: '/using-showmesh/emergency-stop/' },
 		{ label: 'Nodes', link: '/using-showmesh/nodes/' },
 		{
-			label: 'Node Types',
+			label: 'Node types',
 			items: [
 				{ label: 'Overview', link: '/using-showmesh/node-types/' },
-				{ label: 'Render Nodes', link: '/using-showmesh/node-types/render-nodes/' },
-				{ label: 'Audio Nodes', link: '/using-showmesh/node-types/audio-nodes/' },
+				{ label: 'Render nodes', link: '/using-showmesh/node-types/render-nodes/' },
+				{ label: 'Audio nodes', link: '/using-showmesh/node-types/audio-nodes/' },
 			],
 		},
 		{ label: 'Shows', link: '/using-showmesh/shows/' },

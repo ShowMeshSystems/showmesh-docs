@@ -1,5 +1,5 @@
 ---
-title: Install the Coordinator
+title: Install the coordinator
 description: Build and start the current coordinator appliance, establish an administrator, and protect its state.
 pageType: procedure
 maturity: experimental-active
@@ -18,7 +18,7 @@ Use a host that can run Docker and remains powered for the whole operating windo
 
 - which trusted VLAN or firewall zone will contain the coordinator, UI, broker, FPP players, and native nodes;
 - which host will retain the coordinator's persistent Docker volumes and backups;
-- whether operators will use the UI locally, through a trusted management network, or through an operator-managed TLS reverse proxy.
+- whether operators will use the Operator UI locally, through a trusted management network, or through an operator-managed TLS reverse proxy.
 
 The coordinator must reach configured FPP and Resolume hosts. Each native node must reach the MQTT broker. Keep `1883`, `8080`, and `8081` limited to the systems that genuinely need them.
 
@@ -65,13 +65,13 @@ Open `http://<coordinator-host>:8081` from the trusted management network. The e
 - `coordinator`, `mosquitto`, and `ui` are running;
 - `/healthz` succeeds, which proves the HTTP process is serving;
 - `/readyz` succeeds, which additionally proves the coordinator can reach its SQLite store and MQTT broker;
-- the UI loads, even if it later reports that the coordinator is disconnected.
+- the Operator UI loads, even if it later reports that the coordinator is disconnected.
 
 The UI container deliberately has no dependency on coordinator health. A UI page that loads is not evidence that the coordinator is ready; use `/readyz` for that question.
 
 ## 5. Create the first administrator
 
-The coordinator writes a one-time bootstrap code into its persistent data volume. Use the UI bootstrap flow, or claim it locally from the coordinator container:
+The coordinator writes a one-time bootstrap code into its persistent data volume. Use the Operator UI bootstrap flow, or claim it locally from the coordinator container:
 
 ```sh
 docker compose exec coordinator showmesh-coordinator bootstrap \
@@ -106,7 +106,7 @@ Use the Operator UI or `showmeshctl` to configure FPP endpoints and the one supp
 
 - Continue with [FPP](../../integrations/fpp/) to add players and, if wanted, configure FPP MQTT.
 - Continue with [Resolume Arena](../../integrations/resolume/) to add Arena and import a composition identity map.
-- Continue with [Install a Native Node](../../guides/add-a-node/) only after the broker and first administrator are working.
+- Continue with [Install a native node](../../guides/add-a-node/) only after the broker and first administrator are working.
 
 Before assigning any ShowMesh asset to a separate native node, configure `assets.settings.contentBaseUrl` to the HTTP(S) coordinator URL that node can reach. It is empty by default, so asset transfer remains disabled until an administrator configures it:
 
@@ -115,7 +115,7 @@ Before assigning any ShowMesh asset to a separate native node, configure `assets
   --content-base-url http://<node-reachable-coordinator>:8080
 ```
 
-Use the externally reachable coordinator hostname, never `localhost` for a separate node host. When reads are closed, give each node a dedicated, least-privilege API identity—never copy an administrator token into a node environment:
+Use the externally reachable coordinator hostname, never `localhost` for a separate node host. When reads are closed, give each node a dedicated, least-privilege API identity. Never copy an administrator token into a node environment:
 
 ```sh
 ./bin/showmeshctl principal create \
@@ -137,12 +137,12 @@ These environment groups are startup migration inputs, not normal configuration:
 
 Remove a migrated group only after the coordinator reports that its environment value **matches the active store configuration exactly**. If a request reports that startup migration was **deferred**, do **not** remove the corresponding variable: it is still the only configuration copy. Repair the coordinator data volume (for example, a full, read-only, or damaged volume) and restart; migration is retried on every boot.
 
-If startup refuses because the environment and store configurations **disagree**, do not delete the variable merely to make startup succeed. Compare both configurations and deliberately choose the authority. To retain the environment change, record it, intentionally switch to the store-backed configuration, and then apply the recorded value through the UI or CLI. To retain the store value, confirm it is correct before removing the matching legacy group. Restart once after a deliberate removal.
+If startup refuses because the environment and store configurations **disagree**, do not delete the variable merely to make startup succeed. Compare both configurations and deliberately choose the authority. To retain the environment change, record it, intentionally switch to the store-backed configuration, and then apply the recorded value through the Operator UI or CLI. To retain the store value, confirm it is correct before removing the matching legacy group. Restart once after a deliberate removal.
 :::
 
 ## Secure the operating boundary
 
-The recommended initial boundary is a trusted show-management VLAN. If operators need HTTPS from another network, put an operator-managed TLS reverse proxy in front of the UI and API; the Compose bundle does not provide one. Set `SHOWMESH_API_SECURE_COOKIE=true` when that proxy terminates TLS.
+The recommended initial boundary is a trusted show-management VLAN. If operators need HTTPS from another network, put an operator-managed TLS reverse proxy in front of the Operator UI and API; the Compose bundle does not provide one. Set `SHOWMESH_API_SECURE_COOKIE=true` when that proxy terminates TLS.
 
 Never treat the browser UI as the only recovery path. `showmeshctl` is a first-class client, and a running node or show is designed not to depend on the UI container staying up.
 
@@ -197,6 +197,6 @@ SQLite migrations are forward-only. Take a volume backup first: returning to an 
 
 **`/healthz` returns 200 but `/readyz` returns 503.** Read the JSON `reason`, then check the broker connection and the coordinator data volume. FPP and Resolume availability do not determine coordinator readiness.
 
-**The UI loads but says disconnected.** Check `/healthz`, `/readyz`, `docker compose ps`, and `docker compose logs coordinator`. UI health does not probe the coordinator.
+**The Operator UI loads but says disconnected.** Check `/healthz`, `/readyz`, `docker compose ps`, and `docker compose logs coordinator`. UI health does not probe the coordinator.
 
 For deeper failures, see [Coordinator troubleshooting](../../troubleshooting/coordinator/).
