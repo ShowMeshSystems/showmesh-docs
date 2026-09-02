@@ -12,7 +12,7 @@ The initial path uses NDI to deliver that video to Resolume. Resolume remains re
 
 Treat the render path as experimental. The current runtime supports one active surface per node and NDI output; HDMI output is not available.
 
-## What the node owns
+## What the render node does
 
 The render node is responsible for:
 
@@ -64,7 +64,7 @@ The implementation in current `main` includes:
 
 The first deployment profile concentrates on Linux/x86 hardware, one active surface per node, 40 fps, and NDI. The broader schema does not permanently encode the one-surface limit.
 
-## Deliberate boundaries
+## Boundaries
 
 - Render nodes do not run `fppd`; they listen for MultiSync as remotes.
 - A render node publishes a video source for Resolume. Resolume control belongs to the separate integration.

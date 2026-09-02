@@ -34,6 +34,6 @@ Only one show can be active. Activation stores a revisioned `show.active` pointe
 
 Activation does **not** start playback, schedule FPP, select a Resolume composition, or begin rendering. Put implemented device operations in actions/macros and test those separately.
 
-:::tip[Think “prepare,” not “play”]
+:::tip[Activation does not start playback]
 Activating `winter-2026` tells ShowMesh which asset set to converge on nodes. It does not press play on any device.
 :::

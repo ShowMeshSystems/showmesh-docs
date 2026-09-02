@@ -55,14 +55,18 @@ flowchart LR
     Native render nodes follow the FPP timeline, read node-local FSEQ content, and publish NDI. The current runtime supports one active surface per node; HDMI output is not available. [Set up a video node →](/guides/set-up-a-video-node/)
   </Card>
   <Card title="Audio node" icon="warning">
-    <StatusBadge status="experimental-testing" label="Experimental: do not deploy" />
+    <StatusBadge status="experimental-testing" />
 
     Audio-node software covers configuration, session control, gain/output control, and LTC generation. [Read about audio nodes →](/using-showmesh/node-types/audio-nodes/)
   </Card>
   <Card title="Show Night" icon="open-book">
+    <StatusBadge status="experimental-active" />
+
     Show Night brings together a Show, FPP Playlists, background audio, Transition Steps, and a controlled start/end lifecycle. [Read Show Night →](/using-showmesh/show-night/)
   </Card>
   <Card title="FPP Connect" icon="setting">
+    <StatusBadge status="experimental-testing" />
+
     Native nodes accept experimental xLights FPP Connect content and report channel-range outcomes. [Read the FPP Connect guide →](/integrations/xlights/)
   </Card>
   <Card title="Multi-node audio" icon="warning">
@@ -77,14 +81,16 @@ flowchart LR
   </Card>
 </CardGrid>
 
-## Day-0 public release work
+## Remaining work before the first public release
 
-The first public release needs more than source code. It needs an installation people can reproduce and a safe answer when something is missing. Remaining work includes:
+The first public release needs an installation people can reproduce and a safe answer when something is missing. Remaining work includes:
 
-- the recorded Debian NDI plugin build recipe and tested runtime versions;
-- Resolume screenshots and per-version setup notes;
-- a supported audio installation guide with clear routing, LTC alignment, and failure guidance;
-- secure remote/TLS deployment, backup/restore drills, compatibility policy, and FPP/xLights setup guidance;
-- continued refinement of Show Night and operator workflows as the Operator UI work lands.
+- published coordinator images and agent packages instead of source builds;
+- a recorded Debian NDI plugin build recipe and tested runtime versions, plus real-hardware timing evidence for the render path;
+- audio hardware commissioning guidance (routing, LTC alignment, receiver lock, failure recovery) and a two-node audio acceptance;
+- a packaged FPP plugin installation verified on a real FPP host, including fallback-program execution;
+- Resolume per-version setup notes and a recovery test against a real Arena restart;
+- secure remote/TLS deployment, backup and restore drills, and a compatibility policy;
+- Operator UI documentation once that work settles.
 
 Use the current guides to stage and test a show deliberately, and retain native/manual controls for every show-critical system.

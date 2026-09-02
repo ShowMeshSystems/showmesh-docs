@@ -21,6 +21,6 @@ Start with the [API guide](./api/), then read [Events and live state](./events/)
 
 The current public extension surface is the HTTP API. There is no released plugin SDK, provider SDK, or stable in-process extension ABI. Building directly against SQLite, coordinator internals, MQTT topics, or UI implementation details creates coupling outside the public API.
 
-## Planned here later
+## Planned developer material
 
 Provider authoring, node extension kits, generated client libraries, and a supported SDK belong here once their public APIs exist. See [SDK roadmap](./sdk/).

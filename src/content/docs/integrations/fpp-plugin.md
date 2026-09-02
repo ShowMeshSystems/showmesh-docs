@@ -45,7 +45,7 @@ An invalid command invocation can fail before the helper writes any status recor
 
 Every verification claim available today is against test doubles, not a real FPP host or a real coordinator. Before any real-host trial, expect at minimum to confirm: the C++ core builds against the target FPP version's actual headers, the plugin loads under that FPP host's own ABI expectations, the brightness Action applies without a competing ceiling write, the playlist-entry identity event reaches a real coordinator and resolves to the expected Cue, and the credential file's ownership and mode survive the host's own package or plugin-manager install path. None of this is established here.
 
-## Degraded delivery
+## Retained outcomes while the coordinator is unavailable
 
 A macro-run submission that comes back `refused`, `rejected`, or `unreachable` is retained locally and included with a later successful authenticated submission. The buffer is bounded to 50 entries and 30 days of age; entries pruned by either bound increment a persisted dropped-entry counter rather than disappearing silently. This improves later diagnosis; it is not a substitute for checking the host-local status record when the coordinator is unavailable.
 

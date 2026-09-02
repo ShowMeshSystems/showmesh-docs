@@ -6,7 +6,7 @@ pageType: landing
 
 Start here when ShowMesh is not behaving as expected. The shortest safe path is to establish whether the coordinator is alive, whether it is ready, and what evidence it holds.
 
-## First 90 seconds
+## Check the coordinator first
 
 1. Check liveness: `curl -i http://localhost:8080/healthz`. A running HTTP process returns `200` and `ok`.
 2. Check readiness: `curl -i http://localhost:8080/readyz`. `200` means both the MQTT connection and SQLite store are ready. `503` includes a JSON `reason`; it does **not** mean the HTTP process is dead.
@@ -28,6 +28,6 @@ Do not restart everything before capturing the snapshot and the readiness respon
 - [A show night lifecycle command is refused](./show-night/)
 - [Logs, health, events, and evidence](./diagnostics/)
 
-## What belongs here later
+## Planned troubleshooting pages
 
-More symptom pages will be added as rendering, audio, timecode, and additional device providers become real runtime capabilities. Their architecture is not treated as a troubleshooting surface until code exists.
+Render, audio, LTC, and Resolume recovery failures are covered inside the node, FPP, and action pages for now. Dedicated symptom pages for them will be added as failure modes are observed on real hardware.

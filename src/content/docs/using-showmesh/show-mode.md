@@ -7,7 +7,7 @@ maturity: available
 
 **Show Mode** is one installation-wide value: `program` or `show`. It is not per-node, per-device, or per-subsystem. A fresh install reports the built-in default, `program`, at revision 0 with source `default`; it never 404s.
 
-## Why it exists
+## Purpose
 
 A show control system is generally safer to run with fewer live edit surfaces once a show is underway. Show Mode gives ShowMesh one value that answers "are we in a show right now," so subsystems can each read the same answer instead of inventing their own private notion of it.
 

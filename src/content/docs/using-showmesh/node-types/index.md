@@ -30,7 +30,7 @@ Those functions make a machine visible and manageable, but they do not make it a
 
 These are workload profiles, not exclusive machine classes. ShowMesh assigns a role only when the node advertises the required capabilities and its fresh evidence satisfies that role's readiness rules.
 
-## Capabilities are not roles
+## Capabilities versus roles
 
 The capability vocabulary includes media work such as rendering or audio, shared services such as media caching and process supervision, and output features such as NDI send, HDMI, local audio, FM, or LTC. An output capability describes one thing the node can do; it does not create another node type.
 

@@ -72,7 +72,7 @@ The audio role is broader than any single connector. Local program output, FM fe
 
 Likewise, do not consider an audio-capable machine ready merely because Linux lists an interface. Readiness requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, supported session operations, and fresh engine evidence.
 
-## Deliberate boundaries
+## Boundaries
 
 - FPP owns the schedule; the audio node owns local playback and its output clock.
 - The coordinator orchestrates and observes but never streams program audio.
