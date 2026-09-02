@@ -23,6 +23,6 @@ These are decision constraints, not a list of available product capabilities. Th
 
 These are summaries for orientation. The ADR register and engineering specifications in the main repository remain authoritative.
 
-## Evidence before explanation
+## Verify claims against the implementation
 
 Repository documents can contradict one another during active development. Resolve the claim against the implementation, tests that would fail if the behavior vanished, the OpenAPI description for public HTTP behavior, and captured running-system evidence. If uncertainty remains, label it rather than choosing the most polished prose.

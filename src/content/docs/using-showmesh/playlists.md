@@ -39,7 +39,26 @@ These are read-only.
 
 ## What readiness does
 
-`showmeshctl fpp playlist-readiness <playlist-id>` checks an FPP-backed Playlist and reports the first of these conditions that fails, in order: the imported definition is present (`definition-missing`); the entry's position and filenames still match that definition (`entry-not-in-definition`, `entry-filename-mismatch`); the stored definition itself has not been superseded by a newer import (`definition-superseded`); the Cue behind the entry is ready (`cue-not-ready`); the latest FPP observation's playlist hash still matches the bound hash (`observation-hash-mismatch`); fresh evidence exists at all (`evidence-unavailable`); the assigned render node actually holds the entry's render assignment (`node-render-unassigned`); the node's Cue catalog is current (`node-catalog-stale`); no conflicting exclusive claim exists (`exclusive-claim-conflict`); the installation's LTC emitter is unambiguous (`audio-ltc-emitter-ambiguous`); and an audio output's `target` resolves to a real, bound node (`audio-target-unbound`, `audio-target-unresolved`) with its assets present (`assets-missing`). This is a read-only preflight result. It does not start playback or change FPP.
+`showmeshctl fpp playlist-readiness <playlist-id>` is a read-only preflight for one FPP-backed Playlist. It does not start playback or change FPP. It checks these conditions in order and reports the first one that fails:
+
+| Condition | What it means when reported |
+| --- | --- |
+| `definition-missing` | No stored FPP playlist definition matches the binding. |
+| `entry-not-in-definition` | An entry's section and position do not exist in the stored definition. |
+| `entry-filename-mismatch` | An entry's expected filename does not match the definition at that position. |
+| `definition-superseded` | A newer definition has been imported for the same instance and playlist name. |
+| `cue-not-ready` | The referenced Cue is missing, never activated, or belongs to another Show. |
+| `observation-hash-mismatch` | The latest FPP observation carries a different playlist hash than the binding. |
+| `evidence-unavailable` | An observation exists but could not establish identity. |
+| `node-render-unassigned` | The node holding the surface has no confirmed render assignment for the entry. |
+| `node-catalog-stale` | The node has not acknowledged the catalog revision the active Show requires. |
+| `exclusive-claim-conflict` | Two Cues that could run concurrently hold the same exclusive resource claim. |
+| `audio-ltc-emitter-ambiguous` | More than one `audio.node` holds the `program+ltc` role. |
+| `audio-target-unbound` | A Cue output names a target node with no `audio.node` object. |
+| `audio-target-unresolved` | A Cue output names no target and no single node can be resolved for it. |
+| `assets-missing` | A node that must render or play a Cue does not hold the required asset. |
+
+The same conditions are explained with remedies in [FPP troubleshooting](../../troubleshooting/fpp/).
 
 ## What a Playlist does not do
 

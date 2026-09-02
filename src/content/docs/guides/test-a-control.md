@@ -48,6 +48,6 @@ showmeshctl action check <action-id>
 
 This is a read; it dispatches nothing. It exits `29` if the checked binding is broken, and never exits `29` for an `unknown` result (the check itself could not run). Fix a broken binding before invoking the action or running a macro that references it.
 
-## Move into a macro
+## Use the primitive in an action or macro
 
 Invoke the action directly only after the primitive is confirmed and its binding checked (`showmeshctl action invoke <action-id>`, which requires `show:action:invoke`) or reference it from a macro. Run the macro with `--follow` during testing, then inspect every step rather than relying on the overall label alone.

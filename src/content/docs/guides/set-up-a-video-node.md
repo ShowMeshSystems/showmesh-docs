@@ -137,7 +137,7 @@ If the surface reports `Drawing: stale`, the MultiSync timeline has moved on to 
 
 In Resolume, select the exact NDI source name configured on the surface and route it into the intended composition. ShowMesh does not create Arena's source routing, mapping, or projection output.
 
-## 7. Make the evidence meaningful
+## 7. Verify timing against real lights
 
 Use a dedicated bench FPP or containerized bench `fppd` to play a real sequence. Watch a sharp event, such as a blackout or color snap, on the physical lights and the projected surface at the same time. A screen recording reviewed later is not a substitute for a live timing observation.
 

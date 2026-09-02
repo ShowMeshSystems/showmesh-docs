@@ -72,7 +72,7 @@ sudo ./install.sh /path/to/showmesh-agent-native
 
 Re-running `install.sh` on an upgrade replaces the binary and unit and restarts the service; it never touches an existing `/etc/showmesh/agent.env` or anything already written under `/var/lib/showmesh`.
 
-:::caution[Refuses to adopt a colliding account]
+:::caution[The installer refuses a mismatched `showmesh` account]
 If a `showmesh` account already exists but does not match the shape this installer creates (a system UID, a nologin-equivalent shell, home at `/var/lib/showmesh`), `install.sh` refuses outright rather than running the agent as an unrelated human login account. Rename or remove the colliding account, or edit `SERVICE_USER`/`SERVICE_GROUP` in `install.sh` to use a different name, then re-run.
 :::
 

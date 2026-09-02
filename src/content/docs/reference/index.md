@@ -18,6 +18,6 @@ Use Reference when you already know what you are trying to configure or call. Fo
 
 This reference describes the captured development state, not a released version. Documentation versioning is intentionally deferred until ShowMesh has a release/versioning system to match.
 
-## Expected later
+## Planned reference material
 
 Generated schema tables, protocol references, released compatibility matrices, and per-version documentation belong here after the first prerelease process exists.

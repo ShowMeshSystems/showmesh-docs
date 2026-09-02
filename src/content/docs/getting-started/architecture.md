@@ -20,7 +20,7 @@ flowchart LR
     Coordinator --> Store["SQLite configuration and asset metadata"]
 ```
 
-## Evidence, not guesses
+## Observation freshness and provenance
 
 The API reports provenance and freshness with observations. A value can be current, stale, unavailable because collection failed, unsupported, or of unknown age. `unknown_age` commonly means the coordinator restored retained MQTT evidence whose original observation time is not known; it is never treated as fresh.
 

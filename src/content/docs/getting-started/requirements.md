@@ -27,15 +27,17 @@ The Compose bundle builds the coordinator and UI locally; there is no published-
 
 ## Native node hosts
 
-The native agent is a Go binary. `make build` produces a `CGO_ENABLED=0` agent with no audio engine at all. A node that plays audio or generates LTC needs the separate `make build-agent-native` build instead, which links go-gst (GStreamer) and libltc and also shells out to the `gst-launch-1.0` and `gst-discoverer-1.0` command-line tools.
+Each native node needs:
 
-The audio-capable (`build-agent-native`) build has a measured platform floor: **Debian 13 (trixie) or newer**. Its cgo build fails on Debian 12 because that release's GLib is missing symbols the build depends on. `deploy/node/install.sh` and `deploy/node/preflight.sh` both check the host's `/etc/os-release` and refuse on an older release rather than producing a confusing link failure.
+- Debian 13 (trixie) or newer. The audio-capable agent build fails on Debian 12, and `install.sh` and `preflight.sh` refuse older releases.
+- The `make build-agent-native` agent binary, or the tarball from `make package-node-agent`, built on the same platform as the node. The plain `make build` agent has no audio engine.
+- Root access for `deploy/node/install.sh`, which creates the `showmesh` system user, `/etc/showmesh/agent.env`, `/var/lib/showmesh`, and the systemd unit.
+- The runtime packages named by `preflight.sh`: ALSA tools, GStreamer tools and plugins, `gstreamer1.0-alsa`, and `libltc11`.
+- A node ID of lowercase letters, digits, and internal hyphens, and its own broker credential from `add-agent-credential.sh`.
+- Network access to the MQTT broker and, for asset downloads and FPP Connect registration, to the coordinator.
+- For NDI output only: the vendor NDI runtime and a separately built gst-plugins-rs `ndisink` element on `GST_PLUGIN_PATH`. ShowMesh does not build or ship either.
 
-NDI output is not part of this build or its install path. The GStreamer `ndisink` element comes from a separately built gst-plugins-rs NDI plugin that this project does not build, vendor, or ship; a render node that needs NDI output must build that plugin itself and point `GST_PLUGIN_PATH` at it.
-
-Each agent needs a valid lowercase node ID, its own broker credential, a writable asset directory, and network access to the broker and, when asset downloads are used, the coordinator. `make package-node-agent` builds a platform-named, distributable tarball of the native agent plus its install files; because it is a cgo build linking host C libraries, a tarball can only target the platform it was built on. An arm64 tarball built this way has been installed on a Raspberry Pi 3B+ as a program-only audio node; that is the only hardware install on record for this build.
-
-Nodes run natively rather than in the coordinator bundle so they can use local GPUs, displays, audio devices, and NDI runtimes. `deploy/node/install.sh` installs the binary, creates the `showmesh` system user, and installs a systemd unit; it is idempotent and safe to re-run for an upgrade. The [native-node installation guide](../../guides/add-a-node/) provides a reviewed starting unit and verification path.
+The only hardware install on record is a Raspberry Pi 3B+ (arm64) running as a program-only audio node. See [Install a native node](../../guides/add-a-node/) for the procedure.
 
 ## Supported integrations in this snapshot
 
