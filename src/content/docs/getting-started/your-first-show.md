@@ -8,7 +8,7 @@ complexity: advanced
 
 This is the complete command-line-first path from an installed coordinator to a prepared ShowMesh production. It uses the current source and command surface, so it **will change over time**. Run `showmeshctl version` and `showmeshctl <command> --help` against the coordinator you are operating before copying a command into a script.
 
-This guide deliberately does not cover the Operator UI. A separate UI workflow will follow when that surface is ready. FPP remains the scheduler and playback authority; ShowMesh prepares, observes, and performs the bounded controls configured here.
+This guide is command-line-first; a separate full UI workflow will follow when that surface is ready. FPP remains the scheduler and playback authority; ShowMesh prepares, observes, and performs the bounded controls configured here. [Step 1](#1-connect-fpp) also names the Operator UI's Monitor screen, since observing your own FPP playlist there needs only Docker, a browser, and one FPP player, with no native node, audio, or Resolume Arena involved.
 
 ## Before you start
 
@@ -19,6 +19,8 @@ Complete [Install the coordinator](../installation/) first. You need:
 - one reachable FPP player and, if you use video, one reachable Resolume Arena instance;
 - native agents for any render or audio nodes you plan to use; and
 - the FSEQ, audio, and media files that belong to the production.
+
+Reaching the observation checkpoint in [Step 1](#confirm-your-playlist-is-observed) needs only the first three of those: a healthy coordinator, a token holding `config:write` (an administrator token holds it, along with every other scope this guide uses), and one reachable FPP player. Everything past that checkpoint needs the rest, as each step names.
 
 Build the CLI and point it at the coordinator. Keep the token in the environment rather than placing it in a shell history or process list:
 
@@ -56,6 +58,14 @@ showmeshctl config get
 showmeshctl fpp
 showmeshctl fpp fpp-main
 ```
+
+### Confirm your playlist is observed
+
+This is the point a minimal Docker-and-one-FPP-player installation reaches: ShowMesh polling your own FPP player and reporting what it sees, with no native node, audio, or Resolume Arena configured. `showmeshctl fpp fpp-main` above already shows the collected playlist name and state on the command line. The same evidence is visible in the Operator UI: open the coordinator's UI, go to **Monitor > Signals**, filter to **FPP**, and confirm a `fpp.playlist.name` row reporting your player's currently running playlist, with a recent **Observed** time.
+
+If no FPP row appears, or every row reads `not reported`, revisit collection before continuing: confirm the endpoint URL in `fpp-endpoints.json` actually reaches your FPP player, and check `showmeshctl fpp fpp-main`'s own collection-health fields.
+
+Everything below this point (Resolume Arena, native nodes, assets, Cues, Playlists, macros, and Show Night) builds a complete production and needs the corresponding hardware or software; none of it is required to reach the observation above.
 
 Optionally configure FPP MQTT status collection. The FPP host mapping uses the ShowMesh endpoint ID on the left and the FPP MQTT host name on the right.
 

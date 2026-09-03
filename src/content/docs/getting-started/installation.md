@@ -6,7 +6,9 @@ maturity: experimental-active
 complexity: advanced
 ---
 
-This is the supported installation path for the current source-built development version. It starts three services on one host: the coordinator, an authenticated Mosquitto broker, and the Operator UI. Native nodes run elsewhere; add them only after this host is healthy.
+This is the supported installation path for the current pre-release. It starts three services on one host: the coordinator, an authenticated Mosquitto broker, and the Operator UI. Native nodes run elsewhere; add them only after this host is healthy.
+
+The primary path pulls the published coordinator and Operator UI images at a pinned release version. Building from source remains supported as a secondary path, for example when contributing to ShowMesh itself.
 
 :::caution[Start on an isolated show-management network]
 The default bundle publishes MQTT on `1883`, the coordinator API on `8080`, and the Operator UI on `8081`. The read API is open to every machine that can reach it, and ShowMesh does not terminate TLS. Do not expose this default stack directly to the public internet.
@@ -22,18 +24,20 @@ Use a host that can run Docker and remains powered for the whole operating windo
 
 The coordinator must reach configured FPP and Resolume hosts. Each native node must reach the MQTT broker. Keep `1883`, `8080`, and `8081` limited to the systems that genuinely need them.
 
-## 2. Obtain the source and verify Docker
+## 2. Obtain the deployment bundle and verify Docker
 
-Install Git, Docker Engine or Docker Desktop, and the Docker Compose v2 plugin. Then obtain the ShowMesh revision you intend to run:
+Install Git, Docker Engine or Docker Desktop, and the Docker Compose v2 plugin. The `deploy/` directory (the Compose files, the Mosquitto configuration, and `generate-credentials.sh`) lives in the ShowMesh repository, so the deployment bundle and the source are the same clone. Check out the release tag you intend to run:
 
 ```sh
 git clone https://github.com/ShowMeshSystems/showmesh.git
 cd showmesh
-git rev-parse --short HEAD
+git checkout v<release-version>
 docker compose version
 ```
 
-There are no published coordinator images yet. The first start builds the coordinator and UI locally, so the host needs access to the source dependencies while building. See [Requirements](../requirements/) for the current platform boundaries.
+`v<release-version>` is the pushed release tag, for example `v0.1.0`, matching a version published as GHCR images (see [Releasing ShowMesh Core](https://github.com/ShowMeshSystems/showmesh/blob/main/docs/RELEASING.md) for what a release tag produces). See [Requirements](../requirements/) for the current platform boundaries.
+
+Building the coordinator and UI locally instead of pulling published images remains supported, for example when contributing to ShowMesh itself: skip step 4's `docker-compose.published.yml` override and run `make -C .. deploy-up` alone, which builds both images from this checkout before starting them.
 
 ## 3. Create installation-specific broker credentials
 
@@ -51,14 +55,16 @@ Do not create broker users by hand in the repository. Use the bundled scripts so
 
 ## 4. Start and verify the stack
 
+Run the bundle from the published images, at the release version you checked out (without the leading `v`, for example `0.1.0`):
+
 ```sh
-make -C .. deploy-up
+make -C .. deploy-up-published SHOWMESH_RELEASE_VERSION=<release-version>
 docker compose ps
 curl -fsS http://localhost:8080/healthz
 curl -fsS http://localhost:8080/readyz
 ```
 
-`docker compose up -d --build`, run directly instead of through `make -C .. deploy-up`, refuses to start: `deploy/docker-compose.yml` requires `VERSION`, `COMMIT`, and `BUILD_DATE` build arguments and names the `make` targets in its error rather than falling back to placeholder values. `make -C .. deploy-up` sets them from the source checkout and starts the stack; `make -C .. deploy-build` builds the same image without starting it.
+`make -C .. deploy-up-published` adds `docker-compose.published.yml` as a Compose override, which replaces the coordinator and Operator UI `build:` blocks with `image:` references pinned to `SHOWMESH_RELEASE_VERSION` and pulls them from GHCR instead of building. `SHOWMESH_RELEASE_VERSION` must be passed on the `make` command line as shown; setting it only in `deploy/.env` is read by a direct `docker compose` invocation but not by this `make` target's own precondition check, and the command exits with an error naming the variable before it reaches Compose. To build from source instead, run `make -C .. deploy-up` in place of the command above. Bypassing both and running `docker compose up -d --build` directly refuses to start: `deploy/docker-compose.yml` requires `VERSION`, `COMMIT`, and `BUILD_DATE` build arguments and names the `make` targets in its error rather than falling back to placeholder values.
 
 Open `http://<coordinator-host>:8081` from the trusted management network. The expected first result is:
 
@@ -71,16 +77,46 @@ The UI container deliberately has no dependency on coordinator health. A UI page
 
 ## 5. Create the first administrator
 
-The coordinator writes a one-time bootstrap code into its persistent data volume. Use the Operator UI bootstrap flow, or claim it locally from the coordinator container:
+The coordinator writes a one-time bootstrap code into its persistent data volume, never to a log. Claim it either from the Operator UI, which needs no CLI or build tooling, or from the coordinator container.
+
+**From the Operator UI:** open `http://<coordinator-host>:8081`. An unclaimed coordinator shows a bootstrap form asking for the code, an administrator name, a password, and a label for this device. The coordinator image ships no shell, so copy the code file out with `docker compose cp` rather than `exec`-ing into the container:
+
+```sh
+docker compose cp coordinator:/var/lib/showmesh/bootstrap-code.txt ./bootstrap-code.txt
+cat ./bootstrap-code.txt
+```
+
+Paste that code into the form along with your chosen name, password, and device label, and submit it. A browser submitting this form always carries the header the coordinator requires (below), so nothing further is needed.
+
+**From the coordinator container**, claim it without a browser at all:
 
 ```sh
 docker compose exec coordinator showmesh-coordinator bootstrap \
   -name "<administrator name>"
 ```
 
-The command reads the code from the mounted data volume by default and prompts for a password. The code expires after 24 hours and is deleted after a successful claim; it is deliberately never written to logs.
+The command reads the code from the mounted data volume by default and prompts for a password. This path claims the code directly against the data volume rather than over HTTP, so it is unaffected by the header requirement below.
 
-After creating the administrator, issue a token for a local CLI or automation identity. The token is displayed once, so store it in an appropriate secret manager:
+Either path expires the code after 24 hours and deletes it after a successful claim; a second claim attempt fails because no code remains.
+
+### The claim endpoint requires a same-origin request
+
+`POST /api/v1/bootstrap` is unauthenticated by construction (no administrator exists yet to authenticate as), so it is instead gated to same-origin callers to close cross-site forgery against it. The check (shared with `POST /api/v1/session`) reads two browser-set headers, checked in order, and a request carrying neither is refused:
+
+1. If the request carries a `Sec-Fetch-Site` header, the request is accepted only when its value is exactly `same-origin`.
+2. Otherwise, if the request carries an `Origin` header, the request is accepted only when that origin's host matches the `Host` the request was addressed to.
+3. A request with neither header is refused.
+
+A refused request gets `403 Forbidden` with a `CSRF check failed` problem body. A browser submitting the Operator UI's own bootstrap form always satisfies this, so the UI path above needs no extra step. Scripting the same call with `curl` needs the header added explicitly, since `curl` sends neither by default:
+
+```sh
+curl -sS -X POST http://<coordinator-host>:8080/api/v1/bootstrap \
+  -H 'Content-Type: application/json' \
+  -H 'Sec-Fetch-Site: same-origin' \
+  -d '{"code":"<code from bootstrap-code.txt>","name":"<administrator name>","password":"<password>","deviceLabel":"<device label>"}'
+```
+
+After creating the administrator, issue a token for a local CLI or automation identity (optional; skip this if you only need the Operator UI). The token is displayed once, so store it in an appropriate secret manager:
 
 ```sh
 docker compose exec coordinator showmesh-coordinator issue-token \
@@ -88,7 +124,7 @@ docker compose exec coordinator showmesh-coordinator issue-token \
   -label "local showmeshctl"
 ```
 
-Build the CLI from the source root and point it at the coordinator:
+Building `showmeshctl` needs Go tooling; this is not required for a Docker-and-browser-only installation. Skip to step 6 and use the Operator UI if you do not need the command line. Otherwise, build the CLI from the source root and point it at the coordinator:
 
 ```sh
 cd ..
@@ -179,7 +215,13 @@ Restoring old session-generation data can otherwise revive sessions that were re
 
 ## Upgrade deliberately
 
-Current upgrades are source checkouts plus a rebuild, not image-tag changes:
+On the published-image path, upgrading or rolling back is a pinned-version change: take a volume backup first (see above), then set `SHOWMESH_RELEASE_VERSION` to the reviewed target version and re-run:
+
+```sh
+make -C .. deploy-up-published SHOWMESH_RELEASE_VERSION=<reviewed-version>
+```
+
+On the from-source path, upgrading or rolling back is a source checkout plus a rebuild:
 
 ```sh
 git fetch --tags
@@ -187,7 +229,7 @@ git checkout <reviewed-ref>
 make deploy-up
 ```
 
-SQLite migrations are forward-only. Take a volume backup first: returning to an older source ref after a newer ref migrated the database requires restoring the matching pre-upgrade backup.
+Either way, SQLite migrations are forward-only: returning to an older version after a newer one migrated the database requires restoring the matching pre-upgrade backup, not just pointing at the older version or ref again.
 
 ## First-start failures
 
