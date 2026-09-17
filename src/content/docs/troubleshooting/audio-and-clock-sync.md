@@ -6,7 +6,7 @@ maturity: experimental-testing
 complexity: advanced
 ---
 
-Start by deciding whether the problem is content delivery, output routing, clock evidence, scheduling, alignment, or physical receiver behavior. Do not treat “the command was accepted” as proof that audio was heard or synchronized.
+First identify whether the problem is the asset, output route, clock, scheduled start, alignment, or physical receiver. Command acceptance does not prove audible or synchronized output.
 
 ## Capture evidence
 
@@ -27,38 +27,38 @@ showmeshctl audio alignment-run get --node <node-id> --run <run-id>
 
 ## Symptom: no sound
 
-Check that the node advertised the configured route, program channels are valid, the sink backend matches the installation, and a PipeWire target still exists when `pipewiresink` is selected. Confirm the exact asset is present and the session is not muted, stopped, failed, or `restore_pending`.
+Confirm the node advertises the saved route, the program channels are valid, and the selected output backend exists. Then confirm the asset is present and the session is not muted, stopped, failed, or `restore_pending`.
 
 Device loss fails silent. ShowMesh does not automatically fall back to another output.
 
 ## Symptom: wrong output or missing LTC
 
-Program and LTC must use the same advertised route and distinct channels. A program-only node omits both LTC route and channel and should use role `program`. Only one node may hold `program+ltc`.
+Program and LTC must use the same route and different channels. A program-only node omits both LTC fields and uses role `program`. Only one node may use `program+ltc`.
 
-Confirm PipeWire owns the card when configured, and verify the saved target node matches the current PipeWire graph. A valid saved route does not prove the physical jack or receiver is correct.
+When using PipeWire, confirm it owns the card and that the saved target still exists. A valid route does not prove the physical output is correct.
 
 ## Symptom: PTP is unlocked or stale
 
-Inspect the configured provider, interface, PTP domain, PHC where applicable, and current clock report. Distinguish synchronized, holdover, stale, unavailable, and never observed.
+Inspect the provider, interface, PTP domain, optional PHC, and current clock report. Distinguish synchronized, holdover, stale, unavailable, and never observed.
 
 For a managed provider, verify the service can access the interface and requested timestamping mode. For an external provider, verify its management socket and PHC. For an FPP provider, verify the FPP 10 base URL and its own clock state.
 
 ## Symptom: multi-node start is unaligned
 
-An aligned-start result is per node. Check which target failed preparation, lacked an asset, missed the scheduled instant, or reported that it did not use the shared instant. One aligned node does not make the group aligned.
+Alignment is reported per node. Find the target that failed preparation, lacked an asset, missed the scheduled instant, or did not use it. One aligned node does not make the group aligned.
 
-Repeat only after correcting the named condition. Reissuing the same start against stale clock evidence can reproduce the failure while changing playback state.
+Retry only after correcting the named condition. A retry can change playback state without fixing stale clock evidence.
 
 ## Symptom: a stable offset remains
 
-Check output-latency calibration on every target. Confirm method, signed microsecond value, reference, device/buffer configuration, measurement time, and confidence still match the current output chain.
+Check each target's output-latency calibration and confirm its method, value, device configuration, timestamp, and confidence still match the output chain.
 
 Recalibrate after changing the device, sample rate, PipeWire quantum, buffer configuration, or downstream processing.
 
 ## Symptom: drift grows over time
 
-Start an alignment run and compare its series with the configured warning threshold. Separate PTP lock loss from a stable output-latency offset and from receiver behavior. A prior clean run is not current evidence after a clock or routing change.
+Start an alignment run and compare it with the warning threshold. Separate PTP lock loss, a stable output-latency offset, and receiver behavior. Rerun the measurement after clock or routing changes.
 
 ## What remains outside ShowMesh evidence
 
-ShowMesh can report routes, scheduling, clocks, engine state, and measured alignment. It cannot prove that an amplifier, physical cable, speaker, or external LTC receiver behaved correctly without installation-side observation.
+ShowMesh reports routes, scheduling, clocks, engine state, and measured alignment. Check amplifiers, cables, speakers, and external LTC receivers directly.

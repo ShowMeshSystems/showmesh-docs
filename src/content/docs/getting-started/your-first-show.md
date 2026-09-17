@@ -6,9 +6,7 @@ maturity: experimental-active
 complexity: advanced
 ---
 
-This is the complete command-line-first path from an installed coordinator to a prepared ShowMesh production. It uses the current source and command surface, so it **will change over time**. Run `showmeshctl version` and `showmeshctl <command> --help` against the coordinator you are operating before copying a command into a script.
-
-This guide is command-line-first. For the current Operator UI workflow, see [Author a Show](../../guides/author-a-show/). FPP remains the scheduler and playback authority for FPP-backed playback; ShowMesh prepares, observes, and performs the bounded controls configured here.
+Use this guide to build a Show from the command line. For the Operator UI path, see [Author a Show](../../guides/author-a-show/). Check `showmeshctl version` and command-specific help before copying examples into scripts.
 
 ## Before you start
 
@@ -19,8 +17,6 @@ Complete [Install the coordinator](../installation/) first. You need:
 - one reachable FPP player and, if you use video, one reachable Resolume Arena instance;
 - native agents for any render or audio nodes you plan to use; and
 - the FSEQ, audio, and media files that belong to the production.
-
-Reaching the observation checkpoint in [Step 1](#confirm-your-playlist-is-observed) needs only the first three of those: a healthy coordinator, a token holding `config:write` (an administrator token holds it, along with every other scope this guide uses), and one reachable FPP player. Everything past that checkpoint needs the rest, as each step names.
 
 Build the CLI and point it at the coordinator. Keep the token in the environment rather than placing it in a shell history or process list:
 
@@ -61,11 +57,7 @@ showmeshctl fpp fpp-main
 
 ### Confirm your playlist is observed
 
-This is the point a minimal Docker-and-one-FPP-player installation reaches: ShowMesh polling your own FPP player and reporting what it sees, with no native node, audio, or Resolume Arena configured. `showmeshctl fpp fpp-main` above already shows the collected playlist name and state on the command line. The same evidence is visible in the Operator UI: open the coordinator's UI, go to **Monitor > Signals**, filter to **FPP**, and confirm a `fpp.playlist.name` row reporting your player's currently running playlist, with a recent **Observed** time.
-
-If no FPP row appears, or every row reads `not reported`, revisit collection before continuing: confirm the endpoint URL in `fpp-endpoints.json` actually reaches your FPP player, and check `showmeshctl fpp fpp-main`'s own collection-health fields.
-
-Everything below this point (Resolume Arena, native nodes, assets, Cues, Playlists, macros, and Show Night) builds a complete production and needs the corresponding hardware or software; none of it is required to reach the observation above.
+`showmeshctl fpp fpp-main` shows the collected Playlist and state. In the Operator UI, open **Monitor > Signals**, filter to **FPP**, and confirm a recent `fpp.playlist.name` observation. If it is missing or `not reported`, fix endpoint reachability before continuing.
 
 Optionally configure FPP MQTT status collection. The FPP host mapping uses the ShowMesh endpoint ID on the left and the FPP MQTT host name on the right.
 
@@ -79,22 +71,7 @@ showmeshctl fpp-mqtt set \
 showmeshctl fpp-mqtt get
 ```
 
-Confirm that ShowMesh is collecting state before using a control. This list is the complete direct FPP control set:
-
-```sh
-showmeshctl fpp start-playlist fpp-main '<playlist name>'
-showmeshctl fpp stop-playlist fpp-main
-showmeshctl fpp stop-playlist-gracefully fpp-main
-showmeshctl fpp pause-playlist fpp-main
-showmeshctl fpp resume-playlist fpp-main
-showmeshctl fpp next-playlist-item fpp-main
-showmeshctl fpp prev-playlist-item fpp-main
-showmeshctl fpp set-volume fpp-main 75
-showmeshctl fpp set-transition-gain fpp-main 100
-showmeshctl fpp republish-playlist-definitions fpp-main
-```
-
-Each command waits for updated observation evidence. If one is unconfirmed, inspect FPP before repeating it. See [FPP](../../integrations/fpp/) for collection, readiness, and recovery details.
+Confirm collection before sending a control. Commands wait for new observation evidence; if a result is unconfirmed, inspect FPP before retrying. See [FPP](../../integrations/fpp/) for controls and recovery.
 
 ## 2. Connect Resolume Arena
 
@@ -111,7 +88,7 @@ showmeshctl resolume status
 showmeshctl resolume action list
 ```
 
-Test a reversible Arena action before including it in a macro. The available direct actions are `launch-clip`, `clear-layer`, `launch-column`, `select-deck`, `blackout`, `set-layer-bypass`, and `set-layer-master`.
+Test a reversible Arena action before adding it to a macro:
 
 ```sh
 showmeshctl resolume action select-deck <deck-id>
@@ -138,8 +115,6 @@ Do not use `undeclare` during normal configuration: it removes the declaration a
 - [Set up a video node](../../guides/set-up-a-video-node/)
 - [Set up an audio node](../../guides/set-up-an-audio-node/)
 - [Nodes](../../using-showmesh/nodes/) and [Node types](../../using-showmesh/node-types/)
-
-For a render node, the later render commands are `render settings`, `render status`, `render apply`, `render clear`, `render restart`, `render probe`, and `render transport`. For an audio node, configure `audio settings` and `audio node` before using `audio session`, `audio gain`, or `audio output` commands.
 
 ## 4. Create the Show and surfaces
 
@@ -233,7 +208,7 @@ showmeshctl cue get main-opening
 showmeshctl cue revisions main-opening
 ```
 
-Create a Playlist that maps Cues onto an existing FPP playlist. Substitute the FPP instance UUID, playlist name, and canonical hash from the FPP playlist-definition commands. The entry position refers to the FPP section and position.
+Create a Playlist that maps Cues onto an imported FPP Playlist definition. Substitute its instance UUID, name, and canonical hash.
 
 ```sh
 showmeshctl playlist set \
@@ -247,11 +222,11 @@ showmeshctl playlist get main-fpp-playlist
 showmeshctl fpp playlist-readiness main-fpp-playlist
 ```
 
-For an audio-runner Playlist, use `--runner showmesh-audio` with `--showmesh-audio-json` instead of `--fpp-json`. Cue audio and announcement outputs use a `"targets"` list of audio-node IDs; LTC keeps one optional `"target"`. Use `media-playlist` commands for reusable local-audio bed sequences. See [Cues](../../using-showmesh/cues/) and [Playlists](../../using-showmesh/playlists/) for complete rules.
+For an audio-runner Playlist, use `--runner showmesh-audio` with `--showmesh-audio-json`. See [Cues](../../using-showmesh/cues/) and [Playlists](../../using-showmesh/playlists/) for target and media-playlist rules.
 
 ## 7. Create actions and macros
 
-Actions and Macros use JSON files because they contain complete provider targets and ordered step policies. Start from the current shape for your coordinator, then write the definition and validate every action before assembling the Macro:
+Actions and Macros use JSON files. Validate each action before adding it to a Macro:
 
 ```sh
 showmeshctl action put --file ./actions/start-main-playlist.json start-main-playlist
@@ -264,7 +239,7 @@ showmeshctl macro run --follow start-show
 showmeshctl run list --macro start-show
 ```
 
-An action can target FPP, Resolume, a configured integration MQTT broker, or ShowMesh audio. A Macro runs its action steps in order. `--follow` observes the asynchronous run; an idle follow can finish with exit code `14` while the run is still active, so inspect it explicitly:
+`--follow` observes the asynchronous run. It can exit `14` while the run remains active, so inspect the run afterward:
 
 ```sh
 showmeshctl run show --follow <run-id>
@@ -274,7 +249,7 @@ Use [Actions and macros](../../using-showmesh/actions-and-macros/) for the targe
 
 ## 8. Create and operate a Show Night
 
-**Show Night** is the operator name for the revisioned `night.session` configuration. Create it from a complete JSON file that references the Show, FPP playlists, optional audio, and Transition Steps:
+Create the Show Night from a JSON file that references the Show, Playlists, optional audio, and Transition Steps:
 
 ```sh
 showmeshctl night set --file ./nights/main-night.json main-night
@@ -283,7 +258,7 @@ showmeshctl night activate main-night
 showmeshctl night status
 ```
 
-Run the night lifecycle in order. FPP continues to decide scheduled admission and playback; these commands prepare and control the Show Night around it.
+Run the lifecycle in order. FPP remains the schedule and playhead authority.
 
 ```sh
 showmeshctl night prepare-site
@@ -332,78 +307,9 @@ showmeshctl resolume status
 showmeshctl snapshot
 ```
 
-The expected result is an active Show, ready assets, an FPP Playlist readiness result, current node and Resolume evidence, and a Show Night that is ready for the lifecycle operation you intend. If a command reports an uncertain result, inspect the named system and fresh evidence before retrying.
+Expect an active Show, ready assets, a passing FPP Playlist check, fresh node and Resolume evidence, and a Show Night ready for the intended transition. Investigate uncertain results before retrying.
 
-## Complete `showmeshctl` command map
-
-This is the current command inventory. The guide used the commands needed to build a first production; the rest support inspection, recovery, integration administration, and automation. Use `showmeshctl <group> --help` for exact flags and required scopes in the binary you run.
-
-```text
-Inventory and evidence
-  nodes | node | snapshot | watch | events | session | audit | version | help
-
-FPP and FPP MQTT
-  fpp
-  fpp start-playlist | stop-playlist | stop-playlist-gracefully
-  fpp pause-playlist | resume-playlist | next-playlist-item | prev-playlist-item | set-volume
-  fpp reset-observation-sequence | acknowledge-instance-uuid-change
-  fpp playlist-definitions list|get|entries
-  fpp playlist-entry-observations list|reconciliation
-  fpp playlist-readiness
-  config get|set|revisions
-  fpp-mqtt get|set
-
-Nodes and Show configuration
-  discover | declare | undeclare
-  show list|get|set|revisions|delete|active|activate
-  show participation get|set
-  show mode|get|set|revisions
-  surface list|get|set|revisions|delete
-  cue list|get|set|revisions|delete|activate
-  playlist list|get|set|revisions|delete
-  media-playlist list|get|set|revisions|delete
-  cuecatalog get|acknowledge|deploy
-
-Actions, Macros, Show Night, and Emergency Stop
-  action list|show|put|check|invoke|delete
-  macro list|show|put|run|delete
-  run show|list
-  night list|get|set|revisions|revision|active|activate|deactivate|status
-  night prepare-site|readiness|preshow|start|final-show|fade-out|power-down|end-session
-  emergency-stop stop|stop-power-down
-  emergency-stop hard-stop arm|fire
-  emergency-stop config get|set|revisions
-
-Resolume
-  resolume instance list|set|remove
-  resolume composition upload|show
-  resolume action list|launch-clip|clear-layer|launch-column|select-deck|blackout
-  resolume action set-layer-bypass|set-layer-master
-  resolume status
-  resolume recovery status|enable|disable|restore|revisions
-
-Assets and node media
-  assets list|get|upload|fetch|manifest|unused|remove|resync
-  assets settings get|set
-  render settings get|set|revisions
-  render status|apply|clear|restart|probe|transport
-  audio settings get|set|revisions
-  audio node list|get|set|revisions|delete
-  audio session apply|prepare|start|aligned-start|pause|resume|seek|advance|stop|clear
-  audio gain set|fade
-  audio output mute|unmute
-  audio silence
-  audio alignment-run start|stop|list|get
-  node-clock list|get|set|revisions
-  fppconnect settings get|set|revisions
-  fppconnect status
-
-Identity
-  principal list|create|disable|enable|reset-password|set-role
-  token list|issue|revoke
-```
-
-Every command accepts `--server`, `--token`, `--output text|json`, and `--timeout` after its last verb and before any positional ID. See [Command-line interface](../../reference/cli/) for common flags, stable exit codes, and scripting behavior.
+See [Command-line interface](../../reference/cli/) for the complete command inventory, global flags, and exit codes.
 
 ## If something does not converge
 

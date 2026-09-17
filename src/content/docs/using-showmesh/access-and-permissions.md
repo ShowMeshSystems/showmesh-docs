@@ -6,7 +6,7 @@ maturity: available
 complexity: advanced
 ---
 
-ShowMesh uses coordinator-local **principals**. A principal is either `human` or `machine`, has one role, and may hold passwords or API tokens. Kind is for display and audit readability; authorization is determined by scopes.
+ShowMesh uses coordinator-local **principals**. Each principal is `human` or `machine`, has one role, and can hold passwords or API tokens. Scopes determine authorization.
 
 ## Roles
 
@@ -18,7 +18,7 @@ ShowMesh uses coordinator-local **principals**. A principal is either `human` or
 | `scheduler` | Narrow machine authority for macro/Night scheduling plus FPP observation and fallback exchange. |
 | `recovery` | Narrow built-in authority for Resolume recovery actions. |
 
-Routes authorize scopes, not role names. A UI control can therefore be hidden or disabled because current scope evidence is loading, stale, unavailable, or insufficient even when the role label looks familiar.
+Routes authorize scopes, not role names. A control can remain unavailable while scope evidence is loading or when the principal lacks the required scope.
 
 ## Principals and credentials
 
@@ -30,19 +30,17 @@ The **Access** page lets an administrator:
 - set or replace a password;
 - issue, inspect, and revoke tokens.
 
-Tokens are credentials, not identity records. Revoking one token does not delete the principal or automatically revoke its other credentials.
-
-Use a separate machine principal for unattended integrations. Give it the narrow role appropriate to the caller rather than reusing a human administrator credential.
+Revoking one token does not delete the principal or revoke its other credentials. Give unattended integrations a separate machine principal with the narrowest suitable role.
 
 ## Last-administrator protection
 
-The coordinator refuses operations that would remove the last reachable administrator: disabling that principal, changing its role away from one containing `principal:write`, or revoking its last credential. Host-local coordinator commands remain the break-glass path if no administrator can authenticate.
+The coordinator refuses changes that would remove the last reachable administrator, including disabling it, removing `principal:write`, or revoking its last credential. Host-local coordinator commands are the break-glass path.
 
 ## Unsaved and destructive changes
 
-Access editors can contain several independent drafts. Saving or reloading one principal must not erase another principal's unsaved work. Navigation prompts require an explicit discard decision.
+Access can contain several unsaved principal drafts. Saving one must not discard another. The UI prompts before navigation discards a draft.
 
-Disabling a principal, revoking a token, or deleting credential access is destructive. Confirm the exact principal and token before applying it and inspect the resulting audit entry.
+Confirm the exact principal or token before disabling or revoking it, then inspect the audit entry.
 
 ## CLI administration
 

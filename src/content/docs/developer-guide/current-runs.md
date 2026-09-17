@@ -6,13 +6,13 @@ maturity: experimental-active
 complexity: advanced
 ---
 
-`GET /api/v1/current-runs` is the authoritative projection of playback that is current now. It is runner-neutral and returns zero to many runs: FPP is optional, and FPP plus ShowMesh-audio runs can appear concurrently.
+`GET /api/v1/current-runs` is the authoritative current-playback projection. It returns zero to many runs and can show FPP and ShowMesh audio at the same time.
 
 Do not reconstruct this view from local Playlist order, raw FPP observations, or an assumed single global playhead.
 
 ## Projection responsibilities
 
-The coordinator combines:
+Each run can include:
 
 - active Show and generation context;
 - runner identity and status;
@@ -26,9 +26,7 @@ The coordinator combines:
 
 ## Full-frame updates
 
-The `currentRuns.changed` server-sent event carries a complete replacement frame, not a patch. Replace the local current-runs collection as one unit.
-
-The event is an optional prompt and has no resumable cursor. After an SSE reconnect, fetch `GET /current-runs` again. Do not assume a frame received before disconnect remains authoritative.
+The `currentRuns.changed` server-sent event carries a complete replacement frame, not a patch. Replace the collection as one unit. The event has no resumable cursor, so refetch `GET /current-runs` after reconnecting.
 
 ## State handling
 
@@ -42,7 +40,7 @@ Preserve distinctions among:
 - disconnected streaming transport;
 - a current run with `next: null`.
 
-Collapsing these into one “offline” or “idle” state removes information operators need during a show.
+Do not collapse these states into “offline” or “idle.”
 
 ## Consumer sequence
 
@@ -52,4 +50,4 @@ Collapsing these into one “offline” or “idle” state removes information 
 4. Replace the frame when `currentRuns.changed` arrives.
 5. After reconnect, refetch `/current-runs` before trusting the stream again.
 
-The Operator UI applies this replacement and reconnect behavior. API consumers should follow the same contract rather than relying on UI implementation details.
+The Operator UI follows this sequence; other clients must do the same.

@@ -5,9 +5,7 @@ pageType: procedure
 maturity: experimental-testing
 ---
 
-ShowMesh audio nodes play complete media files locally. The coordinator distributes assets, chooses a shared start instant when several nodes must play together, and records evidence; it never streams program audio through MQTT.
-
-This path is implemented and test-covered, but physical interfaces, PTP infrastructure, multi-node phase alignment, and live-show recovery still require installation-specific acceptance.
+ShowMesh audio nodes play complete files locally. The coordinator distributes assets and schedules shared starts; it does not stream program audio. Test the physical outputs, PTP network, alignment, and recovery on your installation before show use.
 
 ## Before you start
 
@@ -15,9 +13,9 @@ You need:
 
 - a native node installed with [Install a native node](../add-a-node/);
 - an administrator credential for configuration writes;
-- the program and optional LTC routes from the node's current capability report;
-- the PipeWire target node name when PipeWire owns the output device;
-- the network interface, PTP domain, and clock-provider choice for this node;
+- the program route and optional LTC route from the node's capability report;
+- any required PipeWire target;
+- the network interface, PTP domain, and clock provider;
 - the audio assets required by the Show already uploaded to ShowMesh.
 
 Do not guess route names or declare hardware that the agent has not advertised. Audio-node writes are refused unless the selected routes exist in the node's own capability evidence.
@@ -29,7 +27,7 @@ showmeshctl node <node-id>
 showmeshctl audio node get <node-id>
 ```
 
-Use the node report to identify the advertised local-audio route and, when present, the LTC-capable route. Program and LTC must use the same route. LTC needs a discrete channel that is not one of the program channels.
+Identify the advertised audio route. Program and LTC must use that same route, with LTC on a channel not used by program audio.
 
 ## 2. Choose the role
 
@@ -41,7 +39,7 @@ Every `audio.node` has one role:
 | `program+ltc` | Main program audio and the installation's sole LTC output. |
 | `zone` | An independently named speaker zone; never the main program or LTC output. |
 
-Only one node may hold `program+ltc`. Set `--role program` explicitly for a program-only node; the omitted-role default is `program+ltc`.
+Only one node may use `program+ltc`. Set `--role program` explicitly for program-only output; the default is `program+ltc`.
 
 ## 3. Configure routing
 
@@ -71,13 +69,13 @@ showmeshctl audio node set \
   <node-id>
 ```
 
-For a node that also emits LTC, add both `--ltc-route` and `--ltc-channel`. They are optional together and invalid separately.
+For LTC, add both `--ltc-route` and `--ltc-channel`; using only one is invalid.
 
-The command is a full replacement, with three deliberate carry-forwards: omitted sink-backend, PipeWire target, and output-latency flags retain their current stored values after a successful pre-write read. Use `--force` only when deliberately bypassing the revision check; it can also reset those carried values if the read fails.
+This command replaces the saved configuration, although omitted output-backend and latency flags are normally carried forward. Use `--force` only when you intend to bypass revision protection; if the pre-write read fails, carried values can reset.
 
 ## 4. Configure the node clock
 
-`node.clock` declares how the node participates in the shared media clock. The supported providers are:
+Choose one clock provider:
 
 - `managed`: ShowMesh manages the node's PTP service;
 - `external`: another service manages PTP and ShowMesh reads its evidence;
@@ -95,7 +93,7 @@ showmeshctl node-clock set \
   <node-id>
 ```
 
-Use `--phc-device` when an external provider disciplines a particular PTP hardware clock. Use `--fpp-base-url` with the `fpp` provider. `node-clock set` is a full replacement and does not read the previous object first.
+Use `--phc-device` for an external provider tied to a PTP hardware clock, or `--fpp-base-url` for the `fpp` provider. `node-clock set` fully replaces the object.
 
 ```sh
 showmeshctl node-clock get <node-id>
@@ -104,7 +102,7 @@ showmeshctl node-clock revisions <node-id>
 
 ## 5. Record output latency
 
-Calibrated output latency lets ShowMesh compensate for a static device and output-chain delay when it chooses a scheduled start. Record the measurement method, value, reference, configuration, timestamp, and confidence together. Use `showmeshctl audio node set --help` for the complete required flag group.
+Record output-latency calibration with its method, value, reference, device configuration, timestamp, and confidence. ShowMesh uses it to compensate for static output delay. See `showmeshctl audio node set --help` for the flags.
 
 Use `--output-latency-method unmeasured` by itself to clear a stored calibration. Do not present a declared or estimated value as a measured one.
 
@@ -116,11 +114,11 @@ showmeshctl audio node get <node-id>
 showmeshctl node-clock get <node-id>
 ```
 
-Readiness depends on more than the presence of an interface. Check exact assets, program/LTC channel separation, route availability, clock state, current engine evidence, and output-latency provenance.
+Confirm assets, channel separation, route availability, clock state, engine evidence, and output-latency provenance.
 
 ## 7. Exercise scheduled playback
 
-Test one node before testing a group. The direct session commands expose prepare, start, pause, resume, seek, advance, stop, clear, gain, fade, mute, and unmute operations.
+Test one node before a group. Direct session commands provide playback, gain, fade, mute, and clear controls.
 
 For several nodes, use one aligned-start request so the coordinator prepares every target and chooses one shared media-clock instant:
 
@@ -128,7 +126,7 @@ For several nodes, use one aligned-start request so the coordinator prepares eve
 showmeshctl audio session aligned-start <session-id> <node-id> <node-id> ...
 ```
 
-The result reports each target as aligned or unaligned. Unaligned is visible degraded evidence, not synchronized success.
+The result reports alignment per target. `unaligned` is degraded operation, not synchronized success.
 
 ## 8. Record a drift run
 
@@ -139,10 +137,10 @@ showmeshctl audio alignment-run get --node <node-id> --run <run-id>
 showmeshctl audio alignment-run stop --node <node-id> --run <run-id>
 ```
 
-Source and test evidence does not replace listening tests, receiver-lock checks, or long-duration measurements on the installation's real interfaces.
+Run listening, receiver-lock, and long-duration tests on the real interfaces.
 
 ## Failure behavior
 
-Audio-device loss fails silent. ShowMesh does not automatically move audience audio back to FPP or choose a standby output. Restore the intended route, PipeWire target, clock relationship, channel separation, assets, and session position before resuming sound.
+Audio-device loss fails silent. ShowMesh does not choose a standby output or move audio to FPP. Restore the route, clock, channels, assets, and session position before resuming sound.
 
 See [Audio nodes](../../using-showmesh/node-types/audio-nodes/) for the model, [SMPTE / LTC](../../integrations/smpte-ltc/) for timecode behavior, and [Audio and clock sync](../../troubleshooting/audio-and-clock-sync/) for diagnosis.

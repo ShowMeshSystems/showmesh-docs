@@ -5,7 +5,7 @@ pageType: concept
 maturity: experimental-active
 ---
 
-Settings owns installation configuration. Saving a setting records desired state; Monitor, node reports, integration observations, and command outcomes show whether runtime state matches it.
+Settings records installation-wide desired state. Use Monitor and current observations to verify that runtime state matches it.
 
 ## Pages
 
@@ -23,23 +23,17 @@ Settings owns installation configuration. Saving a setting records desired state
 
 ## Revisioned configuration
 
-Most settings are full-replacement revisioned objects. Read the current object before editing it and preserve fields you do not intend to change. Revision preconditions prevent one editor from silently overwriting another editor's newer save.
-
-Use revision history for inspection and deliberate rollback. A rollback is a new active revision, not deletion of history.
+Most settings are revisioned full replacements. Read the current object before editing and preserve fields you do not intend to change. Revision checks prevent stale editors from overwriting a newer save. A rollback creates another revision; it does not erase history.
 
 ## Node routing
 
-Node routing combines several related but separate objects:
+Node routing edits two objects: `audio.node` selects roles, routes, channels, output backend, clock domain, and output latency; `node.clock` selects managed, external, or FPP PTP behavior. Live reports show what the node currently observes.
 
-- `audio.node` chooses roles, routes, channels, sink backend, PipeWire target, clock-domain declaration, and output latency;
-- `node.clock` chooses managed, external, or FPP PTP behavior;
-- live capability and clock reports show what the node currently observes.
-
-Configuration is refused when it contradicts current required capability evidence. A saved route or clock provider does not prove the output is present, locked, or aligned.
+ShowMesh refuses configuration that contradicts required capability evidence. A saved route or clock provider does not prove the output is present, locked, or aligned.
 
 ## Connection state
 
-Connection pages distinguish configured endpoints from observed reachability. Preserve unavailable, stale, failed, and never-observed states rather than replacing them with one generic offline state.
+Connection pages separate configured endpoints from observed reachability. Unavailable, stale, failed, and never observed are different states.
 
 ## Permissions
 

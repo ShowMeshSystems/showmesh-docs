@@ -5,7 +5,7 @@ pageType: concept
 maturity: experimental-active
 ---
 
-A **Cue** is a revisioned `show.cue` object describing what one point in a Show presents or plays. It belongs to one Show and contains at least one render, audio, LTC, or announcement output.
+A **Cue** describes what one point in a Show presents or plays. It contains at least one render, audio, LTC, or announcement output and keeps revision history.
 
 ## Output types
 
@@ -16,13 +16,13 @@ A **Cue** is a revisioned `show.cue` object describing what one point in a Show 
 
 LTC requires audio. An announcement also requires audio, and one Cue cannot combine LTC with an announcement.
 
-`outputs.audio.targets` and `outputs.announcement.targets` are lists of distinct `audio.node` IDs. Omitted or empty, the target resolves to the installation's `program+ltc` node. The deprecated singular `target` remains accepted as a one-element list, but new configuration should use `targets`. A payload containing both forms for the same output is refused.
+Audio and announcement `targets` contain distinct audio-node IDs. An empty or omitted list uses the `program+ltc` node. The deprecated singular `target` remains accepted, but do not send both forms.
 
 `outputs.ltc.target` remains singular. LTC always runs on exactly one node.
 
 ## Author Cues
 
-Open a Show and select **Cues** to create or edit Cues in the Operator UI. The target pickers expose the audio nodes that current configuration allows.
+Open a Show and select **Cues**. Target pickers show the audio nodes allowed by current configuration.
 
 ```sh
 showmeshctl cue list --show <show-id>
@@ -36,7 +36,7 @@ showmeshctl cue revisions <cue-id>
 showmeshctl cue delete --confirm <cue-id>
 ```
 
-Writes are full replacements and use revision preconditions by default. Every named asset and audio node must resolve when the Cue is written.
+Writes fully replace the Cue and use revision checks. Every named asset and audio node must resolve.
 
 ## Activate a Cue
 
@@ -44,7 +44,7 @@ Writes are full replacements and use revision preconditions by default. Every na
 showmeshctl cue activate <cue-id>
 ```
 
-Direct activation requires `cue:activate`. Live Control uses this path for Announcements; it does not route the activation through a Playlist or an FPP observation.
+Direct activation requires `cue:activate`. Live Control uses it for Announcements without involving a Playlist or FPP observation.
 
 For multi-node audio or announcement output, the coordinator:
 
@@ -55,13 +55,13 @@ For multi-node audio or announcement output, the coordinator:
 5. starts all prepared nodes at that same instant;
 6. reports aligned or unaligned evidence for each node.
 
-Unaligned means the Cue ran without verified shared-clock alignment. It is visible degraded evidence, not synchronized success. If one node lacks an asset or cannot be prepared, the result names that node instead of silently treating the group as complete.
+`unaligned` means the Cue ran without verified shared-clock alignment. Missing assets and preparation failures are reported per node.
 
-Activation does not create a schedule or choose when FPP advances. FPP-backed Playlists and Show Night retain schedule and playhead authority.
+Activation does not schedule playback or advance FPP.
 
 ## Show Mode
 
-In Show Mode, Cue authorization is pinned to the active Show, generation, and catalog revision established when that Show became authorized. An edit made afterward stays staged until the show restarts. Program Mode resolves the current Cue revision live.
+Show Mode pins Cue authorization to the active Show, generation, and catalog revision. Later edits remain staged until the show restarts. Program Mode resolves the current revision.
 
 ## Cue catalog
 
@@ -73,8 +73,8 @@ showmeshctl cuecatalog deploy <node-id>
 showmeshctl cuecatalog acknowledge --show <show-id> --generation <n> <node-id> <revision>
 ```
 
-Deployment requires the admin-only `cuecatalog:deploy` scope. An acknowledgement records which catalog revision the node reports holding; it is not readiness by itself.
+Deployment requires `cuecatalog:deploy`. An acknowledgement records the revision held by the node; it is not readiness by itself.
 
-An exclusive-claim conflict blocks deployment unless an operator explicitly overrides that conflict for the current revision. The override is deliberate and revision-specific; it is not a permanent relaxation of catalog safety.
+An exclusive-claim conflict blocks deployment unless an operator overrides it for that revision.
 
 Use Cues in [Playlists](../playlists/) for ordered playback and in [Show Night](../show-night/) for named changes around the night lifecycle.

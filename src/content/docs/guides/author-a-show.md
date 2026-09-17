@@ -5,15 +5,15 @@ pageType: procedure
 maturity: experimental-active
 ---
 
-Use the Show workspace to keep one production's content, automation, and operating-night configuration together without hiding their separate revision histories.
+Use the Show workspace to create one production's content, automation, and operating-night configuration.
 
 ## Before you start
 
-You need an administrator credential for configuration and asset writes. Configure or discover required nodes and integrations first; a Show can reference only objects the coordinator can validate.
+You need an administrator credential. Configure the required nodes and integrations first.
 
 ## 1. Create the Show
 
-Open **Shows**, choose **New Show**, and create a stable Show ID, label, and notes. The ID becomes the namespace referenced by Cues, playlists, assets, actions, macros, and Night Sessions.
+Open **Shows**, choose **New Show**, and create a stable ID, label, and notes. Related Cues, Playlists, assets, actions, macros, and Night Sessions reference this ID.
 
 CLI equivalent:
 
@@ -24,14 +24,14 @@ showmeshctl show get <show-id>
 
 ## 2. Select participating instances
 
-Record which FPP and Resolume instances belong to this Show. Participation has three meaningful states: never recorded, explicitly empty, and populated. Do not use an empty list when you mean “not decided yet.”
+Select the FPP and Resolume instances used by this Show. Leave participation unrecorded while it is undecided; an empty list means the Show deliberately uses none.
 
 ```sh
 showmeshctl show participation get <show-id>
 showmeshctl show participation set --help
 ```
 
-Readiness and attention views use this selection to distinguish tonight's required instances from other configured systems.
+Readiness uses this selection to identify the required instances.
 
 ## 3. Activate the Show for authoring
 
@@ -40,31 +40,27 @@ showmeshctl show activate <show-id>
 showmeshctl show active
 ```
 
-Activation selects the current Show configuration. It does not prove any runner is playing it; use current runs for playback evidence.
+Activation selects the current Show configuration. Use current runs for playback evidence.
 
 ## 4. Add Playlists and media playlists
 
-In the Show workspace, open **Playlists**. Create FPP- or ShowMesh-audio-backed Cue playlists and, when needed, local-audio media playlists for reusable beds.
-
-For an FPP-backed Playlist, import or republish its canonical definition and bind the exact instance, name, hash, section, and position evidence.
+In **Playlists**, create FPP- or ShowMesh-audio-backed Cue Playlists. Create a media playlist when you need a reusable local-audio bed. An FPP Playlist must bind to its imported definition.
 
 ## 5. Add Cues
 
-Open **Cues** and define render, audio, LTC, or announcement outputs. Use plural audio and announcement target lists for multi-node playback; LTC remains singular.
-
-Validate that each target audio node and asset exists. Use direct activation only for a deliberate test or operator-triggered Cue.
+In **Cues**, define render, audio, LTC, or announcement output. Select every audio target needed for multi-node playback; LTC remains single-node. Use direct activation only for a deliberate test or operator-triggered Cue.
 
 ## 6. Add assets
 
-Open **Assets** to upload exact content revisions and target them to the Show and nodes. Confirm the manifest reports required assets ready before treating upload success as delivery success.
+In **Assets**, upload content and assign it to the Show and target nodes. Confirm the manifest reports the required assets ready.
 
 ## 7. Configure presentation and automation
 
-Use **Presentation** for Show-facing presentation configuration. Use **Automation** to author FPP, Resolume, MQTT, or audio actions and ordered macros. Check bindings before invoking or placing actions into a Night Session.
+Use **Presentation** for presentation settings. Use **Automation** for FPP, Resolume, MQTT, or audio actions and ordered macros. Check bindings before invoking an action or adding it to a Night Session.
 
 ## 8. Configure the Night Session
 
-Open **Night Session** and select Show/resting Playlists, background audio or a media playlist, Transition Steps, announcements, site-control actions, and interlocks. Calendar scheduling stays in FPP.
+In **Night Session**, select Show and resting Playlists, background audio, Transition Steps, announcements, site-control actions, and interlocks. Calendar scheduling stays in FPP.
 
 ## 9. Review revisions and readiness
 
@@ -79,3 +75,5 @@ Before showtime:
 - run the Show Night preparation/readiness procedure.
 
 Use [Run a Show Night](../run-a-show-night/) for the operator sequence.
+
+If a write fails validation, fix the named object or binding before continuing. Do not bypass revision protection or treat an incomplete Show as ready.

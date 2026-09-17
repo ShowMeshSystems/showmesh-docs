@@ -5,7 +5,7 @@ pageType: landing
 maturity: experimental-active
 ---
 
-ShowMesh separates desired configuration from observed runtime evidence. A saved object says what should happen; current runs, node reports, integration observations, and command outcomes say what the system has actually observed.
+ShowMesh separates saved configuration from observed runtime evidence. A saved object describes intent; current runs, node reports, and command outcomes show what ShowMesh observed.
 
 ## Operator workspace
 
@@ -20,7 +20,7 @@ ShowMesh separates desired configuration from observed runtime evidence. A saved
 | **Settings** | Connections, delivery, recovery, appearance, audio defaults, node routing, operating mode, and Resolume. |
 | **Access** | Human and machine principals, roles, passwords, tokens, and revocation. |
 
-## Configuration objects
+## Core objects
 
 | Object | Question it answers |
 | --- | --- |
@@ -37,18 +37,18 @@ ShowMesh separates desired configuration from observed runtime evidence. A saved
 | [Audio node](./node-types/audio-nodes/) | Which routes, channels, clock, latency, role, and zone belong to an audio node? |
 | **Node clock** | Which PTP provider and interface supply the node's media clock? |
 
-These are references, not one nested Show document. A Show owns related objects by ID; reading the Show does not inline every Cue, action, or asset.
+These are separate revisioned objects linked to a Show by ID.
 
 ## Runtime evidence
 
-[Live Control and current runs](./live-control-and-current-runs/) explains the runner-neutral current playback projection. Do not infer one global playhead: several FPP and ShowMesh-audio runs can be current at once, and `next` is authoritative only when the responsible runner supplied it.
+[Live Control and current runs](./live-control-and-current-runs/) shows current playback. Several FPP and ShowMesh-audio runs can be active at once; `next` is present only when the runner supplied it.
 
-[Nodes](./nodes/) and Monitor distinguish declared configuration from live capabilities, freshness, assets, clocks, and alignment evidence. Unknown, stale, failed, unavailable, unobserved, and disconnected are different states and should remain different in operator decisions.
+[Nodes](./nodes/) and Monitor show live capabilities, freshness, assets, clocks, and alignment. Keep unknown, stale, failed, unavailable, unobserved, and disconnected states distinct.
 
 ## Safety and access
 
-[Emergency Stop](./emergency-stop/) concurrently stops FPP, silences declared audio nodes, and blackouts configured Resolume instances. The higher levels also move an active Show Night session.
+[Emergency Stop](./emergency-stop/) stops FPP, silences audio nodes, and blackouts Resolume. Higher levels also move the Show Night lifecycle.
 
-[Access and permissions](./access-and-permissions/) describes the roles and scopes controlling reads, authoring, operation, emergency actions, recovery, and machine observation.
+[Access and permissions](./access-and-permissions/) explains roles, scopes, credentials, and revocation.
 
 For an end-to-end workflow, use [Author a Show](/guides/author-a-show/) and [Run a Show Night](/guides/run-a-show-night/).
