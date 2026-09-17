@@ -10,7 +10,7 @@ ShowMesh has two revisioned playlist kinds:
 - `show.playlist` orders [Cues](../cues/) and runs through FPP or ShowMesh audio;
 - `media.playlist` orders local audio assets for reusable beds and similar node-local playback.
 
-The Operator UI presents both kinds in the Show workspace's **Playlists** tab, with a type column. They remain different configuration objects and have different entry shapes.
+Both appear in the Show workspace's **Playlists** tab, but they remain different objects.
 
 ## Show Playlists
 
@@ -31,7 +31,7 @@ Deletion creates a tombstone and preserves revision history. It is refused when 
 
 ## Media Playlists
 
-A media playlist is a Show-scoped ordered sequence of assets with stable item IDs, repeat policy, resume/restart behavior, and transition settings. A Night Session can reference it instead of repeating the complete bed definition inline.
+A media playlist orders local assets with repeat, resume, and transition settings. A Night Session can reuse it as background audio.
 
 ```sh
 showmeshctl media-playlist list --show <show-id>
@@ -41,11 +41,11 @@ showmeshctl media-playlist revisions <playlist-id>
 showmeshctl media-playlist delete --confirm <playlist-id>
 ```
 
-The referenced assets must belong to the same Show. A Night Session can apply its own list of audio-node targets to the media playlist.
+Assets must belong to the same Show. The Night Session supplies the target audio nodes.
 
 ## FPP definition and observation evidence
 
-An FPP-backed Show Playlist binds to an imported definition rather than reading live structure from FPP on every check:
+An FPP Playlist binds to an imported definition. Inspect or republish it with:
 
 ```sh
 showmeshctl fpp playlist-definitions list
@@ -56,13 +56,13 @@ showmeshctl fpp playlist-entry-observations reconciliation <instance-id>
 showmeshctl fpp republish-playlist-definitions <instance-id>
 ```
 
-Republish reports that the request was accepted. It does not claim a new definition was imported; confirm that through later definition evidence.
+Republish reports request acceptance. Confirm the imported definition afterward.
 
 ## Readiness
 
 `showmeshctl fpp playlist-readiness <playlist-id>` is a read-only preflight. It does not start playback.
 
-The ordered checks include:
+Readiness checks:
 
 1. a matching stored definition exists;
 2. the binding has not been superseded by a newer definition for that instance and name;
@@ -72,10 +72,8 @@ The ordered checks include:
 6. observation identity is available and matches;
 7. render assignments, Cue catalogs, exclusive claims, audio roles and targets, and required assets are ready.
 
-A superseded definition is reported before entry existence or filename details because the binding itself is no longer current.
-
 Multi-node audio clock or alignment concerns can produce readiness warnings. A warning remains visible and must not be rewritten as confirmed alignment.
 
 ## Ownership boundary
 
-A Playlist defines ordered content and runner behavior. It is not a calendar. FPP remains the scheduling and playhead authority for FPP-backed playback; [Show Night](../show-night/) orchestrates the operating-day lifecycle around selected Playlists.
+A Playlist defines content order, not a calendar. FPP remains the schedule and playhead authority for FPP playback; [Show Night](../show-night/) manages the operating lifecycle.

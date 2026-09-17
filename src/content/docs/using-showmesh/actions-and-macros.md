@@ -6,9 +6,9 @@ maturity: available
 complexity: advanced
 ---
 
-An **action** is one named operation against FPP, Resolume, an integration MQTT broker, or ShowMesh audio. A **macro** is an ordered list of action IDs with explicit failure policies. Both belong to a Show and keep revision history.
+An **action** is one named FPP, Resolume, MQTT, or audio operation. A **macro** runs actions in order with stored failure policies. Both belong to a Show and keep revision history.
 
-The Operator UI's Show workspace can create, edit, check, delete, and directly invoke actions, and can create and run macros. `showmeshctl` exposes the same configuration and execution model for scripts and diagnostics.
+Use the Show workspace to author and run them, or `showmeshctl` for scripts and diagnostics.
 
 ## Action integrations
 
@@ -19,9 +19,7 @@ The Operator UI's Show workspace can create, edit, check, delete, and directly i
 | **MQTT** | A publish to a configured integration broker, optionally with response evidence. |
 | **Audio** | One audio session, gain, or output command for one or more configured audio nodes. |
 
-FPP primitives are start, immediate stop, graceful stop, pause, resume, next item, previous item, and volume. Resolume operations are launch clip, clear layer, blackout, launch column, select deck, layer bypass, and layer master.
-
-MQTT actions declare a broker, topic, payload, QoS, retain behavior, and optional response contract. Publish success does not prove the external device changed state unless the action also has meaningful response evidence.
+FPP supports playlist transport and volume. Resolume supports clip, layer, column, deck, and blackout operations. MQTT actions define a publish and optional response contract; publish success alone does not prove an external effect.
 
 Audio actions use one of these operation names:
 
@@ -29,13 +27,13 @@ Audio actions use one of these operation names:
 - `audio.gain.set` or `audio.gain.fade`;
 - `audio.output.mute` or `audio.output.unmute`.
 
-An audio target names an audio session and one node ID or a list of node IDs. Multi-node Night and announcement consumers use every listed node; other direct consumers dispatch to the first listed node. Gain parameters are decibels: `gainDb` for set and `targetGainDb` for fade.
+An audio target names a session and one or more nodes. Night and announcement consumers use every listed node; other direct consumers use the first. Gain values are decibels.
 
 ## Validation and safety
 
-The coordinator validates action targets when a revision is written. It rejects unresolved FPP instances, MQTT brokers, Resolume references, audio nodes, unsupported operation names, invalid parameters, or safety-class conflicts before the action becomes active.
+The coordinator validates targets and parameters before activating a revision. Invalid or unresolved bindings are rejected.
 
-An action can declare whether it is idempotent. This tri-state value is primarily consumed by Show Night's first-outward-cue gate:
+An action can declare whether it is safe to repeat. Show Night uses this for the first outward-facing step:
 
 - omitted or `null`: not declared;
 - `true`: retrying with the same effect is safe;
@@ -43,7 +41,7 @@ An action can declare whether it is idempotent. This tri-state value is primaril
 
 ## Author actions
 
-Open a Show, select **Automation**, and use the Actions section to create or edit an action. The page shows whether the current principal may author, check, invoke, or run the selected objects.
+Open a Show and select **Automation** to create or edit an action. The page reflects the current principal's permissions.
 
 ```sh
 showmeshctl action list --show <show-id>
@@ -52,7 +50,7 @@ showmeshctl action put --file <action.json> <action-id>
 showmeshctl action delete --confirm <action-id>
 ```
 
-Writes are full replacements and use revision preconditions by default. Deletion creates a tombstone and preserves server-side history, although this CLI group does not yet expose a revisions reader. Deleting an action does not rewrite a macro or Night Session that referenced it, so check those bindings before showtime.
+Writes are full replacements protected by revision checks. Deletion preserves history but does not update macros or Night Sessions that reference the action. Check those bindings before showtime.
 
 ## Check and invoke directly
 
@@ -71,11 +69,11 @@ Direct invocation uses the action's stored target:
 showmeshctl action invoke <action-id>
 ```
 
-It requires `show:action:invoke`. Use `--revision` when a durable caller must execute an exact revision rather than whichever revision is active at invocation time.
+Invocation requires `show:action:invoke`. Use `--revision` when the caller must execute an exact revision.
 
 ## Build and run macros
 
-A macro contains up to 32 ordered steps. Each step names an action and chooses what to do after failed or uncertain evidence. The run dispatches steps in order; it is not a simultaneity mechanism.
+A macro contains up to 32 ordered steps, each with policies for failed or uncertain evidence. Macros are sequential, not simultaneous.
 
 ```sh
 showmeshctl macro list
@@ -85,7 +83,7 @@ showmeshctl macro delete --confirm <macro-id>
 showmeshctl macro run --follow <macro-id>
 ```
 
-Submitting a run returns `202 Accepted`. Without `--follow`, acceptance is not completion. Inspect retained runs with:
+Submitting returns `202 Accepted`, not completion. Use `--follow` or inspect the retained run:
 
 ```sh
 showmeshctl run list --macro <macro-id>
@@ -93,10 +91,10 @@ showmeshctl run list --show <show-id>
 showmeshctl run show <run-id>
 ```
 
-`run list` contains summaries; `run show` contains every step's command and outcome evidence.
+`run list` returns summaries; `run show` returns step evidence.
 
 ## Failure behavior
 
-A macro normally continues after a failed step. `onFailure: abort` stops after failure; `onUnconfirmed: abort` stops after an unconfirmed outcome. The separate `unconfirmable` outcome means the provider has no confirmation mechanism and is not treated as `unconfirmed`.
+A macro normally continues after failure. `onFailure: abort` or `onUnconfirmed: abort` changes that behavior. `unconfirmable` means the provider has no confirmation mechanism; it is distinct from `unconfirmed`.
 
-FPP and Resolume use evidence-confirmed command paths. A timeout may mean the operation happened but confirmation arrived late. Inspect fresh device and coordinator evidence before retrying a non-idempotent action.
+A timeout can mean the operation happened but confirmation arrived late. Inspect fresh evidence before retrying a non-idempotent action.

@@ -6,7 +6,7 @@ maturity: experimental-active
 complexity: advanced
 ---
 
-This procedure follows the current Show Night lifecycle. It does not replace installation-specific commissioning, staffing, or emergency procedures.
+Use this procedure to prepare, run, and close a Show Night. Complete the installation's physical checks and emergency plan separately.
 
 ## Before you start
 
@@ -33,9 +33,7 @@ showmeshctl night prepare-site
 showmeshctl night readiness
 ```
 
-Resolve blocking checks. A `ready_with_warnings` result allows start but keeps degraded evidence visible; record the warning and decide under the installation's operating policy rather than rewriting it as ready.
-
-Check participating FPP definitions and observations, Cue catalogs, assets, audio routes, clocks, alignment, actions, and interlocks. If a catalog conflict requires an override, inspect the exact claim and revision before accepting it.
+Resolve blocking checks. `ready_with_warnings` allows start, but the warning remains active. Record it and follow the installation's operating policy. If a Cue-catalog conflict requires an override, inspect the exact claim and revision first.
 
 ## 3. Enter pre-show
 
@@ -43,7 +41,7 @@ Check participating FPP definitions and observations, Cue catalogs, assets, audi
 showmeshctl night preshow
 ```
 
-Confirm the intended resting/preshow presentation and background audio on every target. Multi-node beds should report one shared scheduled instant and per-node aligned or unaligned evidence.
+Confirm the intended resting/preshow presentation and background audio on every target. Expect multi-node beds to report one shared scheduled instant and per-node aligned or unaligned evidence.
 
 ## 4. Start the night
 
@@ -53,11 +51,11 @@ showmeshctl night start
 
 If the saved readiness result became stale, start automatically reruns it and uses the fresh result. A failure names the current blocking check; do not rely on the earlier pass.
 
-Monitor current runs rather than assuming one global playhead. FPP and ShowMesh audio may both be active.
+Monitor current runs rather than assuming one global playhead. FPP and ShowMesh audio can run at the same time.
 
 ## 5. Operate transitions
 
-Use Live Control and the Night page to observe lifecycle state, FPP reconciliation, Cue activation, audio targets, clocks, and warnings. Announcements use direct Cue activation and require `cue:activate`.
+Use Live Control and the Night page to watch lifecycle state, current runs, target evidence, clocks, and warnings. Announcements use direct Cue activation and require `cue:activate`.
 
 For an uncertain action, inspect fresh evidence before retrying. Acceptance is not confirmation, and an unaligned audio result is not synchronized success.
 
@@ -73,7 +71,7 @@ These commands remain available when the session is degraded so the site can sti
 
 ## Degraded recovery
 
-If contradictory evidence or a restart marks the session degraded, use the permitted closing commands. `night end-session` is the unconditional recovery to `stopped` and preserves the degraded record:
+If a restart or contradictory evidence marks the session degraded, use the permitted closing commands. `night end-session` returns it to `stopped` and preserves the degraded record:
 
 ```sh
 showmeshctl night end-session

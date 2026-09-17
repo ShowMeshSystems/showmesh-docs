@@ -6,9 +6,9 @@ maturity: experimental-active
 complexity: advanced
 ---
 
-**Show Night** is a revisioned `night.session` configuration plus its recorded lifecycle. It selects a Show, resting and end-of-night FPP Playlists, optional local-audio beds, Transition Steps, announcements, site-control actions, and interlocks.
+**Show Night** combines revisioned `night.session` configuration with its operating lifecycle. It selects the Show, FPP Playlists, optional audio beds, transitions, announcements, site actions, and interlocks.
 
-It does not contain calendar dates, time zones, cron expressions, or manually entered resting durations. FPP remains responsible for calendar scheduling, playlist selection, and playhead position.
+FPP remains responsible for calendar scheduling, Playlist selection, and playhead position.
 
 ## Lifecycle
 
@@ -27,9 +27,9 @@ It does not contain calendar dates, time zones, cron expressions, or manually en
 
 ## Preparation and readiness
 
-Every `prepare-site` creates a new epoch. A prior epoch's readiness result is never adopted.
+Every `prepare-site` creates a new epoch. Earlier readiness results do not apply.
 
-If readiness is absent, `night start` is refused. If the recorded result is stale, `night start` automatically reruns readiness for the current epoch and uses that fresh result. A failed fresh pass remains a refusal and reports its actual failing check.
+`night start` requires current-epoch readiness. It reruns a stale result automatically and refuses to start when the fresh check fails.
 
 Readiness can be:
 
@@ -37,23 +37,23 @@ Readiness can be:
 - `ready_with_warnings`: starting is allowed, but degraded evidence remains visible;
 - refused or failed: the night cannot start until the named condition is resolved.
 
-Readiness respects the active Show's selected FPP and Resolume participation. An instance that does not participate in this Show should not be treated as tonight's required target.
+Readiness checks only the FPP and Resolume instances selected for the active Show.
 
-Before and during a night, ShowMesh can auto-deploy stale Cue catalogs. An exclusive-claim conflict requires an explicit operator override for the current catalog revision; it is never silently ignored.
+ShowMesh can deploy stale Cue catalogs. Exclusive-claim conflicts require an explicit, revision-specific override.
 
 ## Background audio
 
-Background audio can be stored inline or reference a `media.playlist`. It supports ordered items, repeat policy, resume/restart policy, sequential/gapless/crossfade transitions, gain limits, and fade timing around show boundaries.
+Background audio can be inline or reference a media playlist. It supports order, repeat/resume policy, transitions, gain limits, and show-boundary fades.
 
-A bed can name several `audio.node` targets. ShowMesh prepares all targets and schedules one shared start instant. Item changes and resume also use each node's media clock while preserving the shared transition instant. Every node reports aligned or unaligned evidence.
+A bed can target several audio nodes. ShowMesh prepares them for one shared instant and reports alignment per node.
 
 Announcements can likewise target several nodes and start at one shared instant. LTC remains a one-node output.
 
 ## Transition Steps
 
-A Transition Step invokes a same-Show action with an offset, fade, barrier, failure behavior, and announcement policy. It is not a separately revisioned Cue. Use a [Cue](../cues/) for reusable render/audio/LTC/announcement output and an [Action](../actions-and-macros/) for one reusable provider operation.
+A Transition Step invokes a same-Show action with timing and failure policy. Use a [Cue](../cues/) for reusable show output and an [Action](../actions-and-macros/) for a reusable provider operation.
 
-The first outward-facing step can require an explicit idempotency declaration so a retry decision is made from stored policy rather than inferred during a live transition.
+The first outward-facing step can require stored retry-safety policy.
 
 ## Configuration commands
 
@@ -71,7 +71,7 @@ Deletion is refused while the session is active. Cross-object references must be
 
 ## Degraded recovery
 
-A restart or contradictory evidence can mark a session degraded. In that state, ordinary forward transitions are refused. `final-show`, `fade-out`, `power-down`, and `end-session` remain available so an operator can end safely.
+A restart or contradictory evidence can mark the session degraded and block forward transitions. Closing commands remain available.
 
 To restart the operating flow after `end-session`, open a new preparation epoch and run readiness again.
 
