@@ -73,11 +73,13 @@ Read the reported failing condition. The defined conditions, in the order readin
 - `audio-target-unresolved`: a Cue's output names no target and the installation has no single node to resolve it to.
 - `assets-missing`: a node that must render or play a Cue in this Playlist does not hold an asset that has been uploaded and resolved to it.
 
+Readiness also reports non-blocking warnings when a multi-node audio target lacks the clock/alignment evidence needed for a verified shared start. Keep that warning visible even when the overall outcome permits operation. Readiness follows the Show's selected FPP participation; an instance outside tonight's Show is not silently promoted into a required target.
+
 Fix the named cause, then rerun `fpp playlist-readiness` and confirm it reports ready before relying on the Playlist in a show.
 
 ## Symptom: the fallback program is missing, stale, or mismatched
 
-The coordinator's own side of the signed fallback program exists; there is no CLI for it yet, and FPP-host execution lives in the separate FPP plugin, unverified on real FPP hardware. Inspect the coordinator's record directly:
+The coordinator builds and signs fallback programs. The separate plugin can fetch, verify, install, acknowledge, and locally resolve program entries. Coordinator-to-node activation delivery and node execution are not implemented, and real-host/public-package acceptance remains unverified. Inspect the coordinator's record directly:
 
 ```sh
 curl -fsS -H "Authorization: Bearer <token>" \
@@ -88,4 +90,4 @@ curl -fsS -H "Authorization: Bearer <token>" \
 
 The list endpoint returns metadata only, never the signed payload. The per-instance endpoint returns the full signed program the coordinator most recently published for that FPP instance, plus `acknowledgedStatus` (`fallback-program-current`, `fallback-program-stale`, `fallback-program-rejected`, or `fallback-program-unacknowledged`) and, when set, the `acknowledgedPackageId` and `acknowledgedAt` a host last reported back through `POST /api/v1/fallback-programs/{fppInstanceId}/acknowledge`. `published: false` with no `program` or `signatureBase64` means this coordinator has never successfully compiled and published a program for this host at all. Publication itself runs as a background reconciliation loop on the coordinator; these endpoints only read what that loop has already written.
 
-Do not assume a real FPP host is actually running the program these endpoints describe: nothing in this path has been exercised against a real xLights, FPP, or the FPP plugin's own host-side execution.
+Do not assume a real FPP host is executing activations merely because it acknowledged a package. Local program handling, delivery to an executing node, and observed show output are separate evidence layers.

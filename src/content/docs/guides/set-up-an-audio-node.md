@@ -1,70 +1,148 @@
 ---
-title: Audio node overview
-description: Understand experimental audio-node configuration, sessions, and output behavior.
+title: Set up an audio node
+description: Configure node-local playback, PipeWire routing, PTP clock evidence, output latency, and alignment checks.
 pageType: procedure
 maturity: experimental-testing
 ---
 
-ShowMesh has experimental audio-node software for configuration, session commands, gain and output control, and LTC generation. This overview explains the model before you configure a node.
+ShowMesh audio nodes play complete media files locally. The coordinator distributes assets, chooses a shared start instant when several nodes must play together, and records evidence; it never streams program audio through MQTT.
+
+This path is implemented and test-covered, but physical interfaces, PTP infrastructure, multi-node phase alignment, and live-show recovery still require installation-specific acceptance.
 
 ## Before you start
 
-Install the node first with [Install a native node](../add-a-node/): the agent must be running and have already advertised its audio hardware before you can configure it as an audio node. Have the audio assets for the intended session and the route names the node's own capability report advertised.
+You need:
 
-The only hardware evidence on record is a Raspberry Pi 3B+ installed as a program-only audio node with no LTC route; no installation has ever run two audio nodes. Treat anything beyond a single audio node as unverified.
+- a native node installed with [Install a native node](../add-a-node/);
+- an administrator credential for configuration writes;
+- the program and optional LTC routes from the node's current capability report;
+- the PipeWire target node name when PipeWire owns the output device;
+- the network interface, PTP domain, and clock-provider choice for this node;
+- the audio assets required by the Show already uploaded to ShowMesh.
 
-## What the audio node does
+Do not guess route names or declare hardware that the agent has not advertised. Audio-node writes are refused unless the selected routes exist in the node's own capability evidence.
 
-The current design and software behavior establish these boundaries:
+## 1. Inspect the node
 
-- audio files stay local to the audio node and are never streamed as real-time PCM through MQTT or the coordinator;
-- FPP remains the schedule and show-timeline authority, while audio aligns at start and explicit correction points rather than continuously changing rate;
-- program audio and LTC use a declared shared clock domain where LTC is configured;
-- audio-device failure fails silent rather than automatically falling back to another output;
-- node readiness combines assets, routes, channel separation, clock relationship, and current engine evidence.
+```sh
+showmeshctl node <node-id>
+showmeshctl audio node get <node-id>
+```
 
-## The audio.node role and zone
+Use the node report to identify the advertised local-audio route and, when present, the LTC-capable route. Program and LTC must use the same route. LTC needs a discrete channel that is not one of the program channels.
 
-Every audio.node object carries a role: `program` plays program audio only; `program+ltc` plays program audio and is this installation's sole LTC emitter; `zone` plays an independent local speaker zone and never carries program or LTC. Only one node across the installation may hold `program+ltc` at a time; a second is refused, naming both node IDs.
+## 2. Choose the role
 
-`--role`, `--ltc-route`, and `--ltc-channel` are independent settings on `showmeshctl audio node set`. `--ltc-route` and `--ltc-channel` are optional together: omit both to declare a program-only interface that has no channel to spare for a discrete LTC signal. Omitting `--role` defaults it to `program+ltc`, regardless of whether an LTC route is given. Set `--role program` explicitly for a node that emits no LTC, rather than relying on the role default. `--zone` is accepted only with `--role zone`.
+Every `audio.node` has one role:
+
+| Role | Use |
+| --- | --- |
+| `program` | Main program audio without LTC. |
+| `program+ltc` | Main program audio and the installation's sole LTC output. |
+| `zone` | An independently named speaker zone; never the main program or LTC output. |
+
+Only one node may hold `program+ltc`. Set `--role program` explicitly for a program-only node; the omitted-role default is `program+ltc`.
+
+## 3. Configure routing
+
+For an ALSA-backed program-only node:
 
 ```sh
 showmeshctl audio node set \
   --program-route <advertised-route> \
   --program-channels 1,2 \
-  --clock-domain "<name>" \
-  --clock-domain-provenance "<basis for the declaration>" \
+  --clock-domain <clock-domain-name> \
+  --clock-domain-provenance <why-these-outputs-share-a-clock> \
   --role program \
   <node-id>
 ```
 
-The write is refused unless the node's own capability report already advertised the named route; it is never accepted on the operator's claim alone.
-
-## What to configure
-
-1. Add a native node and select its audio role and zone (if any).
-2. Choose the program route and, when needed, a separate LTC route and channel.
-3. Configure gain, fade, ducking, and drift behavior with the audio-node settings.
-4. Synchronize the audio assets needed by the session.
-5. Start and observe the session through the audio-node commands.
-
-Audio files remain local to the node. ShowMesh coordinates the session and observes its state; it does not stream real-time PCM over MQTT or through the coordinator.
-
-## Readiness conditions specific to audio nodes
-
-- `audio-ltc-emitter-ambiguous`: more than one audio.node holds role `program+ltc`. Authoring refuses a second one; reaching this state means two nodes were declared while a third path was open, or one was rewritten while another was absent.
-- `audio-target-unbound`: a Cue's audio, LTC, or announcement output names a target node that holds no audio.node object.
-- `audio-target-unresolved`: a Cue's output names no target and the installation has no node to resolve it to. An untargeted output goes to the sole `program+ltc` node, or, when there is none, to the sole audio.node of any role; an installation with two or more audio nodes and none holding `program+ltc` leaves that output unresolved.
-
-## Confirm the setup
+When PipeWire owns the device, select `pipewiresink` and the exact PipeWire target node:
 
 ```sh
-showmeshctl audio node get <node-id>
+showmeshctl audio node set \
+  --program-route <advertised-route> \
+  --program-channels 1,2 \
+  --clock-domain <clock-domain-name> \
+  --clock-domain-provenance <provenance> \
+  --role program \
+  --sink-backend pipewiresink \
+  --pipewire-target-node <pipewire-node-name> \
+  <node-id>
 ```
 
-The node displays the selected routes, role, and current engine evidence, and the session reports the expected asset and playback state.
+For a node that also emits LTC, add both `--ltc-route` and `--ltc-channel`. They are optional together and invalid separately.
 
-## Where to go next
+The command is a full replacement, with three deliberate carry-forwards: omitted sink-backend, PipeWire target, and output-latency flags retain their current stored values after a successful pre-write read. Use `--force` only when deliberately bypassing the revision check; it can also reset those carried values if the read fails.
 
-Use [Audio nodes](../../using-showmesh/node-types/audio-nodes/) for the full configuration model, and [SMPTE / LTC](../../integrations/smpte-ltc/) for timecode-specific behavior.
+## 4. Configure the node clock
+
+`node.clock` declares how the node participates in the shared media clock. The supported providers are:
+
+- `managed`: ShowMesh manages the node's PTP service;
+- `external`: another service manages PTP and ShowMesh reads its evidence;
+- `fpp`: an FPP 10 host provides the clock relationship.
+
+Example managed configuration:
+
+```sh
+showmeshctl node-clock set \
+  --provider managed \
+  --interface <network-interface> \
+  --domain <ptp-domain> \
+  --client-only \
+  --hardware-timestamping \
+  <node-id>
+```
+
+Use `--phc-device` when an external provider disciplines a particular PTP hardware clock. Use `--fpp-base-url` with the `fpp` provider. `node-clock set` is a full replacement and does not read the previous object first.
+
+```sh
+showmeshctl node-clock get <node-id>
+showmeshctl node-clock revisions <node-id>
+```
+
+## 5. Record output latency
+
+Calibrated output latency lets ShowMesh compensate for a static device and output-chain delay when it chooses a scheduled start. Record the measurement method, value, reference, configuration, timestamp, and confidence together. Use `showmeshctl audio node set --help` for the complete required flag group.
+
+Use `--output-latency-method unmeasured` by itself to clear a stored calibration. Do not present a declared or estimated value as a measured one.
+
+## 6. Check assets and readiness
+
+```sh
+showmeshctl assets manifest --node <node-id> --require-ready
+showmeshctl audio node get <node-id>
+showmeshctl node-clock get <node-id>
+```
+
+Readiness depends on more than the presence of an interface. Check exact assets, program/LTC channel separation, route availability, clock state, current engine evidence, and output-latency provenance.
+
+## 7. Exercise scheduled playback
+
+Test one node before testing a group. The direct session commands expose prepare, start, pause, resume, seek, advance, stop, clear, gain, fade, mute, and unmute operations.
+
+For several nodes, use one aligned-start request so the coordinator prepares every target and chooses one shared media-clock instant:
+
+```sh
+showmeshctl audio session aligned-start <session-id> <node-id> <node-id> ...
+```
+
+The result reports each target as aligned or unaligned. Unaligned is visible degraded evidence, not synchronized success.
+
+## 8. Record a drift run
+
+```sh
+showmeshctl audio alignment-run start --node <node-id>
+showmeshctl audio alignment-run list --node <node-id>
+showmeshctl audio alignment-run get --node <node-id> --run <run-id>
+showmeshctl audio alignment-run stop --node <node-id> --run <run-id>
+```
+
+Source and test evidence does not replace listening tests, receiver-lock checks, or long-duration measurements on the installation's real interfaces.
+
+## Failure behavior
+
+Audio-device loss fails silent. ShowMesh does not automatically move audience audio back to FPP or choose a standby output. Restore the intended route, PipeWire target, clock relationship, channel separation, assets, and session position before resuming sound.
+
+See [Audio nodes](../../using-showmesh/node-types/audio-nodes/) for the model, [SMPTE / LTC](../../integrations/smpte-ltc/) for timecode behavior, and [Audio and clock sync](../../troubleshooting/audio-and-clock-sync/) for diagnosis.

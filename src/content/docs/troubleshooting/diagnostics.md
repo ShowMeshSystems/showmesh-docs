@@ -35,14 +35,20 @@ showmeshctl audit --output json
 ```sh
 showmeshctl night status
 showmeshctl show mode
+showmeshctl show active
+showmeshctl show participation get <show-id>
 showmeshctl render status <node-id>
+showmeshctl audio node get <node-id>
+showmeshctl audio session show
+showmeshctl node-clock get <node-id>
+showmeshctl audio alignment-run list --node <node-id>
 showmeshctl resolume status
 showmeshctl fppconnect status <node-id>
 ```
 
 `night status` and `show mode` are open reads. `render status` exits `22` when a node has never published surface render evidence at all; a node that has reported, even stale or unknown evidence, prints normally. `fppconnect status` reports whether a node's most recently pushed FPP Connect channel range was formatted, empty (no surface configured), or dropped, and why.
 
-The snapshot is authoritative for the current view. Event history is ordered by its durable sequence number, but retained history can have a gap. The audit log requires the `audit:read` scope.
+The snapshot is authoritative for its resources. Capture `GET /api/v1/current-runs` or Live Control separately for the full runner-neutral playback frame. Event history is ordered by its durable sequence number, but retained history can have a gap. The audit log requires `audit:read`.
 
 For live changes:
 
@@ -54,7 +60,7 @@ After any interruption, `watch` fetches a new snapshot before applying changes. 
 
 ## Read structured errors
 
-API failures use `application/problem+json`. Preserve the response `type`, `detail`, and status. The CLI maps common conditions to distinct exit codes; run `showmeshctl help` for the complete table.
+API failures use `application/problem+json`. Preserve the response `type`, `detail`, and status. The CLI maps common conditions to distinct exit codes; consult [Command-line interface](../../reference/cli/) and command-specific help. Current top-level help does not list every subcommand-specific code.
 
 Common distinctions:
 
@@ -64,8 +70,10 @@ Common distinctions:
 - Exit `9`: a command completed its request path but its effect was not confirmed by evidence.
 - Exit `10`: the coordinator deliberately refused the operation because current state conflicts with it.
 - Exit `14`: a follow operation went idle; the macro may still be running.
+- Exit `16`: Resolume restore was incomplete or partial.
 - Exit `20`: the active show's asset manifest is not ready.
 - Exit `21`: no asset is proven missing, but at least one node's readiness is unknown.
+- Exit `29`: an action binding check found at least one broken binding.
 
 ## Logs
 

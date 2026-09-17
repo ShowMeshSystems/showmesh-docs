@@ -1,52 +1,80 @@
 ---
 title: Cues
-description: Define the render, audio, LTC, or announcement output for one point in a Show.
+description: Define and activate render, multi-node audio, LTC, or announcement output for one point in a Show.
 pageType: concept
 maturity: experimental-active
 ---
 
-A **Cue** is a revisioned `show.cue` object that describes what one point in a Show presents or plays. It belongs to one Show and can contain render output, audio output, LTC output, or an announcement. A Cue must contain at least one output.
+A **Cue** is a revisioned `show.cue` object describing what one point in a Show presents or plays. It belongs to one Show and contains at least one render, audio, LTC, or announcement output.
 
-## What a Cue can contain
+## Output types
 
-- **Render** names a logical sequence for the Show.
-- **Audio** names an asset from the same Show and an optional start offset.
-- **LTC** adds a timecode offset to the Cue's audio output.
-- **Announcement** plays audio over an existing source with a duck, mix, or interrupt policy.
+- **Render** names a logical sequence in the Show.
+- **Audio** names an asset, optional start offset, and optional list of target audio nodes.
+- **LTC** adds a timecode offset and keeps one optional target because one installation has one LTC generator.
+- **Announcement** names an asset, target nodes, and a duck, mix, or interrupt policy.
 
-LTC requires audio. Announcements also require audio, and one Cue cannot combine LTC and an announcement. These limits keep one Cue's audio behavior clear.
+LTC requires audio. An announcement also requires audio, and one Cue cannot combine LTC with an announcement.
 
-Each of `outputs.audio`, `outputs.ltc`, and `outputs.announcement` also accepts an optional `target` naming an `audio.node` id. Omitted, a target resolves later to the installation's single `program+ltc` audio node, which keeps a one-node installation's Cues unchanged. A `target` naming an `audio.node` that does not exist is refused at write time. See [Audio nodes](../node-types/audio-nodes/) for node roles.
+`outputs.audio.targets` and `outputs.announcement.targets` are lists of distinct `audio.node` IDs. Omitted or empty, the target resolves to the installation's `program+ltc` node. The deprecated singular `target` remains accepted as a one-element list, but new configuration should use `targets`. A payload containing both forms for the same output is refused.
 
-Use the Operator UI or the CLI to manage Cues:
+`outputs.ltc.target` remains singular. LTC always runs on exactly one node.
+
+## Author Cues
+
+Open a Show and select **Cues** to create or edit Cues in the Operator UI. The target pickers expose the audio nodes that current configuration allows.
 
 ```sh
 showmeshctl cue list --show <show-id>
 showmeshctl cue get <cue-id>
-showmeshctl cue set <cue-id> --help
+showmeshctl cue set \
+  --show <show-id> \
+  --name <name> \
+  --outputs-json '{"audio":{"asset":"audience-track","startOffsetMillis":0,"targets":["audio-a","audio-b"]}}' \
+  <cue-id>
 showmeshctl cue revisions <cue-id>
+showmeshctl cue delete --confirm <cue-id>
 ```
 
-## What activation does
+Writes are full replacements and use revision preconditions by default. Every named asset and audio node must resolve when the Cue is written.
 
-Activating a Cue applies its selected outputs to the node or runner that receives it. For an audio Cue, the node prepares the configured asset, starts it, seeks to the observed Cue position, and uses that same audio session when LTC is configured.
+## Activate a Cue
 
-Activation does not create a schedule or choose when FPP advances. A Playlist or Show Night provides that larger sequence; FPP remains the schedule and playhead authority for FPP-backed playback.
+```sh
+showmeshctl cue activate <cue-id>
+```
 
-While [Show Mode](../show-mode/) is `show`, a Cue's activation authorization is pinned to the active Show, generation, and catalog revision at the moment show mode began authorizing that Show. A Cue edited after that point stays staged: the edit does not reach any node until the show restarts. `program` mode keeps resolving Cue authorization live.
+Direct activation requires `cue:activate`. Live Control uses this path for Announcements; it does not route the activation through a Playlist or an FPP observation.
+
+For multi-node audio or announcement output, the coordinator:
+
+1. resolves every target;
+2. ensures each node holds the required asset;
+3. reads the shared clock once;
+4. prepares all targets before the chosen instant;
+5. starts all prepared nodes at that same instant;
+6. reports aligned or unaligned evidence for each node.
+
+Unaligned means the Cue ran without verified shared-clock alignment. It is visible degraded evidence, not synchronized success. If one node lacks an asset or cannot be prepared, the result names that node instead of silently treating the group as complete.
+
+Activation does not create a schedule or choose when FPP advances. FPP-backed Playlists and Show Night retain schedule and playhead authority.
+
+## Show Mode
+
+In Show Mode, Cue authorization is pinned to the active Show, generation, and catalog revision established when that Show became authorized. An edit made afterward stays staged until the show restarts. Program Mode resolves the current Cue revision live.
 
 ## Cue catalog
 
-A node's **Cue catalog** is the coordinator's resolved set of Cues for that node, deployed and acknowledged separately from readiness:
+Each node holds a resolved **Cue catalog**:
 
 ```sh
 showmeshctl cuecatalog get <node-id>
-showmeshctl cuecatalog acknowledge <node-id> <revision> --show <show-id> --generation <n>
 showmeshctl cuecatalog deploy <node-id>
+showmeshctl cuecatalog acknowledge --show <show-id> --generation <n> <node-id> <revision>
 ```
 
-`deploy` pushes the coordinator's current resolved catalog to a node and requires the `cuecatalog:deploy` scope (admin only). `acknowledge` records which catalog revision a node reports holding; it requires `node:observe`, not a readiness scope, and acknowledging a revision is not itself evidence that a show is ready to run. Use [Playlists](../playlists/)'s readiness check for that.
+Deployment requires the admin-only `cuecatalog:deploy` scope. An acknowledgement records which catalog revision the node reports holding; it is not readiness by itself.
 
-## Use Cues with other Show objects
+An exclusive-claim conflict blocks deployment unless an operator explicitly overrides that conflict for the current revision. The override is deliberate and revision-specific; it is not a permanent relaxation of catalog safety.
 
-Add Cues to a [Playlist](../playlists/) when they need a defined order. Use them in [Show Night](../show-night/) Transition Steps when a night needs a named change at a specific point. Keep a Cue scoped to the Show that owns its assets and actions so the reader of a configuration can see its dependencies directly.
+Use Cues in [Playlists](../playlists/) for ordered playback and in [Show Night](../show-night/) for named changes around the night lifecycle.

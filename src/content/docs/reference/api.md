@@ -16,11 +16,11 @@ Every public route belongs to one of these groups:
 
 | Group | Routes and purpose |
 | --- | --- |
-| Service and live state | `/`, `/snapshot`, `/nodes`, node declarations, discovery, `/observations`, `/events`, and `/stream`. |
+| Service and live state | `/`, `/snapshot`, `/current-runs`, `/nodes`, node declarations, discovery, `/observations`, `/events`, and `/stream`. |
 | FPP | `/fpp`, FPP commands, instance-UUID acknowledgement, imported playlist entries/definitions, reconciliation, and Playlist readiness. |
-| Native media | Node render operations, audio session/gain/output operations, assets, cue catalogs, and FPP Connect settings/status. |
-| Show configuration | Revisioned Show, Surface, Cue, Playlist, Action, Macro, active-Show, Show Mode, Show Night session, and active-Show-Night resources. |
-| Show operation | `/emergency-stop/stop`, `/emergency-stop/stop-power-down`, the hard-stop arm/fire pair, `/night/session`, `/night/sessions/{id}`, and the `/night/commands/{command}` lifecycle routes. |
+| Native media | Node render operations; audio sessions, aligned start, silence, gain/output and alignment runs; node clocks; assets and node maintenance; Cue catalogs; and FPP Connect settings/status. |
+| Show configuration | Revisioned Show and participation, Surface, Cue, Show Playlist, media Playlist, Action, Macro, active-Show, Show Mode, Show Night session, and active-Show-Night resources. |
+| Show operation | Direct Cue activation, `/emergency-stop/stop`, `/emergency-stop/stop-power-down`, the hard-stop arm/fire pair, `/night/session`, `/night/sessions/{id}`, and the `/night/commands/{command}` lifecycle routes. |
 | Integration configuration | Revisioned FPP endpoints/MQTT, Resolume instances/composition/recovery, asset settings, render settings, audio settings/nodes, FPP Connect settings, and the show-emergency-stop follow-up configuration. |
 | Resolume | Action vocabulary, actions, recovery, and instance state. |
 | Fallback programs | `/fallback-programs`, per-FPP-instance fallback programs, and their acknowledgement route. |
@@ -36,7 +36,7 @@ Every principal holds exactly one role, a fixed bundle of scopes. A route's requ
 | Role | Scopes |
 | --- | --- |
 | `viewer` | `node:read`, `fpp:read`, `observation:read`, `event:read`. |
-| `operator` | Everything `viewer` holds, plus `show:macro:run`, `device:power`, `fpp:command`, `resolume:action`, `render:command`, `show:action:invoke`, `audio:command`, `night:command`, and `show:emergencystop:invoke`. |
+| `operator` | Everything `viewer` holds, plus `show:macro:run`, `device:power`, `fpp:command`, `resolume:action`, `render:command`, `show:action:invoke`, `audio:command`, `night:command`, `show:emergencystop:invoke`, and `cue:activate`. |
 | `admin` | Everything `operator` holds, plus `config:write`, `principal:write`, `audit:read`, `asset:write`, `principal:read`, `fpp:observe`, `night:override`, `node:observe`, `cuecatalog:deploy`, and `fpp:fallback`. |
 | `scheduler` | `show:macro:run`, `night:command`, `fpp:observe`, `fpp:fallback`. A machine role for the installed FPP plugin principal, not selectable for interactive use beyond that purpose. |
 

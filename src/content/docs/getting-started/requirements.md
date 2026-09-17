@@ -16,7 +16,7 @@ You need:
 - Enough local storage for the coordinator's SQLite database and uploaded assets.
 - TCP ports `8081` for the Operator UI and `1883` for the bundled MQTT broker, unless you override them. Port `8080` exposes the coordinator directly and is also published by the reference bundle. Firewall these ports to the show-management network.
 
-The Compose bundle builds the coordinator and UI locally; there is no published-image install path in this captured build.
+The Compose bundle can build coordinator and UI images locally. A published-image override also exists for tags whose release workflow actually published the matching GHCR images; check the selected release and pin its version or digest before using it.
 
 ## Show network
 
@@ -37,7 +37,7 @@ Each native node needs:
 - Network access to the MQTT broker and, for asset downloads and FPP Connect registration, to the coordinator.
 - For NDI output only: the vendor NDI runtime and a separately built gst-plugins-rs `ndisink` element on `GST_PLUGIN_PATH`. ShowMesh does not build or ship either.
 
-The only hardware install on record is a Raspberry Pi 3B+ (arm64) running as a program-only audio node. See [Install a native node](../../guides/add-a-node/) for the procedure.
+Hardware and integration acceptance is installation-specific. The repository supplies native `amd64` and `arm64` packaging and software tests, but a successful build is not proof that a particular board, audio interface, PTP clock, NDI stack, or receiver is supported. See [Install a native node](../../guides/add-a-node/) for the procedure.
 
 ## Supported integrations in this snapshot
 

@@ -10,13 +10,13 @@ ShowMesh uses two related but different vocabularies.
 
 ## Node capabilities
 
-A capability is a namespaced, versioned claim advertised by a node. It describes what that node can actually perform. The current native agent probes its supported GStreamer/NDI path after connecting to MQTT and can also advertise an explicit capability override. An override disables automatic probing. An empty list is valid on a host without a detected supported path; do not infer an untested hardware role from it.
+A capability is a namespaced, versioned claim advertised by a node. It describes what that node can actually perform. The native agent probes render/NDI elements, local-audio and LTC routes, session-engine operations, and clock evidence after connecting to MQTT. An explicit override disables automatic probing. An empty list is valid; do not infer an untested hardware role from it.
 
 ## Logical show actions
 
 A `show.action` is a named, show-scoped operator concept that binds to an integration primitive. Macros invoke these logical actions rather than embedding protocol details.
 
-The implemented adapters support FPP primitives and these Resolume actions:
+The implemented adapters support FPP, Resolume, MQTT, and audio targets. Resolume actions are:
 
 - `launchClip`
 - `clearLayer`
@@ -27,6 +27,8 @@ The implemented adapters support FPP primitives and these Resolume actions:
 - `setLayerMaster`
 
 Resolume references are validated against an uploaded composition. The CLI can list the current runtime vocabulary with `showmeshctl resolume action list`.
+
+Audio actions bind one session operation to one node or a list of nodes. The closed operation vocabulary covers session apply/prepare/start/pause/resume/seek/advance/stop/clear, gain set/fade, and output mute/unmute. Cue audio and announcements can also target several nodes at one shared scheduled instant; direct Cue activation requires `cue:activate`.
 
 A `show.action` declares an `idempotent` field: `true` or `false` when the author has stated whether repeating the action's effect is safe, or `null` when it has never been declared. `null` is a real, distinct state, not a default of `false`; only an action bound as a night session's outward-facing enter-show cue requires a non-null value, and an ordinary action can stay undeclared indefinitely.
 

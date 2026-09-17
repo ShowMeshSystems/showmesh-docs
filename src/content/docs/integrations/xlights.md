@@ -15,7 +15,7 @@ The listener is an unauthenticated compatibility shim for xLights, not part of t
 
 ## Required credential for upload registration
 
-`SHOWMESH_AGENT_API_TOKEN` is **required** on any node that will ever receive an xLights upload. The listener binds unconditionally on every node regardless of this setting, so any node can receive an upload; without a token that carries `asset:write` (only the admin role carries that scope in the documented build), the node still assembles and holds the upload but never registers it with the coordinator. That upload is retried indefinitely rather than failing outright, and nothing is visible to the operator except a field in the node's own `assets/fppconnect-uploads/index.json`. Set the token and restart the agent to let a stalled upload register on its next retry; do not expect a coordinator-side alert.
+`SHOWMESH_AGENT_API_TOKEN` is **required** on any node that will register an xLights upload. Without `asset:write` (currently admin-only), the node still assembles, hashes, and holds the upload but cannot register it with the coordinator. Registration state, asset ID, reason, problem type, held-file count, and event count are reported through node render evidence and `showmeshctl fppconnect status`; the local `assets/fppconnect-uploads/index.json` remains a deeper host-side record.
 
 The listener binds on `SHOWMESH_FPPCONNECT_LISTEN_ADDR` (default `:80`, matching where xLights itself expects to find FPP Connect hosts). Binding a privileged port requires the `CAP_NET_BIND_SERVICE` capability, which the packaged systemd unit grants explicitly. A node that cannot bind the listener still renders and still answers other agent traffic; check node status for the bind failure.
 
@@ -33,7 +33,9 @@ showmeshctl fppconnect status <node-id>
 
 ## What to inspect
 
-After a controlled development upload, inspect `fppconnect status` for every target node and confirm that its reported outcome matches the intended surface assignment. A formatted result confirms only the recorded node outcome; it does not verify FPP deployment or rendered output.
+An upload binds to one Show. When the request does not identify a Show, the agent resolves the active Show only when that choice is unambiguous; otherwise it holds the upload and reports why it cannot register it.
+
+Sequences register automatically through the assets API. Music and video files remain held for manual registration rather than being silently assigned to a Show or target. After a controlled upload, inspect `fppconnect status` and the node's render report for every target. A formatted channel range or registered asset confirms only that recorded step; it does not verify FPP deployment or rendered output.
 
 ## Boundaries that remain open
 

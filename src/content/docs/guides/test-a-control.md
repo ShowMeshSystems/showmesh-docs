@@ -16,7 +16,7 @@ Test one primitive against a non-critical target before placing it in an action 
 5. Know the emergency-stop path before testing anything show-visible.
 
 :::caution[Know the stop levels before you test]
-`showmeshctl emergency-stop` stops playout on every configured FPP instance at one of three levels (`stop`, `stop-power-down`, or the two-step `hard-stop`) and requires the `show:emergencystop:invoke` scope. Decide which level you would reach for before running an unfamiliar command against a live target. See [Emergency stop](../../using-showmesh/emergency-stop/) for what each level does and how to read its exit code.
+`showmeshctl emergency-stop` has three levels (`stop`, `stop-power-down`, and the two-step `hard-stop`). Every level stops configured FPP instances, silences declared audio nodes, and blackouts configured Resolume; every trigger requires `show:emergencystop:invoke`. Decide which level you would reach for before running an unfamiliar command against a live target. See [Emergency stop](../../using-showmesh/emergency-stop/) for lifecycle effects and outcome interpretation.
 :::
 
 For FPP, a volume change in a safe test window is one option:

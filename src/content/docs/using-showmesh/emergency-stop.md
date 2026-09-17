@@ -1,43 +1,56 @@
 ---
 title: Emergency stop
-description: Stop playout immediately at one of three levels, and recover afterward.
+description: Stop FPP, silence audio nodes, black out Resolume, and recover afterward.
 pageType: procedure
 maturity: available
 complexity: advanced
 ---
 
-Emergency Stop stops playout on every configured FPP instance immediately. It has three levels, each stronger than the last, and each with its own optional follow-up actions. Every level requires the `show:emergencystop:invoke` scope.
+Every Emergency Stop level immediately dispatches to three target kinds in parallel:
+
+- `stopPlaylist` to every configured FPP instance;
+- `audio.node.silence` to every declared audio node;
+- `resolume.blackout` to every configured Resolume instance.
+
+Every target produces its own outcome. A failed audio silence or Resolume blackout fails the stop operation just as a failed FPP stop does. Every level requires `show:emergencystop:invoke` and is accepted in both Program Mode and Show Mode.
+
+## Choose a level
+
+| Level | Immediate stop | Active Show Night effect |
+| --- | --- | --- |
+| `stop` | Stops FPP, silences audio, and blackouts Resolume. | None. |
+| `stop-power-down` | Performs the same immediate stop. | Starts the session's standard graceful shutdown immediately. |
+| `hard-stop` | Performs the same immediate stop. | Abandons the session directly to `stopped`, with no wait. Requires arm and fire. |
+
+Each level can also run its own optional follow-up actions, such as work lights. Follow-up failures are reported separately and never rewrite the stop result.
 
 ## Before you start
 
-- A principal token that carries `show:emergencystop:invoke`.
-- To configure follow-up actions, a separate token or role that carries `config:write` (admin).
-- Know which level you need. Stopping playout is show-affecting: it interrupts whatever FPP is doing on every configured instance, with no confirmation prompt.
+- Use a principal carrying `show:emergencystop:invoke`.
+- Use an administrator credential when changing follow-up configuration.
+- Know that all configured FPP, declared audio, and configured Resolume targets are affected.
+- Do not assume one successful target means the entire stop succeeded.
 
-## The three levels
+## Run a stop
 
-Each level does everything the level before it does, plus one more effect on the active Show Night session:
+```sh
+showmeshctl emergency-stop stop
+showmeshctl emergency-stop stop-power-down
+```
 
-| Level | Effect on FPP playout | Effect on an active Show Night session |
-| --- | --- | --- |
-| `stop` | Stops playout immediately on every configured FPP instance, then runs this level's follow-up actions. | None. |
-| `stop-power-down` | Same as `stop`. | Forces the session's own standard graceful shutdown ([`power-down`](../show-night/)) to start now instead of waiting for its ordinary trigger. |
-| `hard-stop` | Same as `stop`. | Abandons the session straight to the `stopped` state with no wait, the same decision `night end-session` makes. Gated by an arm/fire sequence so a retry or a redelivered command can never fire it twice. |
+The Operator UI exposes the same levels in Live Control. Read the returned target-kind and target-ID rows rather than relying on a single aggregate message.
 
-Show Mode never gates any of these: being in Show Mode or Program Mode makes no difference to whether a stop is accepted.
+## Arm and fire a hard stop
 
-## Arm and fire the hard stop
+Hard stop deliberately has no one-command shortcut:
 
-`hard-stop` has no single command that both arms and fires it. This is deliberate: a convenience flag that chained arm and fire together would make the safeguard exist in name only.
+1. Run `showmeshctl emergency-stop hard-stop arm`.
+2. Copy the single-use token from the response.
+3. Before it expires, run `showmeshctl emergency-stop hard-stop fire --arm-token <token>`.
 
-1. Run `showmeshctl emergency-stop hard-stop arm`. This mints a single-use token good for about 10 seconds and has no effect on the show by itself. Arming is freely retryable.
-2. Run `showmeshctl emergency-stop hard-stop fire --arm-token <token>` with the token from step 1, before it expires. Firing consumes the token atomically before dispatching anything, so neither an accidental retry nor a redelivered command can fire the hard stop twice.
+Arming does not affect the show. Firing atomically consumes the token before dispatch, so a retry or redelivered request cannot fire the same arm twice. If the token expires, arm again; if a concurrent fire reports a conflict, inspect whether the stop already happened before retrying.
 
-If the token expires before you fire it, arm again.
-
-## Configure optional follow-up actions
-
-Each level can run its own list of `show.action` IDs after the stop, such as turning on work lights. Configuring this requires `config:write`:
+## Configure follow-up actions
 
 ```sh
 showmeshctl emergency-stop config get
@@ -45,43 +58,35 @@ showmeshctl emergency-stop config set --file ./emergency-stop-followups.json
 showmeshctl emergency-stop config revisions
 ```
 
-A follow-up action's own outcome is always reported, but it never changes the command's exit code. A work light that failed to turn on is never reported as "the stop did not happen."
+Configuration requires `config:write`. Each level owns a separate action list. A follow-up action's failure remains visible but does not turn a confirmed immediate stop into a failed stop.
 
-## Run a stop
+## Interpret the result
 
-```sh
-showmeshctl emergency-stop stop
-showmeshctl emergency-stop stop-power-down
-showmeshctl emergency-stop hard-stop arm
-showmeshctl emergency-stop hard-stop fire --arm-token <token-from-arm>
-```
-
-### Confirm the outcome
-
-Each command's exit code reflects the stop alone, taken as the worst outcome across every configured FPP instance:
+The command prints grouped outcomes for FPP, audio-node, and Resolume targets plus any Show Night transition and follow-up actions.
 
 | Exit code | Meaning |
 | --- | --- |
-| `0` | Confirmed: the stop was observed to take effect. |
-| `9` | Unconfirmed: the command was accepted but its effect was not yet confirmed by evidence. |
-| `12` | Failed: at least one instance's stop did not take effect. |
-| `13` | Refused: at least one instance refused the command outright. |
+| `0` | Every immediate stop target was confirmed, and no Show Night transition or follow-up-configuration read failed. |
+| `9` | At least one command was accepted but not confirmed. |
+| `12` | An immediate stop target failed, the requested Show Night transition failed, or follow-up configuration could not be read. Individual best-effort follow-up action failures do not cause this exit code. |
+| `13` | At least one immediate stop target refused the command. |
 
-Inspect the printed per-instance outcomes and, for `stop-power-down` or `hard-stop`, the reported Show Night session outcome. Then confirm the affected FPP instances directly:
+Check the affected systems and fresh coordinator evidence:
 
 ```sh
 showmeshctl fpp <instance-id>
+showmeshctl audio session show
+showmeshctl resolume status
 showmeshctl night status
 ```
 
+An unconfirmed result does not prove the stop failed. The operation may have happened while confirmation was delayed. Inspect current state before repeating a command that could already have taken effect.
+
 ## What Emergency Stop does not do
 
-- It does not blank a Resolume composition, mute an audio node, or send any command outside the configured FPP instances and the affected Show Night session.
-- It does not change Show Mode or any other configuration.
-- `stop` alone never touches an active Show Night session; only `stop-power-down` and `hard-stop` do.
+- It does not change Show Mode or configuration.
+- `stop` does not move the active Show Night lifecycle; `stop-power-down` and `hard-stop` do.
+- It does not make failed or unreachable targets safe. Their outcome remains failed, refused, or unconfirmed and requires operator follow-up.
+- It does not prove physical amplifiers, projectors, or fixtures reached a safe state beyond the evidence their integrations returned.
 
-## If a stop does not confirm
-
-An unconfirmed or failed outcome (exit code `9` or `12`) means at least one FPP instance's state could not be confirmed as stopped. Check that instance directly with `showmeshctl fpp <instance-id>` before repeating the command, since FPP may already have stopped and the confirmation alone was delayed. A refused outcome (exit code `13`) means the instance rejected the command; inspect that instance's own logs and connectivity.
-
-If `stop-power-down` or `hard-stop` reports a Show Night session error, the stop itself still took effect on FPP; only the session's own shutdown step failed. Recover the session with `showmeshctl night status`, and use [Show Night](../show-night/)'s degraded-session recovery (`end-session`, then `prepare-site`) if the session reports degraded.
+After the incident, resolve the failed target evidence and use the normal [Show Night](../show-night/) preparation and readiness process before resuming operation.

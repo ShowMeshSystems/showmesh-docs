@@ -14,7 +14,7 @@ The agent's cgo build requires Debian 13 (trixie) or newer: Debian 12's GLib is 
 
 ## Before you start
 
-Have root access on the target host, a reachable coordinator and broker, and a node ID chosen from lowercase letters, digits, and internal hyphens. `coordinator`, `fpp`, and `healthcheck` are reserved. The only hardware evidence on record is a Raspberry Pi 3B+ installed from a prebuilt arm64 tarball as a program-only audio node; nothing here is verified on any other hardware.
+Have root access on the target host, a reachable coordinator and broker, and a node ID chosen from lowercase letters, digits, and internal hyphens. `coordinator`, `fpp`, and `healthcheck` are reserved. Repository builds and packaging are not a hardware support matrix; validate the selected host, media interfaces, and service behavior separately.
 
 ## 1. Provision a broker credential
 
@@ -72,8 +72,8 @@ sudo ./install.sh /path/to/showmesh-agent-native
 
 Re-running `install.sh` on an upgrade replaces the binary and unit and restarts the service; it never touches an existing `/etc/showmesh/agent.env` or anything already written under `/var/lib/showmesh`.
 
-:::caution[The installer refuses a mismatched `showmesh` account]
-If a `showmesh` account already exists but does not match the shape this installer creates (a system UID, a nologin-equivalent shell, home at `/var/lib/showmesh`), `install.sh` refuses outright rather than running the agent as an unrelated human login account. Rename or remove the colliding account, or edit `SERVICE_USER`/`SERVICE_GROUP` in `install.sh` to use a different name, then re-run.
+:::caution[Review an existing service account]
+The installer reuses the account shape it previously created and can safely adopt an already-used non-root service account when that adoption is explicit. It still refuses unsafe cases, including root-equivalent identities. Read the exact diagnostic, confirm the account's UID, groups, shell, and home are appropriate for the agent, and use the installer's adoption mechanism rather than editing the script or deleting an account blindly.
 :::
 
 ## 5. Configure and start

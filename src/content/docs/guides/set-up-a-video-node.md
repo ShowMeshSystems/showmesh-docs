@@ -82,7 +82,9 @@ showmeshctl assets settings set \
   --content-base-url http://<node-reachable-coordinator>:8080
 ```
 
-Use an HTTP(S) URL that the node can actually resolve and reach, not `localhost` unless the coordinator and node are the same machine. If the coordinator closes anonymous API reads, create a dedicated `machine` principal with the `viewer` role and put its issued token in `SHOWMESH_AGENT_API_TOKEN`; never copy an administrator token to the node. [Install a native node](../add-a-node/) has the exact issuance commands.
+Use an HTTP(S) URL that the node can actually resolve and reach, not `localhost` unless the coordinator and node are the same machine. If the coordinator closes anonymous reads, a dedicated `machine` principal with the `viewer` role is sufficient for asset downloads. Put its token in `SHOWMESH_AGENT_API_TOKEN`; never copy a human administrator token to the node.
+
+FPP Connect registration is a separate write path requiring `asset:write`, which is currently admin-only. A node used as an xLights upload target therefore needs a separate, deliberately issued machine credential with that authority. Do not assume the viewer token used for closed asset reads can register uploads. [Install a native node](../add-a-node/) describes that boundary.
 
 ## 5. Create one surface and stage its FSEQ asset
 

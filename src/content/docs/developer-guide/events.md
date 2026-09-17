@@ -31,11 +31,14 @@ Current event names are:
 - `resolumeRecovery.changed`
 - `nightSession.changed`
 - `fppPlaylistEntry.changed`
+- `currentRuns.changed`
 - `stream.reset`
 
 With the exact query `?deltas=1`, the stream may also emit `fpp.observations.changed`. Any other `deltas` value behaves as though the option were absent. A delta-aware client must still process `fpp.changed`, because structural FPP changes use that event.
 
 Ignore unknown event names for forward compatibility. Ignore `: keepalive` comments; they contain no event data.
+
+`currentRuns.changed` is a complete replacement frame, not a patch. Replace the entire local current-runs collection. After reconnect, fetch `GET /current-runs` again; this event is an optional prompt and has no resumable cursor.
 
 ## Known v1 gap
 

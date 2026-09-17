@@ -15,7 +15,7 @@ For the meaning of Available, Experimental, and Planned labels, see [Maturity an
 
 <StatusNote status="experimental-active" label="No public release date yet">
 
-There are no published release images or a compatibility promise yet. The current source build is for deliberate, isolated show-network evaluation, not an unattended production install.
+Tag-driven release automation and artifact definitions exist, but public availability and the compatibility promise must be checked against the selected release. Development builds remain for deliberate, isolated show-network evaluation, not unattended production use.
 
 </StatusNote>
 
@@ -72,12 +72,12 @@ flowchart LR
   <Card title="Multi-node audio" icon="warning">
     <StatusBadge status="experimental-active" />
 
-    An installation can declare more than one audio node with a role: program, program-and-LTC, or an independent zone. Cross-node sample sync is not part of this work. [Read about audio nodes →](/using-showmesh/node-types/audio-nodes/)
+    Cue audio, announcements, Night beds, item changes, and resumes can target several nodes at one shared scheduled instant. Per-node evidence reports aligned or unaligned results. Physical timing, PTP lock, and recovery still need installation acceptance. [Read about audio nodes →](/using-showmesh/node-types/audio-nodes/)
   </Card>
   <Card title="Signed FPP fallback program" icon="puzzle">
     <StatusBadge status="experimental-active" />
 
-    The coordinator can build and sign a per-FPP fallback program so a previously authorized Cue path can survive a coordinator outage during a scheduled show. This exists on the coordinator today; the FPP-side executor that would act on a delivered program is not established as verified. [Read about FPP →](/integrations/fpp/)
+    The coordinator builds and signs fallback programs, and the plugin can fetch, verify, install, acknowledge, and locally resolve entries. Coordinator-to-node activation delivery and real-host execution remain incomplete. [Read about FPP →](/integrations/fpp/)
   </Card>
 </CardGrid>
 
@@ -85,12 +85,12 @@ flowchart LR
 
 The first public release needs an installation people can reproduce and a safe answer when something is missing. Remaining work includes:
 
-- published coordinator images and agent packages instead of source builds;
+- publication and clean-machine verification of the exact coordinator images and agent packages defined by the release workflow;
 - a recorded Debian NDI plugin build recipe and tested runtime versions, plus real-hardware timing evidence for the render path;
-- audio hardware commissioning guidance (routing, LTC alignment, receiver lock, failure recovery) and a two-node audio acceptance;
-- a packaged FPP plugin installation verified on a real FPP host, including fallback-program execution;
+- audio hardware commissioning evidence for routing, PTP lock, LTC receiver behavior, output latency, long-run drift, and recovery;
+- a packaged FPP plugin installation verified on a real FPP host, including activation delivery and fallback execution;
 - Resolume per-version setup notes and a recovery test against a real Arena restart;
 - secure remote/TLS deployment, backup and restore drills, and a compatibility policy;
-- Operator UI documentation once that work settles.
+- a final browser-verified Operator UI documentation pass against the prerelease candidate.
 
 Use the current guides to stage and test a show deliberately, and retain native/manual controls for every show-critical system.

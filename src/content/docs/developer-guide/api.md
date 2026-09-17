@@ -43,14 +43,15 @@ Every cookie-authenticated write is checked this way, but a bearer-token request
 
 The current API covers:
 
-- Snapshot, nodes, discovery, observations, event history, and live stream.
+- Snapshot, runner-neutral current runs, nodes, discovery, observations, event history, and live stream.
 - FPP instances and commands.
 - Sessions, audit records, principals, and API tokens.
-- Revisioned FPP, FPP MQTT, Resolume, asset, show, surface, cue, playlist, action, macro, show mode, emergency-stop, and active-show configuration.
+- Revisioned FPP, FPP MQTT, Resolume, asset, Show/participation, Surface, Cue, Show Playlist, media Playlist, Action, Macro, Show Mode, Emergency Stop, and active-Show configuration.
 - Macro runs, action invocations and binding checks, and Resolume actions/recovery.
-- Show Night session configuration and lifecycle commands, and emergency-stop trigger routes.
+- Show Night session configuration and lifecycle commands, direct Cue activation, and Emergency Stop trigger routes.
 - Cue catalogs, FPP Connect settings/status, and signed FPP fallback programs.
-- Asset metadata, bytes, manifests, and node inventories.
+- Asset metadata, bytes, manifests, node inventories, unused-asset inspection/removal, and resync.
+- Node clocks, single- and multi-node scheduled audio starts, audio silence, and alignment runs.
 
 Use the OpenAPI document for exact schemas and status codes. Do not infer a write operation from a read route; no state change is reachable by `GET`.
 

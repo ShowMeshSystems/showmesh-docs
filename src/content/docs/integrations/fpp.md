@@ -64,9 +64,18 @@ showmeshctl fpp reset-observation-sequence --confirm <instance-id>
 showmeshctl fpp acknowledge-instance-uuid-change --confirm <instance-id>
 ```
 
-## Signed fallback program (experimental, coordinator side)
+Two coordinator-owned operations sit beside the eight FPP primitives:
 
-The coordinator can build and sign a per-FPP fallback program for an active FPP-backed show: a bounded map from each known playlist-entry key to the Cue activation the FPP host may perform if it loses contact with the coordinator during a scheduled show. This exists on the coordinator today (build, store, and signed API delivery), but the coordinator does not yet fail readiness when a fallback program is missing, stale, or mismatched, and no CLI command reads or manages it. Treat the signed fallback program as an experimental coordinator-side capability, not an operational safeguard: the FPP-side executor that would act on a delivered program is a separate, unverified piece (see the [FPP Plugin](../fpp-plugin/) boundary).
+```sh
+showmeshctl fpp set-transition-gain <instance-id> <0-100>
+showmeshctl fpp republish-playlist-definitions <instance-id>
+```
+
+Transition gain changes the plugin brightness multiplier and does not overwrite FPP's scheduled ceiling. Republish asks the host plugin to send definitions again; acceptance is not proof that an import arrived.
+
+## Signed fallback program
+
+The coordinator builds and signs a bounded map from known playlist-entry keys to pre-resolved Cue activations. The plugin can fetch, verify, install, acknowledge, and locally resolve those entries. Coordinator-to-node activation delivery and node execution remain absent, and readiness does not turn package presence into an operational safeguard. See the [FPP Plugin](../fpp-plugin/) boundary.
 
 ## FPP-host plugin
 

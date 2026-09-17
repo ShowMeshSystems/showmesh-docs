@@ -15,10 +15,10 @@ showmeshctl night status
 showmeshctl night readiness
 ```
 
-Exit `26` means a precondition the command needs is not yet met: no open preparation epoch, or no fresh readiness result from the *current* epoch. A delayed command run against a stale or prior epoch's readiness reads as not-ready, not as a state-table refusal.
+Exit `26` means a required precondition is absent or the fresh readiness pass used by `night start` failed. A prior epoch's result is never adopted. When the current result is merely stale, `night start` automatically runs readiness again and uses that fresh outcome.
 
 1. Confirm a preparation epoch is open: run `showmeshctl night prepare-site` if not.
-2. Run `showmeshctl night readiness` again for the current epoch and read every named check and reason before trusting it.
+2. Run `showmeshctl night readiness` when you want to inspect and resolve checks before start. If you retry `night start` with a stale result, read the automatically rerun readiness output it returns.
 3. Retry the original command.
 
 ### Confirm recovery
@@ -57,6 +57,14 @@ Exit `28` means a restart, or evidence that contradicted what the session was do
 
 `showmeshctl night status` reports `stopped`, and a subsequent `night prepare-site` succeeds without exiting `28`.
 
-## Symptom: `night readiness` reports a check as `unknown` or `not_verifiable`
+## Symptom: readiness reports warnings, catalog conflict, or unaligned audio
+
+`ready_with_warnings` permits start but preserves a degraded check. Multi-node bed and announcement readiness can warn when clock/alignment evidence is insufficient. Do not translate this into confirmed synchronization.
+
+ShowMesh can auto-deploy stale Cue catalogs before and during a Night. An exclusive-claim conflict requires an explicit operator override for the current catalog revision; inspect the conflicting Cues and claim before using it.
+
+If a bed or announcement names several targets, inspect each node's assets, `node.clock`, scheduled instant, and aligned/unaligned result. One successful target does not prove the group started together.
+
+## Symptom: `night readiness` reports `unknown` or `not_verifiable`
 
 Read every check name in the readiness output before assuming this blocks the night. `resting:asset-exact-variant:<playlist>` is permanently `not_verifiable`: FPP exposes no content hash, so this build cannot confirm the live host is running the pinned asset's exact bytes. It is stated rather than defaulted to a pass, but excluded from the overall outcome, so `ready` is still reachable once every checkable check passes. A plain `unknown` outcome on another check does not by itself block `night start`; only a missing or stale readiness result does (exit `26`, described in the first symptom on this page). Do not treat `unknown` as equivalent to `ready`; investigate the named check's own reason before proceeding.

@@ -12,9 +12,9 @@ This is a development-state compatibility boundary, not a release support matrix
 - Coordinator and native agent communicate through Mosquitto-compatible MQTT broker URLs using `tcp`, `ssl`, `tls`, `mqtt`, `mqtts`, `ws`, or `wss` schemes.
 - FPP is observed through its HTTP API and optionally FPP MQTT topics; eight playlist/volume commands are implemented with evidence-based outcomes.
 - Native nodes have experimental xLights FPP Connect ingestion and report per-node channel-range outcomes.
-- Native audio nodes have experimental configuration and command paths for local playback, gain/output control, and LTC generation. An installation can declare more than one `audio.node` with a role (`program`, `program+ltc`, or `zone`), but no installation has run with more than one audio node.
+- Native audio nodes implement local playback, plural Cue/Night targets, shared scheduled starts, gain/output control, PTP-backed node clocks, latency calibration, alignment runs, and one-node LTC generation. Full physical-interface and live-show support remains installation-specific.
 - An installation-wide operating mode (`show.mode`: `program` or `show`) and an emergency-stop command surface (`emergency-stop stop`, `stop-power-down`, and a two-step hard stop) are implemented and available at the coordinator's API and CLI.
-- Signed FPP fallback programs exist on the coordinator side (`/fallback-programs*`); FPP-host execution of a fallback program lives in the separate `showmesh-fpp-plugin` repository, which has not been installed on a real FPP host and has not reached a real coordinator.
+- Signed FPP fallback programs exist on the coordinator side (`/fallback-programs*`). The separate plugin can fetch, verify, install, acknowledge, and locally resolve entries; coordinator-to-node activation delivery, public packaging, and real-host acceptance remain incomplete.
 - Resolume Arena is observed and controlled through its REST API, with a WebSocket used only as a change signal. Composition metadata is uploaded from an `.avc` file.
 - External clients use HTTP API version 1 and Server-Sent Events.
 
@@ -34,8 +34,8 @@ This is a development-state compatibility boundary, not a release support matrix
 - A supported public audio/LTC operating path.
 - A supported FPP Connect deployment path.
 - A supported FPP plugin/provider development kit or packaged plugin installation.
-- A verified FPP-host installation of the fallback-program plugin runtime.
-- Verified multi-node audio: the contract exists, but every installation on record runs one audio node.
+- A publicly packaged and real-host-verified FPP plugin installation, including fallback activation delivery and execution.
+- A supported multi-node audio hardware matrix and live-show acceptance. Implemented scheduling and retained measurements are narrower evidence.
 - Documentation version selection.
 
 The presence of a surface configuration is not evidence that a renderer is producing output. NDI requires a prepared render node, a ready node-local FSEQ asset, an applied surface, a working transport probe, and fresh pipeline evidence.

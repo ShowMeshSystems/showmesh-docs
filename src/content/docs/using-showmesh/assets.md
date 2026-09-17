@@ -20,7 +20,7 @@ The sequence ID is a logical name used to group the file within a show; it is no
 
 ## Upload and inspect
 
-Use the Operator UI or the CLI. The CLI requires all upload metadata:
+Use the global Assets page for installation-wide inspection or a Show workspace's Assets tab for Show-scoped authoring. Both expose current versions and delivery evidence. The CLI requires all upload metadata:
 
 ```sh
 showmeshctl assets upload \
@@ -31,6 +31,7 @@ showmeshctl assets upload \
   --file ./sequence.fseq
 
 showmeshctl assets list --show <show-id>
+showmeshctl assets get <asset-id>
 showmeshctl assets manifest --require-ready
 ```
 
@@ -41,6 +42,22 @@ Use `--target-kind node --target <node-id>` for one node, or `--target-kind show
 The coordinator builds each declared node's desired manifest from the active show's current show-targeted assets plus current assets targeted specifically to that node. It compares that desired set with the inventory the agent publishes. Agents receive `asset.fetch` commands, download bytes from the coordinator, verify the SHA-256 content hash, place the file in their asset directory, and publish a new inventory.
 
 When reads are closed, an agent needs `SHOWMESH_AGENT_API_TOKEN` to fetch content. It is deliberately separate from the retired `SHOWMESH_API_TOKEN` variable.
+
+## Versions, resync, and removal
+
+Uploading different bytes for the same logical identity creates a new current asset while retaining older metadata. Rollback is a deliberate new selection or upload of the intended bytes; do not edit the coordinator or node asset stores by hand.
+
+Request fresh node evidence and inspect safe removal candidates with:
+
+```sh
+showmeshctl assets resync <node-id>
+showmeshctl assets unused <node-id>
+showmeshctl assets remove <node-id> <content-hash>
+```
+
+Removal is refused while a resolved Cue catalog references the content. A resync request is not a ready manifest; wait for fresh inventory evidence.
+
+For a Cue, announcement, or Night bed targeting several audio nodes, every target resolves and receives the required asset independently. Fallback resolution can select the installation's program/LTC node only where the object omitted targets; it never hides a named target that lacks content.
 
 ## What `ready` means
 

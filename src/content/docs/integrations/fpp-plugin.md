@@ -1,13 +1,13 @@
 ---
 title: Experimental FPP plugin
-description: An FPP-host plugin with a macro-run helper, a local brightness engine, and a playlist-entry identity observer, none of it installed on real FPP hardware yet.
+description: Experimental FPP-host macro, brightness, playlist-identity, and signed-fallback runtime boundaries.
 pageType: integration
 maturity: experimental-active
 complexity: advanced
 ---
 
 :::caution[Nothing here has run on a real FPP host]
-The plugin's Go helper, its host-neutral C++ core, both FPP version adapters, and the outbound coordinator client exist, build, and pass their own tests in CI. They have run against test doubles only. No release has been published, and nothing described on this page has been installed on a real FPP host or exercised against a real coordinator. Do not add it to a show installation.
+The plugin helper, native core, adapters, installer paths, and coordinator client build and have local automated or container evidence. No public package or real-FPP-host acceptance is established here. Do not treat candidate artifacts or local plugin-load coverage as permission to add it to a show installation.
 :::
 
 FPP invokes the plugin through its own command and Action mechanisms. The plugin does not become the FPP scheduler: FPP remains the schedule, playlist-order, and playback authority, and every effect described here is either a macro-run request the coordinator accepts or declines, or a purely local FPP Action.
@@ -16,14 +16,14 @@ FPP invokes the plugin through its own command and Action mechanisms. The plugin
 
 - **A Go macro helper** submits a ShowMesh macro run and records the result locally. Acceptance means the coordinator accepted the run request, not that every macro step has completed.
 - **A host-neutral C++ core** compiled locally against the host's installed FPP headers. It supplies a two-value brightness engine, exposed to FPP as an Action: a fadeable ceiling combined with a transition gain, producing an effective output the FPP host applies without overwriting the scheduled ceiling.
-- **A playlist-entry identity observer** that publishes an atomic, versioned playlist-entry identity event from FPP's own `playlistCallback`. The coordinator ingests this through the read-only playlist-definition and playlist-entry-observation surfaces described in [FPP](../fpp/).
+- **A playlist-entry identity observer** that publishes an atomic, versioned playlist-entry identity event from FPP's own `playlistCallback`. The plugin submits definitions and observations through scheduler-authenticated POST ingestion routes requiring `fpp:observe`; operators inspect the retained results through the separate read-only GET and CLI surfaces described in [FPP](../fpp/).
 - **Two FPP version adapters**: one for FPP 9.4 through 9.x (unversioned ABI, relies on destructor teardown) and one for FPP 10.x (versioned ABI, checked at load time). FPP 8 is not supported.
 
-Only the Go helper ships as a prebuilt binary, fetched by version and processor architecture with a checksum verified against a committed digest list. The C++ core has no prebuilt distribution; it is architecture-independent source, compiled on the host against that host's FPP headers.
+The Go helper is fetched as a checksum-verified prebuilt binary. For verified FPP 10 versions, packaging can also select a digest-locked prebuilt native object for the host architecture; if no matching verified object exists, installation falls back to compiling the native source against that host's FPP headers. Other supported versions compile locally. Candidate artifacts and locked digests are packaging evidence, not a public release.
 
 ## Credential boundary
 
-The Go helper reads its coordinator bearer credential from a fixed path (`/etc/showmesh-fpp-plugin/credential`) and refuses to run unless that file's permissions are exactly owner-read-write (mode `0600`). It never accepts the credential as a command-line argument or an environment variable. Use a machine credential with only the scope the macro run needs. Never reuse a human administrator or operator token.
+The Go helper reads its coordinator bearer credential from a fixed path (`/etc/showmesh-fpp-plugin/credential`) and refuses to run unless that file's permissions are exactly owner-read-write (mode `0600`). It never accepts the credential as a command-line argument or an environment variable. Use a machine principal with the built-in `scheduler` role, whose fixed bundle includes `show:macro:run`, `night:command`, `fpp:observe`, and `fpp:fallback`. ShowMesh roles are bundles rather than arbitrary one-scope credentials, so do not describe this as a macro-only token. Never reuse a human administrator or operator token.
 
 ## Read the local outcome
 
@@ -43,7 +43,7 @@ An invalid command invocation can fail before the helper writes any status recor
 
 ## What to verify
 
-Every verification claim available today is against test doubles, not a real FPP host or a real coordinator. Before any real-host trial, expect at minimum to confirm: the C++ core builds against the target FPP version's actual headers, the plugin loads under that FPP host's own ABI expectations, the brightness Action applies without a competing ceiling write, the playlist-entry identity event reaches a real coordinator and resolves to the expected Cue, and the credential file's ownership and mode survive the host's own package or plugin-manager install path. None of this is established here.
+Before any real-host trial, confirm: artifact selection or local compilation for the exact FPP version, ABI load, brightness behavior, playlist-entry delivery to a real coordinator, signed-program acknowledgement, credential permissions, and uninstall/upgrade behavior. Local automated coverage does not establish these host results.
 
 ## Retained outcomes while the coordinator is unavailable
 
@@ -53,4 +53,4 @@ A macro-run submission that comes back `refused`, `rejected`, or `unreachable` i
 
 - Packaging (`fpp-showmesh`) locks candidate binary digests for a pending version but has not published a release; installing from the packaging repository's default source fails at the download step until a release exists.
 - No FPP plugin-manager integration, permissions model, or cross-FPP-version compatibility claim is verified.
-- The plugin's playlist-entry identity event and the coordinator's signed fallback program (see [FPP](../fpp/)) share the same entry-key design, but the plugin side of executing a fallback activation is not part of what exists today.
+- The plugin can fetch, verify, install, acknowledge, and locally resolve signed fallback entries. Coordinator-to-node activation delivery and node execution do not exist yet, so this is not an operational coordinator-outage safeguard.
