@@ -28,6 +28,8 @@ In the Operator UI, open the dashboard, then the Nodes, FPP, and Resolume pages.
 showmeshctl nodes
 showmeshctl fpp
 showmeshctl resolume status
+showmeshctl show active
+showmeshctl show participation get <show-id>
 ```
 
 ## 3. Check the active show, mode, and assets
@@ -38,7 +40,9 @@ showmeshctl show mode
 showmeshctl assets manifest --require-ready
 ```
 
-`show mode` reports the installation-wide `program` or `show` mode. It is one value for the whole installation, never per-node or per-subsystem; today it changes only whether the Resolume WebSocket wake-up channel is held open (`program`) or closed (`show`). A non-ready manifest means expected bytes are not confirmed on a node. It does not prove playback has failed, and a ready manifest does not prove media can be decoded.
+`show mode` reports one installation-wide value. In addition to Resolume connection behavior, Show Mode pins Cue authorization to the active Show generation and catalog revision. A non-ready manifest means expected bytes are not confirmed on a node. It does not prove playback failed, and a ready manifest does not prove media can be decoded.
+
+Check Live Control or `GET /api/v1/current-runs` for the authoritative zero-to-many playback frame. Do not infer a global next item from Playlist order. For audio targets, also inspect `audio node get`, `node-clock get`, and any current alignment warning.
 
 ## 4. Check show night status and readiness
 
@@ -49,7 +53,7 @@ showmeshctl night status
 showmeshctl night readiness
 ```
 
-`night readiness` is rejected when no preparation epoch is open. Read every check name and reason it returns before trusting it as a complete pre-flight; a plain `unknown` outcome does not by itself block a night command, but a missing or stale readiness result does.
+`night readiness` is rejected when no preparation epoch is open. Read every check and reason. `ready_with_warnings` permits start but preserves degraded evidence. If readiness becomes stale, `night start` runs a fresh pass and reports that result rather than trusting the older one.
 
 ## 5. Inspect recent history
 

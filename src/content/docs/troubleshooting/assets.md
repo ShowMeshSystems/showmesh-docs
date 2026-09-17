@@ -28,6 +28,25 @@ The manifest compares what each node must hold for the active show with the node
 5. If reads are closed, confirm the node has `SHOWMESH_AGENT_API_TOKEN`.
 6. Check free space and write permissions for the node's `SHOWMESH_ASSET_DIR`.
 
+Request a fresh inventory when the node is reachable but the coordinator is holding stale evidence:
+
+```sh
+showmeshctl assets resync <node-id>
+```
+
+The response reports what the resync request actually did. Recheck the manifest; acceptance is not a ready inventory.
+
+Inspect and remove only content no resolved Cue still needs:
+
+```sh
+showmeshctl assets unused <node-id>
+showmeshctl assets remove <node-id> <content-hash>
+```
+
+Removal is refused when a Cue still references the hash. To roll back an upload, re-upload or reselect the intended content revision and confirm delivery; do not edit node files behind the agent.
+
+For multi-node Cue or Night audio, every target must hold the required asset. One ready node does not make the group ready.
+
 Asset sync runs after upload and on a timer; playback never reads from the coordinator asset store. Do not start a show while `--require-ready` reports exit `20` (known not ready) or `21` (unknown). Unknown is not a weaker form of ready.
 
 ## Verify recovery

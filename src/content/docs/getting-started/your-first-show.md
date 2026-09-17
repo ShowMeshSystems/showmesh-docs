@@ -8,7 +8,7 @@ complexity: advanced
 
 This is the complete command-line-first path from an installed coordinator to a prepared ShowMesh production. It uses the current source and command surface, so it **will change over time**. Run `showmeshctl version` and `showmeshctl <command> --help` against the coordinator you are operating before copying a command into a script.
 
-This guide is command-line-first; a separate full UI workflow will follow when that surface is ready. FPP remains the scheduler and playback authority; ShowMesh prepares, observes, and performs the bounded controls configured here. [Step 1](#1-connect-fpp) also names the Operator UI's Monitor screen, since observing your own FPP playlist there needs only Docker, a browser, and one FPP player, with no native node, audio, or Resolume Arena involved.
+This guide is command-line-first. For the current Operator UI workflow, see [Author a Show](../../guides/author-a-show/). FPP remains the scheduler and playback authority for FPP-backed playback; ShowMesh prepares, observes, and performs the bounded controls configured here.
 
 ## Before you start
 
@@ -90,6 +90,8 @@ showmeshctl fpp resume-playlist fpp-main
 showmeshctl fpp next-playlist-item fpp-main
 showmeshctl fpp prev-playlist-item fpp-main
 showmeshctl fpp set-volume fpp-main 75
+showmeshctl fpp set-transition-gain fpp-main 100
+showmeshctl fpp republish-playlist-definitions fpp-main
 ```
 
 Each command waits for updated observation evidence. If one is unconfirmed, inspect FPP before repeating it. See [FPP](../../integrations/fpp/) for collection, readiness, and recovery details.
@@ -134,7 +136,7 @@ Do not use `undeclare` during normal configuration: it removes the declaration a
 
 - [Install a native node](../../guides/add-a-node/)
 - [Set up a video node](../../guides/set-up-a-video-node/)
-- [Audio node overview](../../guides/set-up-an-audio-node/)
+- [Set up an audio node](../../guides/set-up-an-audio-node/)
 - [Nodes](../../using-showmesh/nodes/) and [Node types](../../using-showmesh/node-types/)
 
 For a render node, the later render commands are `render settings`, `render status`, `render apply`, `render clear`, `render restart`, `render probe`, and `render transport`. For an audio node, configure `audio settings` and `audio node` before using `audio session`, `audio gain`, or `audio output` commands.
@@ -150,6 +152,8 @@ showmeshctl show set \
   main-show
 showmeshctl show get main-show
 showmeshctl show revisions main-show
+showmeshctl show participation set --help
+showmeshctl show participation get main-show
 ```
 
 Create a surface for each render canvas. For a 128 by 64 RGB surface, the channel count is `128 × 64 × 3 = 24576`.
@@ -223,7 +227,7 @@ Create Cues for the named moments in the production. A Cue requires its whole `o
 showmeshctl cue set \
   --show main-show \
   --name 'Opening' \
-  --outputs-json '{"render":{"sequence":"main-sequence"},"audio":{"asset":"main-audio","startOffsetMillis":0}}' \
+  --outputs-json '{"render":{"sequence":"main-sequence"},"audio":{"asset":"main-audio","startOffsetMillis":0,"targets":["stage-left"]}}' \
   main-opening
 showmeshctl cue get main-opening
 showmeshctl cue revisions main-opening
@@ -243,7 +247,7 @@ showmeshctl playlist get main-fpp-playlist
 showmeshctl fpp playlist-readiness main-fpp-playlist
 ```
 
-For an audio-runner Playlist, use `--runner showmesh-audio` with `--showmesh-audio-json` instead of `--fpp-json`. If a Cue's audio, LTC, or announcement output must reach a specific audio node rather than the installation's default, add a `"target"` naming that `audio.node` id inside the relevant output object. See [Cues](../../using-showmesh/cues/) and [Playlists](../../using-showmesh/playlists/) for output rules, FPP bindings, mismatch behavior, and complete JSON shapes.
+For an audio-runner Playlist, use `--runner showmesh-audio` with `--showmesh-audio-json` instead of `--fpp-json`. Cue audio and announcement outputs use a `"targets"` list of audio-node IDs; LTC keeps one optional `"target"`. Use `media-playlist` commands for reusable local-audio bed sequences. See [Cues](../../using-showmesh/cues/) and [Playlists](../../using-showmesh/playlists/) for complete rules.
 
 ## 7. Create actions and macros
 
@@ -260,7 +264,7 @@ showmeshctl macro run --follow start-show
 showmeshctl run list --macro start-show
 ```
 
-An action can target FPP, Resolume, or a configured integration MQTT broker. A Macro runs its action steps in order. `--follow` observes the asynchronous run; an idle follow can finish with exit code `14` while the run is still active, so inspect it explicitly:
+An action can target FPP, Resolume, a configured integration MQTT broker, or ShowMesh audio. A Macro runs its action steps in order. `--follow` observes the asynchronous run; an idle follow can finish with exit code `14` while the run is still active, so inspect it explicitly:
 
 ```sh
 showmeshctl run show --follow <run-id>
@@ -305,7 +309,7 @@ showmeshctl show mode get
 Switch back to `program` when you need to resume live Cue editing between shows.
 
 :::caution[Emergency Stop is show-affecting]
-Confirm you can reach [Emergency stop](../../using-showmesh/emergency-stop/) and know which level you would use before a night runs. A confirmed stop silences FPP playout on every configured instance immediately, and Show Mode never delays or degrades it.
+Confirm you can reach [Emergency stop](../../using-showmesh/emergency-stop/) and know which level you would use before a night runs. Every level immediately stops configured FPP instances, silences declared audio nodes, and blackouts configured Resolume instances. Show Mode never gates it.
 :::
 
 ```sh
@@ -351,16 +355,18 @@ FPP and FPP MQTT
 
 Nodes and Show configuration
   discover | declare | undeclare
-  show list|get|set|revisions|active|activate
+  show list|get|set|revisions|delete|active|activate
+  show participation get|set
   show mode|get|set|revisions
-  surface list|get|set|revisions
-  cue list|get|set|revisions
-  playlist list|get|set|revisions
+  surface list|get|set|revisions|delete
+  cue list|get|set|revisions|delete|activate
+  playlist list|get|set|revisions|delete
+  media-playlist list|get|set|revisions|delete
   cuecatalog get|acknowledge|deploy
 
 Actions, Macros, Show Night, and Emergency Stop
-  action list|show|put|check|invoke
-  macro list|show|put|run
+  action list|show|put|check|invoke|delete
+  macro list|show|put|run|delete
   run show|list
   night list|get|set|revisions|revision|active|activate|deactivate|status
   night prepare-site|readiness|preshow|start|final-show|fade-out|power-down|end-session
@@ -377,15 +383,18 @@ Resolume
   resolume recovery status|enable|disable|restore|revisions
 
 Assets and node media
-  assets list|get|upload|fetch|manifest
+  assets list|get|upload|fetch|manifest|unused|remove|resync
   assets settings get|set
   render settings get|set|revisions
   render status|apply|clear|restart|probe|transport
   audio settings get|set|revisions
-  audio node list|get|set|revisions
-  audio session apply|prepare|start|pause|resume|seek|advance|stop|clear
+  audio node list|get|set|revisions|delete
+  audio session apply|prepare|start|aligned-start|pause|resume|seek|advance|stop|clear
   audio gain set|fade
   audio output mute|unmute
+  audio silence
+  audio alignment-run start|stop|list|get
+  node-clock list|get|set|revisions
   fppconnect settings get|set|revisions
   fppconnect status
 

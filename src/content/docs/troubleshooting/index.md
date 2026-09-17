@@ -26,8 +26,7 @@ Do not restart everything before capturing the snapshot and the readiness respon
 - [A macro or action did not complete](./actions/)
 - [Assets are not ready](./assets/)
 - [A show night lifecycle command is refused](./show-night/)
+- [Audio or clock sync is wrong](./audio-and-clock-sync/)
+- [Render or NDI output is wrong](./render-and-ndi/)
+- [Resolume control or recovery failed](./resolume/)
 - [Logs, health, events, and evidence](./diagnostics/)
-
-## Planned troubleshooting pages
-
-Render, audio, LTC, and Resolume recovery failures are covered inside the node, FPP, and action pages for now. Dedicated symptom pages for them will be added as failure modes are observed on real hardware.

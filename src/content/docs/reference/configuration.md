@@ -45,9 +45,10 @@ Some newer media settings are revisioned API configuration, not environment vari
 
 - `fppconnect.settings`: enablement and storage limits for experimental node-side FPP Connect ingestion.
 - `render.settings`: render-node defaults and limits.
-- `audio.settings` and `audio.node`: experimental local-audio/LTC settings and node output declarations.
+- `audio.settings` and `audio.node`: local-audio/LTC defaults, program/LTC placement, sink backend, PipeWire target, and calibrated output latency.
+- `node.clock`: per-node managed, external, or FPP-provided PTP configuration.
 - `show.mode`: the installation-wide operating mode (`program` or `show`).
-- `show`, `show.surface`, `show.cue`, `show.playlist`, `show.action`, `show.macro`, and `show.active`: show authoring objects and the active-show pointer.
+- `show`, `show.surface`, `show.cue`, `show.playlist`, `media.playlist`, `show.action`, `show.macro`, and `show.active`: show authoring objects and the active-show pointer.
 - `show.emergencystop`: each emergency-stop level's optional follow-up action list.
 - `night.session` and `night.session.active`: Show Night session objects and the active-session pointer.
 
@@ -79,6 +80,7 @@ The agent has no config file and no command-line flags: every setting is an envi
 | `SHOWMESH_ASSET_INVENTORY_INTERVAL` | `2m` | Periodic asset-inventory publication. |
 | `SHOWMESH_RENDER_REPORT_INTERVAL` | `15s` | Render-report publication cadence. |
 | `SHOWMESH_AUDIO_REPORT_INTERVAL` | `15s` | Audio-report publication cadence. |
+| `SHOWMESH_CLOCK_REPORT_INTERVAL` | `15s` | Node-clock report publication cadence. |
 | `SHOWMESH_MULTISYNC_LISTEN_ADDR` | `:32320` | Local `host:port` the MultiSync listener binds (FPP's fixed control port). |
 | `SHOWMESH_MULTISYNC_INTERFACE` | every suitable interface | Restrict the MultiSync multicast join to one named network interface. |
 | `SHOWMESH_FPPCONNECT_LISTEN_ADDR` | `:80` | Listen address for the node's FPP Connect compatibility listener. It binds on every node; port 80 is what xLights expects, which is why the service unit grants `CAP_NET_BIND_SERVICE`. |

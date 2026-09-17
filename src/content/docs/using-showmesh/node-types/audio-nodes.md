@@ -1,81 +1,75 @@
 ---
 title: Audio nodes
-description: Experimental audience-audio settings, sessions, routes, and output behavior.
+description: Node-local audio routing, PTP clocks, scheduled starts, LTC, latency, and recovery evidence.
 pageType: concept
 maturity: experimental-testing
 ---
 
-An **audio node** is the ShowMesh authority for node-local audience-audio playback on configured outputs. Current source includes session, gain, output, routing, and LTC command/configuration paths. It holds complete audio files locally, rather than carrying real-time PCM through the coordinator or MQTT.
+An **audio node** plays complete ShowMesh assets locally. The coordinator distributes content, schedules operations, and observes results; it does not stream program PCM through MQTT or through the coordinator process.
 
-See [SMPTE / LTC](../../../integrations/smpte-ltc/) for timecode rates and receiver details.
+Linux, GStreamer, and PipeWire or ALSA provide the media/output layer. ShowMesh owns session state, routing declarations, scheduled-start policy, supervision, and operator evidence.
 
-## Current software responsibilities
+## Roles
 
-The audio-node role provides configuration and command paths for:
+| Role | Meaning |
+| --- | --- |
+| `program` | Main program audio without LTC. |
+| `program+ltc` | Main program audio and the installation's only LTC output. |
+| `zone` | A named independent speaker zone, never main program or LTC. |
 
-- node-local playback of exact ShowMesh asset hashes;
-- media probing before a file is admitted to a playback session;
-- background, show, announcement, and manual audio sources;
-- ordered playlists, looping, resume/restart policy, and natural-completion evidence;
-- gain ceilings, fades, and configured mix, duck, or interrupt behavior;
-- stereo program routing and a discrete LTC output from one clock domain;
-- playback position, drift, device, route, mix, gain, LTC, and readiness evidence;
-- explicit command outcomes for start, stop, pause, resume, seek, restart, fades, and source changes;
-- safe supervision and manual recovery when a device or pipeline fails.
+At most one node can hold `program+ltc`. More than one audio node can play the same Cue, announcement, or Night bed, but LTC remains singular.
 
-Linux is the reference platform. GStreamer performs media decoding and rendering while ShowMesh owns session state, synchronization policy, supervision, health, and operator-visible evidence.
+## Routes and output ownership
 
-## Configure an audio node
+An `audio.node` selects:
 
-Audio settings set the engine-wide drift threshold, fade curve and duration, background gain ceiling, announcement duck target, LTC frame rate, and default LTC start offset. Audio-node settings choose a program route and ordered program channels, then optionally a separate LTC channel on that same route with a declared clock-domain name and provenance.
+- an advertised program route and ordered program channels;
+- an optional discrete LTC channel on the same route;
+- `alsasink` or `pipewiresink`;
+- a PipeWire target node when PipeWire owns the device;
+- a declared clock-domain name and its provenance;
+- an optional calibrated static output latency.
 
-```sh
-showmeshctl audio settings get
-showmeshctl audio settings set --help
-showmeshctl audio node list
-showmeshctl audio node set <node-id> --help
-```
+The coordinator refuses a route that the node has not advertised. A Linux interface appearing in an inventory is not sufficient readiness evidence.
 
-The node must advertise the selected program and LTC routes. A program-only node omits the LTC route and channel. Writes replace the full settings object, so read the current values before changing them.
+PipeWire-routed installations should let PipeWire own the card. ShowMesh targets the configured PipeWire node rather than opening the hardware independently and competing for it.
 
-## Roles and zones
+## Node clocks and PTP
 
-An installation may declare more than one `audio.node`. Each carries a role: `program` (program audio only), `program+ltc` (program audio and this installation's sole LTC emitter), or `zone` (an independent local speaker zone, never program or LTC for the main mix). A `zone` node also carries an operator-facing `zone` name; that field is refused on any other role. Role is optional on the wire, and an audio node with no declared role defaults to `program+ltc`. Set `role: program` explicitly for a node that emits no LTC.
+`node.clock` is separate revisioned configuration. It chooses one provider:
 
-At most one `audio.node` may carry `program+ltc` at a time: authoring a second one is refused at write time, and readiness separately checks that the deployed configuration still has exactly one LTC-carrying node before a show is called ready. No installation on record has run more than one audio node; treat multi-node behavior as unverified beyond configuration and readiness checks until it has been exercised on real hardware.
+- **managed**: ShowMesh manages the node's PTP service;
+- **external**: another service owns PTP and ShowMesh reads its management evidence;
+- **FPP**: an FPP 10 host supplies the clock relationship.
 
-A [Cue](../../cues/)'s audio, LTC, and announcement outputs can each name a specific `audio.node` by ID instead of always resolving to the sole `program+ltc` node, and a Show Night's background bed and announcements can each fan out to more than one `audio.node` at once, such as a porch zone and a garage zone playing the same background music together.
+Clock reports distinguish synchronized, holdover, and unavailable evidence. A configured holdover limit determines when lost lock becomes unsynchronized. Hardware timestamping may be requested for a managed provider, with its availability reported rather than assumed.
 
-## Capability declarations and restore reporting
+## Scheduled starts
 
-An audio node's advertised output capabilities are derived from the bound session engine's real, current availability rather than a fixed list: what an installation can rely on for background-audio transitions and readiness is exactly what the engine has evidenced, not what the hardware is assumed to support.
+A single-node start can carry `scheduledAtNs`. For several nodes, the aligned-start path prepares every target, reads the shared clock once, and schedules all prepared nodes at one instant.
 
-A session whose restore was deferred and re-queued (a build refusal, or no `audio.node` binding yet available) reports its state as `restore_pending` rather than silently continuing to report its last persisted state. This is reporting-only: the on-disk record keeps the state the session actually held, so a reboot before the next successful retry still resumes correctly, and a `restore_pending` session is retried automatically, backed off and bounded, whenever a matching `audio.node` binding becomes available.
+Cue activation, Show Night beds, announcements, and resumes use this shared-instant behavior when multiple targets are selected. Each target reports whether it started aligned. If shared-clock evidence is unavailable, the system can degrade visibly to unaligned operation rather than claiming synchronization.
 
-## Data-flow boundary
+Static output-latency calibration is applied to scheduled starts so each output chain can compensate for a known delay. Calibration evidence includes method, reference, measurement configuration, timestamp, and confidence.
 
-1. ShowMesh synchronizes exact audio assets to the node before a session begins.
-2. The engine probes the local file and checks the required advertised route/output capabilities.
-3. FPP remains the schedule and show-timeline authority. The node performs local audio work; it does not receive a continuous media stream from ShowMesh.
-4. Program audio and LTC are configured as separate outputs in one declared clock domain where LTC is used.
-5. The node publishes session and output evidence for the selected role.
+## Sessions and media
 
-## Failure behavior
+The node supports background, show, announcement, and manual sources; ordered media playlists; repeat and resume/restart policies; gain ceilings; fades; duck, mix, or interrupt behavior; and natural-completion evidence.
 
-Audio-device loss is designed to **fail silent**. ShowMesh will not automatically return audience audio to FPP or select a standby node. Recovery restores the intended route, gain, channel separation, clock relationship, required assets, and current session position before sound resumes.
+Session commands cover apply, prepare, start, pause, resume, seek, advance, stop, clear, gain, fade, mute, and unmute. Session evidence includes playback position, route, device, gain, mix, LTC, restore state, and command outcome.
 
-A running local session is intended to survive coordinator or broker loss when all required media and state are already present. A later transition that requires unavailable authority fails visibly rather than guessing.
+Required media must already exist on every target node. A multi-node activation names a target that lacks an asset instead of reporting the group ready.
 
-## Role and output capabilities
+## LTC and alignment
 
-The audio role is broader than any single connector. Local program output, FM feed, LTC, and possible future transports are separate capabilities with their own readiness evidence. Dante is not a requirement for the initial role, and a possible future Dante bridge is not a supported node type.
+Program audio and LTC use separate channels on one declared clock domain. LTC uses one target and supports the rates documented in [SMPTE / LTC](../../../integrations/smpte-ltc/).
 
-Likewise, do not consider an audio-capable machine ready merely because Linux lists an interface. Readiness requires decodable assets, correct channel routing, a discrete same-clock LTC output where required, supported session operations, and fresh engine evidence.
+Alignment runs record long-duration program-to-LTC measurements. A configured drift threshold can warn before showtime when the observed relationship exceeds the accepted bound. Repository tests and retained measurements do not replace receiver-lock, listening, and long-run validation on the installation's physical interfaces.
 
-## Boundaries
+## Recovery
 
-- FPP owns the schedule; the audio node owns local playback and its output clock.
-- The coordinator orchestrates and observes but never streams program audio.
-- Resolume receives LTC through the configured audio path.
-- Automatic or sample-transparent failover is not promised.
-- Real-time audio transport between ShowMesh nodes and real third-party synchronized-audio services are outside the initial role.
+Device loss fails silent. ShowMesh does not automatically move program audio to another node or return it to FPP. Recovery restores the intended route, channels, clock relationship, assets, gain, and current session position before sound resumes.
+
+A session waiting for a usable binding reports `restore_pending` and retries with bounded backoff. That state is visible; it is not silently presented as the last persisted running state.
+
+Use [Set up an audio node](../../../guides/set-up-an-audio-node/) for the procedure and [Audio and clock sync](../../../troubleshooting/audio-and-clock-sync/) for diagnosis.

@@ -26,15 +26,16 @@ These pages describe the current `main` development state, not a stable release 
 - FPP REST and MQTT observation, plus eight evidence-confirmed playlist and volume controls.
 - Resolume composition import, observation, actions, and optional recovery.
 - Experimental render nodes that turn node-local FSEQ data into an NDI source on the tested Debian 13 amd64 path.
-- Revisioned shows, surfaces, logical actions, macros, an active-show pointer, an asset store, cues, and playlists.
-- An installation-wide operating mode (`program`/`show`) and an emergency-stop command surface, reachable from the Operator UI or `showmeshctl`.
-- Show Night session lifecycle commands (preparation, readiness, pre-show, start, fade-out, power-down).
+- Revisioned Shows, surfaces, actions, macros, Cues, runner-backed Playlists, local-audio media playlists, and Show participation selection.
+- A runner-neutral current-runs projection for concurrent FPP and ShowMesh-audio playback.
+- An installation-wide operating mode (`program`/`show`), direct Cue activation, and Emergency Stop across FPP, audio nodes, and Resolume.
+- Show Night preparation, readiness with warnings, pre-show, live, final-show, fade-out, power-down, and degraded recovery.
 - Experimental xLights FPP Connect ingestion for node-targeted sequence content.
-- Experimental audio-node and LTC software paths, including a contract for more than one audio node per installation.
+- Experimental audio-node and LTC paths with plural Cue/Night targets, shared scheduled starts, `node.clock`, calibrated output latency, and alignment runs.
 
 ## What does not work yet
 
-ShowMesh does not yet provide HDMI output or a supported FPP Connect deployment. Audio/LTC details are documented separately, including their timing and receiver limits. Signed FPP fallback programs exist on the coordinator side, but FPP-host execution of one has not been verified on a real FPP host. Multi-node audio has a contract but no installation has run more than one audio node.
+ShowMesh does not yet provide HDMI output or a publicly supported FPP Connect deployment. Audio/LTC details are documented separately, including the gap between implemented scheduling and installation-specific physical acceptance. Signed fallback programs can be built by the coordinator and fetched, verified, installed, acknowledged, and locally resolved by the FPP plugin; coordinator-to-node activation delivery and real-host acceptance remain incomplete.
 
 ## How to read a maturity label
 

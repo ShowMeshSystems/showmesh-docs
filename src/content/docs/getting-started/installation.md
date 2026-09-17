@@ -8,7 +8,7 @@ complexity: advanced
 
 This is the supported installation path for the current pre-release. It starts three services on one host: the coordinator, an authenticated Mosquitto broker, and the Operator UI. Native nodes run elsewhere; add them only after this host is healthy.
 
-The primary path pulls the published coordinator and Operator UI images at a pinned release version. Building from source remains supported as a secondary path, for example when contributing to ShowMesh itself.
+When the selected tag has published artifacts, the primary path pulls coordinator and Operator UI images at that pinned version. Source includes the release workflow, but that does not prove a particular tag or image is publicly available. Check the registry and release page before choosing this path. Building from source remains the reproducible fallback and the contribution path.
 
 :::caution[Start on an isolated show-management network]
 The default bundle publishes MQTT on `1883`, the coordinator API on `8080`, and the Operator UI on `8081`. The read API is open to every machine that can reach it, and ShowMesh does not terminate TLS. Do not expose this default stack directly to the public internet.
@@ -35,7 +35,7 @@ git checkout v<release-version>
 docker compose version
 ```
 
-`v<release-version>` is the pushed release tag, for example `v0.1.0`, matching a version published as GHCR images (see [Releasing ShowMesh Core](https://github.com/ShowMeshSystems/showmesh/blob/main/docs/RELEASING.md) for what a release tag produces). See [Requirements](../requirements/) for the current platform boundaries.
+`v<release-version>` is the pushed release tag, for example `v0.1.0`. Confirm that the exact tag produced the images or packages you intend to install, then verify their digests. See [Release artifacts](../../reference/release-artifacts/) for the artifact matrix and [Requirements](../requirements/) for platform boundaries.
 
 Building the coordinator and UI locally instead of pulling published images remains supported, for example when contributing to ShowMesh itself: skip step 4's `docker-compose.published.yml` override and run `make -C .. deploy-up` alone, which builds both images from this checkout before starting them.
 

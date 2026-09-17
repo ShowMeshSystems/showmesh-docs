@@ -28,6 +28,9 @@ const usingShowMesh = {
 	label: 'Using ShowMesh',
 	items: [
 		{ label: 'Using ShowMesh', link: '/using-showmesh/' },
+		{ label: 'Live Control and current runs', link: '/using-showmesh/live-control-and-current-runs/' },
+		{ label: 'Settings', link: '/using-showmesh/settings/' },
+		{ label: 'Access and permissions', link: '/using-showmesh/access-and-permissions/' },
 		{ label: 'Actions and macros', link: '/using-showmesh/actions-and-macros/' },
 		{ label: 'Assets', link: '/using-showmesh/assets/' },
 		{ label: 'Cues', link: '/using-showmesh/cues/' },
@@ -85,7 +88,7 @@ export default defineConfig({
 				section('Guides', 'guides'),
 				section('Troubleshooting', 'troubleshooting'),
 				section('Developer Guide', 'developer-guide'),
-			section('Reference', 'reference'),
+				section('Reference', 'reference'),
 				section('Contributing', 'contributing'),
 			],
 			lastUpdated: true,

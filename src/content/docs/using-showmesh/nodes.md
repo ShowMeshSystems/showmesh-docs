@@ -31,7 +31,7 @@ See [Node types](../node-types/) for the shared agent foundation, why roles can 
 
 The bundled agent publishes a retained hello record, ongoing health, last-will state, command results, and asset inventory through MQTT. It can receive asset-fetch commands, download content from the coordinator, verify its SHA-256 hash, store it in the configured asset directory, and publish the updated inventory.
 
-A node without an applied media role does **not** render a surface, play an asset, or automatically gain production media capabilities. A healthy node therefore means the ShowMesh agent and its control-plane path are healthy, not that a configured video or future-audio path is working. Render-node readiness additionally needs local FSEQ assets, a working transport probe, an applied surface, and fresh pipeline evidence.
+A node without an applied media role does **not** render a surface, play an asset, or automatically gain production media capabilities. A healthy node therefore means the ShowMesh agent and its control-plane path are healthy, not that a configured video or audio path is working. Render-node readiness additionally needs local FSEQ assets, a working transport probe, an applied surface, and fresh pipeline evidence; audio-node readiness separately needs valid routing, assets, clock evidence, and a working local output path.
 
 ## Discovered and declared
 
@@ -47,9 +47,12 @@ showmeshctl nodes
 showmeshctl node <node-id>
 showmeshctl discover
 showmeshctl declare <node-id>
+showmeshctl undeclare --confirm <node-id>
 ```
 
-Discovery and declaration are writes and require `config:write`.
+Discovery and declaration are writes and require `config:write`. Undeclaration removes the durable declaration but does not erase historical observations or prove the machine stopped.
+
+The UI exposes node inspectors from Fleet and Manifest views. Use them to compare declared identity, current capabilities, Show participation, asset state, Cue-catalog revision, audio routing, clock state, and alignment evidence without treating one row as proof of the others.
 
 ## Agent configuration
 
@@ -86,3 +89,14 @@ showmeshctl assets settings set \
 `controlPlane.state: offline` means the coordinator lost the agent's MQTT connection. It is not proof that the computer is powered off or local playback stopped. Check observation age, last error, and device-local state before intervening.
 
 Likewise, `discoveryState` is one of four values: `present` (the most recent complete discovery run saw this declared node), `not_seen` (a completed discovery run did not see it), `unknown` (the available run did not establish presence or absence, including when no complete run is available), or `not_applicable` (the node is not declared at all). Do not promote `not_seen` or `unknown` into a claim about playback.
+
+## Asset and clock maintenance
+
+```sh
+showmeshctl assets resync <node-id>
+showmeshctl assets unused <node-id>
+showmeshctl node-clock get <node-id>
+showmeshctl audio alignment-run list --node <node-id>
+```
+
+Resync asks for fresh inventory; it does not manufacture readiness. Unused-asset removal is refused when a resolved Cue still references the content. For audio nodes, keep route/device evidence, PTP state, output-latency calibration, scheduled-start alignment, and long-run drift as separate checks.

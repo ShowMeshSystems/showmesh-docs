@@ -6,7 +6,7 @@ pageType: procedure
 
 ## Before you start
 
-- Go 1.25 or newer in the repository's supported range (`go.mod` requires `go 1.25.0`).
+- Go 1.26 or newer in the repository's supported range (`go.mod` requires `go 1.26.0`; current CI pins Go 1.26.6).
 - Node 22, matching `.nvmrc`.
 - Docker for Compose and integration suites.
 - `make`.

@@ -12,10 +12,10 @@ This section is for software that uses ShowMesh: operator tools, automation clie
 - A versioned HTTP API under `/api/v1`.
 - A Server-Sent Events stream for live changes.
 - Bearer tokens issued to coordinator principals.
-- Configuration, control, audit, discovery, identity, FPP, Resolume, show, macro, and asset resources.
+- Configuration, control, audit, discovery, identity, FPP, Resolume, Show, current-run, media-playlist, native audio/clock, Cue activation, and asset resources.
 - RFC 9457-style structured errors.
 
-Start with the [API guide](./api/), then read [Events and live state](./events/) before building a stateful client. [Actions and capabilities](./actions-and-capabilities/) explains the two vocabularies that are often confused.
+Start with the [API guide](./api/), then read [Events and live state](./events/) before building a stateful client. [Current runs](./current-runs/) defines the playback projection, [Audio clocks and scheduled start](./audio-clocks-and-scheduled-start/) covers multi-node timing, and [Actions and capabilities](./actions-and-capabilities/) separates two vocabularies that are often confused.
 
 ## Extension boundary
 

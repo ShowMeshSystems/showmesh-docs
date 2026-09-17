@@ -31,7 +31,19 @@ The agent periodically publishes its asset inventory. Check `SHOWMESH_ASSET_DIR`
 
 - **`refusing to install on Debian <version>`:** the agent's cgo build requires Debian 13 (trixie) or newer; it fails against Debian 12's older GLib. There is no supported workaround on Debian 12; install onto a Debian 13+ host.
 - **A warning that `/etc/os-release` reports a non-Debian `ID`, or is missing entirely:** the installer proceeds, but the platform is unverified. Review the warning before continuing.
-- **`refusing to adopt existing account 'showmesh'`:** a `showmesh` account already exists but does not match the shape `install.sh` creates (a system UID, a nologin-equivalent shell, home at `/var/lib/showmesh`). This is a deliberate refusal, not a bug: adopting a mismatched account would hand the agent that account's UID, supplementary groups, and home directory. The error names exactly which field mismatches. Either rename or remove the colliding account, or change `SERVICE_USER`/`SERVICE_GROUP` in `install.sh` and re-run.
+- **Existing `showmesh` account:** the installer reuses its own account shape and can explicitly adopt a safe non-root service account already in use. It still refuses unsafe identities, including root-equivalent cases. Read the diagnostic and review UID, groups, shell, and home before choosing adoption; do not delete or rename the account blindly.
+
+## Symptom: the node is not part of tonight's Show
+
+Check `showmeshctl show participation get <show-id>`. Participation applies to FPP and Resolume instances; node participation is derived from Show objects and their resolved outputs. Inspect the node's Show participation row before treating every configured node as required tonight.
+
+## Symptom: assets or Cue catalog are stale
+
+Use `showmeshctl assets resync <node-id>` to request a fresh inventory, `assets unused` to inspect removable content, and Cue-catalog status/deploy commands to compare the required and acknowledged revision. An accepted resync or deploy is not the same as fresh acknowledgement evidence.
+
+## Symptom: audio clock or alignment is unhealthy
+
+Inspect `showmeshctl audio node get <node-id>`, `showmeshctl node-clock get <node-id>`, current session evidence, and retained alignment runs. Distinguish route/device failure, PTP holdover, unsynchronized clock, missing latency calibration, and an unaligned scheduled start. See [Audio or clock sync is wrong](../audio-and-clock-sync/).
 
 ## Symptom: agent logs `mqtt broker rejected connection: not authorized`
 

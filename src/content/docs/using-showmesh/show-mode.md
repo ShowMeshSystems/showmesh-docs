@@ -13,7 +13,7 @@ A show control system is generally safer to run with fewer live edit surfaces on
 
 ## Read and write it
 
-Reading the mode requires only `observation:read`, which every signed-in role holds. This is deliberate: a mode nobody can see is a trap, because every surface behaves differently depending on it and nothing says why. Writing it requires `config:write` (admin only), and every write is audited like any other configuration change.
+Reading the mode requires `observation:read`, which the built-in viewer, operator, and admin roles hold. The narrower scheduler and recovery roles do not, so authentication alone does not grant this read. Writing it requires `config:write` (admin only), and every write is audited like any other configuration change.
 
 ```sh
 showmeshctl show mode get
@@ -28,7 +28,7 @@ A write is a full replacement, validated before it is accepted: an invalid value
 
 The Resolume WebSocket wake-up channel is held open in `program` and closed in `show`, switching without a coordinator restart in either direction. Cue activation also reads the mode: in `show` mode, the coordinator pins the authorizing Show, Generation, and catalog/cue revisions together at the moment Show Mode begins authorizing that Show, so a mid-show edit to a Cue stays staged rather than reaching any node until the show restarts. `program` mode keeps resolving Cues live.
 
-Nodes are told the current mode so later work can read it at the point of decision. A node that has never been told the mode reads it as `unknown`, which behaves as `show`, the more conservative side.
+Renderer nodes also use the delivered mode when frame extraction fails. In `program`, the node replaces the failed frame with an output alert field for diagnosis. In `show`, it replaces the failed frame with black instead. A node that has never been told the mode reads it as `unknown`, which takes the same conservative black-output path as `show`.
 
 ## What it never does
 
