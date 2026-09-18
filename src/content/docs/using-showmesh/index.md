@@ -39,7 +39,7 @@ ShowMesh separates saved configuration from observed runtime evidence. A saved o
 
 These are separate revisioned objects linked to a Show by ID.
 
-## Runtime evidence
+## Check current status
 
 [Live Control and current runs](./live-control-and-current-runs/) shows current playback. Several FPP and ShowMesh-audio runs can be active at once; `next` is present only when the runner supplied it.
 

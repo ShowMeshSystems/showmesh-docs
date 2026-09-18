@@ -40,8 +40,8 @@ Ignore unknown event names for forward compatibility. Ignore `: keepalive` comme
 
 `currentRuns.changed` is a complete replacement frame, not a patch. Replace the entire local current-runs collection. After reconnect, fetch `GET /current-runs` again; this event is an optional prompt and has no resumable cursor.
 
-## Known v1 gap
-
-The stream does not announce deletion of an entire node or FPP resource. The `removed` list in `fpp.observations.changed` only removes observations from an FPP instance that still exists. Periodic resnapshotting or a resnapshot after any interruption prevents deleted resources from remaining indefinitely in a client model.
-
 The stream ends without a terminating event, including during orderly coordinator shutdown.
+
+:::note[Refresh deleted resources]
+The stream does not announce deletion of an entire node or FPP resource. Fetch a new snapshot after any interruption and periodically during long-running sessions so deleted resources do not remain in the client model.
+:::

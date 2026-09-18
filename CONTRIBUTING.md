@@ -21,6 +21,9 @@ Treat main-repository prose as a lead, not proof. Verify claims against code, te
 - Keep commands beside the explanation they support.
 - Organize troubleshooting by symptom.
 - Explain terminology on first use.
+- Use plain, task-oriented headings such as “System requirements,” not internal shorthand such as “Platform floor.”
+- Put a confirmed unsupported or unverified condition in one short top or bottom callout when it affects the reader.
+- Keep implementation history, verification ledgers, acceptance backlogs, and future/open-boundary sections out of public pages.
 - Never add a bare `TODO` page.
 - Never turn planned architecture into a runnable procedure.
 

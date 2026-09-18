@@ -39,7 +39,7 @@ Cue audio, announcements, Night beds, item changes, and resumes use this schedul
 
 Alignment-run endpoints manage long-running program-to-LTC measurements for one node. A retained run covers only its recorded configuration and interval; it does not prove later PTP lock or receiver behavior.
 
-## Failure contract
+## Handle scheduling failures
 
 - Preparation failure names the affected node and prevents it from being silently counted as aligned.
 - A scheduled instant already passed is an error, not permission to claim alignment after starting late.

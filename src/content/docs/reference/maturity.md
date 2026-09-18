@@ -29,9 +29,7 @@ Experimental features might not yet have been tested with the hardware used in y
 
 ### Planned
 
-Design-approved or intended future functionality that is not available. A Planned page must separate future intent from the working behavior available now. Planned material must not contain runnable steps that imply the future behavior exists.
-
-Keep Planned pages to prose, lists, links, and inline code. Do not use block code, raw HTML, or MDX components on a Planned page; those forms can make intended behavior look like an available procedure and are rejected by the content check.
+Functionality that is not available and has not started active development.
 
 ### Deprecated
 
@@ -45,14 +43,4 @@ Available or experimental functionality that assumes deeper ShowMesh or system k
 
 Ordinary pages do not need a “Standard” badge. Omission means the page is written for its stated audience without an additional complexity warning.
 
-## When labels are required
-
-Procedures, integrations, references, and roadmaps that describe product behavior require maturity. Concepts and landing pages use maturity when the label changes how readers interpret the subject. Governance and timeless contribution policy may omit it when no product capability is being described.
-
-Troubleshooting pages normally inherit the maturity of the capability they diagnose and do not need a separate label unless the diagnostic path itself is experimental or deprecated.
-
-Use `complexity: advanced` only when the warning helps readers decide whether to proceed. Do not use it as a substitute for safety instructions.
-
-## Change a label
-
-Do not promote maturity based on intent or task status. Verify the behavior against the documented code state and record the evidence in the pull request. If only part of a page differs, label that section with a status note rather than weakening the page-level meaning.
+See the [documentation standard](../../contributing/documentation/) for authoring and review rules.

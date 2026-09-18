@@ -36,6 +36,25 @@ const plannedEmbeddedNodeTypes = new Set([
 const contractOpaqueNodeTypes = new Set(['code', 'html', 'mdxFlowExpression', 'mdxTextExpression', 'mdxjsEsm']);
 const contractVisibleMdxNames = new Set(['card', 'cardgrid', 'statusnote']);
 const documentationOrigin = new URL('https://docs.showmesh.invalid/');
+const internalPublicHeadings = [
+	/^platform floor$/,
+	/^boundaries(?: that remain open)?$/,
+	/^what a future installation must verify$/,
+	/^what this .+ does not verify$/,
+	/^what remains outside .+$/,
+	/^known (?:v\d+ )?gap$/,
+	/^current scope$/,
+	/^(?:extension|recovery|ownership) boundary$/,
+	/^available today$/,
+	/^planned (?:developer|reference) material$/,
+];
+const internalPublicPhrases = [
+	/\bcurrent `?main`?\b/i,
+	/\bcaptured development state\b/i,
+	/\bcandidate artifacts?\b/i,
+	/\blocal automated or container evidence\b/i,
+	/\breal-host acceptance\b/i,
+];
 
 const walk = (directory) => readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
 	const path = join(directory, entry.name);
@@ -170,6 +189,14 @@ function validateSource(source, name) {
 	if (/:::.*\[Owner screenshots? needed\]/i.test(prose) || /\bAdd (?:a|two) (?:current |versioned )?.*screenshots? here\b/i.test(prose)) {
 		add('reader-facing owner or screenshot placeholder');
 	}
+	if (!isContributionPolicy) {
+		for (const heading of headings) {
+			if (internalPublicHeadings.some((pattern) => pattern.test(heading))) add(`internal-status heading: ${heading}`);
+		}
+		for (const pattern of internalPublicPhrases) {
+			if (pattern.test(prose)) add(`internal implementation-status prose: ${pattern.source}`);
+		}
+	}
 
 	if (frontmatter.pageType === 'procedure') {
 		if (!hasOrderedList && !headings.some((heading) => /^\d+\./.test(heading))) add('procedures require ordered steps');
@@ -254,6 +281,11 @@ function selfTest() {
 	if (!validateSource(contributionPolicy, 'src/content/docs/reference/self-test.md').some((failure) => failure.includes('reference pages require maturity'))) {
 		throw new Error('Content validator self-test allowed a product reference to omit maturity');
 	}
+
+	const internalStatusHeading = `---\ntitle: Internal\ndescription: Fixture\npageType: concept\n---\n\n## Platform floor\n\nCurrent main supports it.`;
+	const internalStatusFailures = validateSource(internalStatusHeading, 'src/content/docs/example.md');
+	if (!internalStatusFailures.some((failure) => failure.includes('internal-status heading'))) throw new Error('Content validator self-test allowed an internal-status heading');
+	if (!internalStatusFailures.some((failure) => failure.includes('internal implementation-status prose'))) throw new Error('Content validator self-test allowed internal implementation-status prose');
 
 	const plannedUppercaseShell = `---\ntitle: Planned\ndescription: Fixture\npageType: integration\nmaturity: planned\n---\n\n\`\`\`BASH\necho deploy\n\`\`\``;
 	if (!validateSource(plannedUppercaseShell, 'self-test-planned-shell').some((failure) => failure.includes('Planned pages cannot contain'))) {

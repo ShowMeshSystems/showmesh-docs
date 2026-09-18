@@ -93,7 +93,7 @@ showmeshctl run show <run-id>
 
 `run list` returns summaries; `run show` returns step evidence.
 
-## Failure behavior
+## If a run fails
 
 A macro normally continues after failure. `onFailure: abort` or `onUnconfirmed: abort` changes that behavior. `unconfirmable` means the provider has no confirmation mechanism; it is distinct from `unconfirmed`.
 

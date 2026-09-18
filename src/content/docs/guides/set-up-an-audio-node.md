@@ -139,7 +139,7 @@ showmeshctl audio alignment-run stop --node <node-id> --run <run-id>
 
 Run listening, receiver-lock, and long-duration tests on the real interfaces.
 
-## Failure behavior
+## If playback fails
 
 Audio-device loss fails silent. ShowMesh does not choose a standby output or move audio to FPP. Restore the route, clock, channels, assets, and session position before resuming sound.
 

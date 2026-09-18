@@ -1,6 +1,6 @@
 ---
 title: Current runs
-description: Consume ShowMesh's runner-neutral, zero-to-many playback projection correctly.
+description: Keep a client synchronized with zero or more current playback runs.
 pageType: reference
 maturity: experimental-active
 complexity: advanced
@@ -10,7 +10,7 @@ complexity: advanced
 
 Do not reconstruct this view from local Playlist order, raw FPP observations, or an assumed single global playhead.
 
-## Projection responsibilities
+## Fields in a current run
 
 Each run can include:
 
@@ -28,7 +28,7 @@ Each run can include:
 
 The `currentRuns.changed` server-sent event carries a complete replacement frame, not a patch. Replace the collection as one unit. The event has no resumable cursor, so refetch `GET /current-runs` after reconnecting.
 
-## State handling
+## Preserve distinct states
 
 Preserve distinctions among:
 
@@ -42,7 +42,7 @@ Preserve distinctions among:
 
 Do not collapse these states into “offline” or “idle.”
 
-## Consumer sequence
+## Keep a client synchronized
 
 1. Fetch the authenticated snapshot required by your client.
 2. Fetch `/current-runs` for the full playback frame.

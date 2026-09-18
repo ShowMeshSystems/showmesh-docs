@@ -5,9 +5,9 @@ pageType: landing
 maturity: experimental-active
 ---
 
-This section is for software that uses ShowMesh: operator tools, automation clients, integration adapters, and future extensions. If you are changing ShowMesh source, use [Contributing](/contributing/).
+This section is for software that uses ShowMesh: operator tools, automation clients, and integration adapters. If you are changing ShowMesh source, use [Contributing](/contributing/).
 
-## Available today
+## Public interfaces
 
 - A versioned HTTP API under `/api/v1`.
 - A Server-Sent Events stream for live changes.
@@ -17,10 +17,8 @@ This section is for software that uses ShowMesh: operator tools, automation clie
 
 Start with the [API guide](./api/), then read [Events and live state](./events/) before building a stateful client. [Current runs](./current-runs/) defines the playback projection, [Audio clocks and scheduled start](./audio-clocks-and-scheduled-start/) covers multi-node timing, and [Actions and capabilities](./actions-and-capabilities/) separates two vocabularies that are often confused.
 
-## Extension boundary
+## Use the public API
 
 The current public extension surface is the HTTP API. There is no released plugin SDK, provider SDK, or stable in-process extension ABI. Building directly against SQLite, coordinator internals, MQTT topics, or UI implementation details creates coupling outside the public API.
 
-## Planned developer material
-
-Provider authoring, node extension kits, generated client libraries, and a supported SDK belong here once their public APIs exist. See [SDK roadmap](./sdk/).
+ShowMesh does not publish an SDK or in-process plugin interface. Build clients against the [HTTP API](./api/) and [event stream](./events/), and keep them tolerant of additive response fields.

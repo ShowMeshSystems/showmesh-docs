@@ -17,7 +17,7 @@ An **audio node** plays complete assets locally. The coordinator distributes con
 
 Only one node can use `program+ltc`. Program audio can target several nodes; LTC remains single-node.
 
-## Routes and output ownership
+## Choose routes and outputs
 
 An `audio.node` selects:
 

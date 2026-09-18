@@ -1,6 +1,6 @@
 ---
 title: Getting started
-description: Understand ShowMesh, install the current development build, and learn where the usable path ends today.
+description: Understand ShowMesh, install it, and prepare your first show.
 pageType: landing
 maturity: experimental-active
 ---
@@ -12,14 +12,14 @@ Start here in order:
 1. Read [What is ShowMesh?](./what-is-showmesh/) for the problem it solves and the current limits.
 2. Check [Requirements](./requirements/) before changing a show computer.
 3. Follow [Installation](./installation/) to start the coordinator, broker, and Operator UI.
-4. Read [Your first show](./your-first-show/) before authoring show objects. It explains which parts of that workflow are usable and which are not yet a playback pipeline.
-5. Use the [Reference roadmap](/reference/roadmap/) to see current development priorities and remaining release work.
+4. Follow [Your first show](./your-first-show/) to author show objects and check the complete path.
+5. Use the [Roadmap](/reference/roadmap/) to distinguish available, in-development, and upcoming work.
 
 :::caution[Development-state documentation]
-These pages describe the current `main` development state, not a stable release or versioned documentation set. Check the source revision and `showmeshctl version` before following an experimental procedure.
+ShowMesh does not yet publish version-selected documentation. Check `showmeshctl version` before following an experimental procedure.
 :::
 
-## What works now
+## Included in ShowMesh
 
 - A Docker Compose coordinator appliance with Mosquitto and a separate Operator UI.
 - Native node agents that advertise identity, health, and asset inventory over MQTT.
@@ -33,10 +33,8 @@ These pages describe the current `main` development state, not a stable release 
 - Experimental xLights FPP Connect ingestion for node-targeted sequence content.
 - Experimental audio-node and LTC paths with plural Cue/Night targets, shared scheduled starts, `node.clock`, calibrated output latency, and alignment runs.
 
-## What does not work yet
+:::note[Experimental media paths]
+HDMI output and coordinator-to-node fallback execution are not available. FPP Connect, NDI, audio, and LTC are experimental and must be tested on the intended show hardware.
+:::
 
-ShowMesh does not yet provide HDMI output or a publicly supported FPP Connect deployment. Audio/LTC details are documented separately, including the gap between implemented scheduling and installation-specific physical acceptance. Signed fallback programs can be built by the coordinator and fetched, verified, installed, acknowledged, and locally resolved by the FPP plugin; coordinator-to-node activation delivery and real-host acceptance remain incomplete.
-
-## How to read a maturity label
-
-Available features are part of the current development build. Experimental features are still changing or intended for deliberate testing. Planned pages describe work that is not yet available. Experimental features might not yet have been tested with the hardware used in your installation. [Read the complete maturity definitions](/reference/maturity/).
+[Read the maturity definitions](/reference/maturity/) for how experimental and planned work is labelled.

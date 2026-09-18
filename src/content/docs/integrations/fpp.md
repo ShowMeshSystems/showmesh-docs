@@ -42,7 +42,7 @@ These writes require `fpp:command`. ShowMesh sends FPP's own command and waits f
 3. Confirm the configured endpoint URL reaches the expected player.
 4. For playlist operations, confirm the playlist exists and the player state permits the transition.
 
-## Playlist evidence and readiness
+## Check playlist status and readiness
 
 The [FPP Plugin](../fpp-plugin/) posts imported playlist definitions and playlist-entry observations to the coordinator through machine-scoped API routes. ShowMesh only ever reads them back; it does not import a playlist definition on its own. Use these read-only commands to inspect what has been imported and observed:
 
@@ -75,8 +75,12 @@ Transition gain changes the plugin brightness multiplier and does not overwrite 
 
 ## Signed fallback program
 
-The coordinator builds and signs a bounded map from known playlist-entry keys to pre-resolved Cue activations. The plugin can fetch, verify, install, acknowledge, and locally resolve those entries. Coordinator-to-node activation delivery and node execution remain absent, and readiness does not turn package presence into an operational safeguard. See the [FPP Plugin](../fpp-plugin/) boundary.
+The coordinator builds and signs a bounded map from known playlist-entry keys to pre-resolved Cue activations. The plugin can fetch, verify, install, acknowledge, and locally resolve those entries.
 
 ## FPP-host plugin
 
 The experimental [FPP Plugin](../fpp-plugin/) submits ShowMesh macro runs from an FPP host and leaves a host-local status record. It is not a standard installation path, and it does not make ShowMesh the FPP scheduler.
+
+:::note[Fallback execution is incomplete]
+Coordinator-to-node activation delivery and node execution are not available. Read [Experimental FPP plugin](../fpp-plugin/) before testing this path.
+:::

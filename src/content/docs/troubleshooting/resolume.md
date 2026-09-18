@@ -7,7 +7,7 @@ maturity: experimental-active
 
 ShowMesh supports one Resolume instance. Identify whether the failure is reachability, composition identity, action confirmation, Show participation, or recovery before retrying.
 
-## Capture evidence
+## Record current state
 
 ```sh
 showmeshctl resolume instance list

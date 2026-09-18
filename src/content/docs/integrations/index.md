@@ -1,18 +1,16 @@
 ---
 title: Integrations
-description: Connect ShowMesh to the systems it can verify today and identify planned integration work.
+description: Connect ShowMesh to FPP, Resolume Arena, MQTT, NDI, LTC, and xLights.
 pageType: landing
 maturity: experimental-active
 ---
 
-ShowMesh has current development integrations for FPP and Resolume Arena. Some newer paths are experimental; their pages name the relevant limits directly.
+Choose an integration to configure or troubleshoot. Experimental pages show their maturity beside the page title and call out any limitation that changes how you can use them.
 
-- [FPP](./fpp/): REST observation/control, optional MQTT status, playlist evidence/readiness, transition gain, definition republish, and signed fallback boundaries.
-- [Experimental FPP plugin](./fpp-plugin/): FPP-host macro runner, brightness Action, playlist-entry observer, and local signed-program handling with no public real-host acceptance.
+- [FPP](./fpp/): REST observation and control, optional MQTT status, playlist readiness, transition gain, and definition republishing.
+- [Experimental FPP plugin](./fpp-plugin/): FPP-host macro runner, brightness Action, playlist-entry observer, and local signed-program handling.
 - [Resolume Arena](./resolume/): composition import, observation, bounded actions, recovery controls, and Show Mode's effect on the WebSocket connection.
 - [Integration MQTT](./mqtt/): advanced action publishing to explicitly configured external brokers.
-- [xLights FPP Connect](./xlights/): experimental Show-bound sequence ingestion, held media, registration evidence, and channel-range outcomes.
+- [xLights FPP Connect](./xlights/): experimental Show-bound sequence ingestion, held media, registration status, and channel-range outcomes.
 - [SMPTE / LTC](./smpte-ltc/): one-node LTC generation alongside PTP-aware multi-node program-audio scheduling and receiver limits.
 - [NDI](./ndi/): experimental render-node output.
-
-An integration page may describe intended behavior, but only sections explicitly marked as available are runnable.

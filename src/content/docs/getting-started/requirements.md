@@ -1,11 +1,11 @@
 ---
 title: Requirements
-description: What the current source-built ShowMesh stack needs before installation.
+description: System, network, and integration requirements for installing ShowMesh.
 pageType: reference
 maturity: experimental-active
 ---
 
-The current installation is built from source. Use a non-production host or isolated show network first.
+Use an isolated show network while evaluating ShowMesh.
 
 ## Coordinator host
 
@@ -37,12 +37,16 @@ Each native node needs:
 - Network access to the MQTT broker and, for asset downloads and FPP Connect registration, to the coordinator.
 - For NDI output only: the vendor NDI runtime and a separately built gst-plugins-rs `ndisink` element on `GST_PLUGIN_PATH`. ShowMesh does not build or ship either.
 
-Hardware and integration acceptance is installation-specific. The repository supplies native `amd64` and `arm64` packaging and software tests, but a successful build is not proof that a particular board, audio interface, PTP clock, NDI stack, or receiver is supported. See [Install a native node](../../guides/add-a-node/) for the procedure.
+:::caution[Test media hardware before show use]
+The repository supplies native `amd64` and `arm64` packages, but you must test the selected board, audio interface, PTP clock, NDI stack, and receiver together before using them in a show.
+:::
 
-## Supported integrations in this snapshot
+See [Install a native node](../../guides/add-a-node/) for the installation procedure.
+
+## Supported integrations
 
 - FPP is implemented through REST polling/control and optional MQTT status collection.
 - Resolume Arena is implemented through its REST API and WebSocket update stream, with polling fallback.
-- The render-node/NDI path is on current `main` but experimental. It requires a user-installed NDI runtime and a source-built GStreamer NDI element.
+- The experimental render-node/NDI path requires a user-installed NDI runtime and a source-built GStreamer NDI element.
 - Audio playback and LTC generation have experimental software paths.
 - xLights/FPP Connect ingestion is experimental. HDMI has no runtime output path.

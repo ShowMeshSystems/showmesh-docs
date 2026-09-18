@@ -36,7 +36,7 @@ Inspect the node's reported channel-range result:
 showmeshctl fppconnect status <node-id>
 ```
 
-An explicit dropped range names why the node could not use it. An empty result can mean no surface is configured. Do not substitute a channel range manually from memory; correct the surface or source configuration, then recheck. This experimental path is not yet a supported production deployment workflow.
+An explicit dropped range names why the node could not use it. An empty result can mean no surface is configured. Do not substitute a channel range manually from memory; correct the surface or source configuration, then recheck. Test the complete upload and registration workflow before show use.
 
 ## Symptom: the experimental FPP plugin did not run a macro
 
@@ -48,7 +48,7 @@ showmesh-fpp-plugin status
 
 `refused` means the plugin credential was rejected; `rejected` means the coordinator declined the requested macro; `unreachable` means the coordinator could not be reached or returned a server error; and `local_error` means the host could not validate its own credential, configuration, or arguments. The command reads the host-local record and does not need a working coordinator connection.
 
-The plugin is not a supported production installation path. Do not attempt a broad FPP restart as a substitute for diagnosing its local status and credential boundary.
+The plugin is experimental. Do not restart FPP as a substitute for checking its local status and credential.
 
 ## Symptom: a Playlist reports not ready
 
@@ -79,7 +79,7 @@ Fix the named cause, then rerun `fpp playlist-readiness` and confirm it reports 
 
 ## Symptom: the fallback program is missing, stale, or mismatched
 
-The coordinator builds and signs fallback programs. The separate plugin can fetch, verify, install, acknowledge, and locally resolve program entries. Coordinator-to-node activation delivery and node execution are not implemented, and real-host/public-package acceptance remains unverified. Inspect the coordinator's record directly:
+The coordinator builds and signs fallback programs. The separate plugin can fetch, verify, install, acknowledge, and locally resolve program entries. Inspect the coordinator's record directly:
 
 ```sh
 curl -fsS -H "Authorization: Bearer <token>" \
@@ -90,4 +90,6 @@ curl -fsS -H "Authorization: Bearer <token>" \
 
 The list endpoint returns metadata only, never the signed payload. The per-instance endpoint returns the full signed program the coordinator most recently published for that FPP instance, plus `acknowledgedStatus` (`fallback-program-current`, `fallback-program-stale`, `fallback-program-rejected`, or `fallback-program-unacknowledged`) and, when set, the `acknowledgedPackageId` and `acknowledgedAt` a host last reported back through `POST /api/v1/fallback-programs/{fppInstanceId}/acknowledge`. `published: false` with no `program` or `signatureBase64` means this coordinator has never successfully compiled and published a program for this host at all. Publication itself runs as a background reconciliation loop on the coordinator; these endpoints only read what that loop has already written.
 
-Do not assume a real FPP host is executing activations merely because it acknowledged a package. Local program handling, delivery to an executing node, and observed show output are separate evidence layers.
+:::note[Fallback execution is incomplete]
+Acknowledging a package does not execute its activations. Coordinator-to-node delivery and node execution are not available.
+:::

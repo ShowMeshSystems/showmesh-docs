@@ -24,13 +24,13 @@ showmeshctl show mode revisions
 
 A write is a full replacement, validated before it is accepted: an invalid value is rejected and appends no revision. A successful write applies without a coordinator restart, in both directions.
 
-## What reads the mode today
+## How Show Mode changes behavior
 
 The Resolume WebSocket wake-up channel is held open in `program` and closed in `show`, switching without a coordinator restart in either direction. Cue activation also reads the mode: in `show` mode, the coordinator pins the authorizing Show, Generation, and catalog/cue revisions together at the moment Show Mode begins authorizing that Show, so a mid-show edit to a Cue stays staged rather than reaching any node until the show restarts. `program` mode keeps resolving Cues live.
 
 Renderer nodes also use the delivered mode when frame extraction fails. In `program`, the node replaces the failed frame with an output alert field for diagnosis. In `show`, it replaces the failed frame with black instead. A node that has never been told the mode reads it as `unknown`, which takes the same conservative black-output path as `show`.
 
-## What it never does
+## Controls Show Mode does not affect
 
 - It never gates who may act; it changes what the system does, not who is authorized to do it. Authorization stays a separate scope check.
 - It never refuses, delays, or degrades blackout, stop, or power-off. [Emergency stop](../emergency-stop/) is accepted in either mode.

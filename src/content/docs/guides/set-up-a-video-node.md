@@ -12,7 +12,7 @@ This guide gets one experimental render node from a node-local FSEQ file to an N
 A render node listens for FPP MultiSync on UDP `32320`; it must not share that port with `fppd`.
 :::
 
-## 1. Confirm the deployment profile
+## 1. Confirm system requirements
 
 The documented transport profile is a native node on Debian 13 amd64, one active surface, 40 fps, and NDI. HDMI output is not available.
 
@@ -22,7 +22,7 @@ Install the node first with [Install a native node](../add-a-node/). Give it loc
 
 Install the NDI runtime from its vendor source on the render node. ShowMesh loads that runtime dynamically; it does not package or redistribute it.
 
-Debian 13 does not package GStreamer's `ndisink` element. The working bench path builds it from `gst-plugins-rs`, but the exact source revision and build commands have not yet been captured in a reproducible public recipe. Use a known-good local build and record its version, plugin path, and runtime version before depending on it. Once built, point `GST_PLUGIN_PATH` at the directory containing the compiled plugin in the node's `agent.env`, so GStreamer's registry can find it.
+Debian 13 does not package GStreamer's `ndisink` element. Build it from `gst-plugins-rs` using a tested local recipe, and record its version, plugin path, and runtime version. Point `GST_PLUGIN_PATH` at the directory containing the compiled plugin in the node's `agent.env`, so GStreamer's registry can find it.
 
 First check that GStreamer sees the element:
 
@@ -143,11 +143,10 @@ In Resolume, select the exact NDI source name configured on the surface and rout
 
 Use a dedicated bench FPP or containerized bench `fppd` to play a real sequence. Watch a sharp event, such as a blackout or color snap, on the physical lights and the projected surface at the same time. A screen recording reviewed later is not a substitute for a live timing observation.
 
-Record the render host, NDI runtime/plugin versions, FPP and Arena versions, canvas geometry, achieved frame rate, late/dropped frames, CPU utilization, run length, and the direct visual result. Current evidence does not yet establish:
+Record the render host, NDI runtime/plugin versions, FPP and Arena versions, canvas geometry, achieved frame rate, late/dropped frames, CPU utilization, run length, and the direct visual result.
 
-- real FSEQ-to-wall timing against physical lights;
-- frame pacing at the intended canvas dimensions;
-- behavior after FPP, sender, or receiver restart;
-- arm64 or Ubuntu support.
+:::caution[Test the complete video path]
+Before show use, test FSEQ-to-wall timing, full-size frame pacing, and recovery after restarting FPP, the sender, and the receiver on the target hardware. This guide covers Debian 13 amd64; other platforms are unsupported.
+:::
 
-For the transport boundary and failure interpretation, see [NDI](../../integrations/ndi/). For the receiver, composition, and recovery boundary, see [Resolume Arena](../../integrations/resolume/).
+For transport failures, see [NDI](../../integrations/ndi/). For receiver configuration and recovery, see [Resolume Arena](../../integrations/resolume/).

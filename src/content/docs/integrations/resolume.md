@@ -69,7 +69,7 @@ For a ShowMesh render node, configure the NDI source and mapping in Arena after 
 
 Use [Set up a video node](../../guides/set-up-a-video-node/) for the sender side. Configure LTC separately from the NDI source and mapping; see [SMPTE / LTC](../smpte-ltc/) for timecode behavior.
 
-## Recovery boundary
+## Recover Arena after a restart
 
 ShowMesh can record known Arena state and offer manual or opt-in automatic recovery after a detected restart. Test recovery with the intended composition on a non-show machine first.
 

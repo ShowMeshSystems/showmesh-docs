@@ -13,12 +13,12 @@ Use `procedure` when the reader follows steps to reach an operational outcome.
 Include:
 
 - The outcome and supported scope.
-- Prerequisites, permissions, and safety boundaries.
+- Prerequisites, permissions, and safety requirements.
 - Ordered actions for the common path.
 - Expected observations at consequential steps.
 - An end-to-end success check.
 - Likely failures and immediate remedies.
-- A rollback, stop, or recovery boundary when the task changes durable or show-visible state.
+- A rollback, stop, or recovery path when the task changes durable or show-visible state.
 
 Put explanation after the working path unless readers need it to make a safe choice.
 
@@ -41,7 +41,7 @@ Use `integration` for a supported or intended connection between ShowMesh and an
 
 Include:
 
-- Supported maturity, versions, or platform boundaries that affect use.
+- Supported maturity, versions, or platforms that affect use.
 - Which system owns configuration, identity, playback, and recovery.
 - Network, authentication, and safety prerequisites.
 - The configuration path.
@@ -49,7 +49,7 @@ Include:
 - Recovery behavior and manual fallback.
 - Unsupported behavior and compatibility limits.
 
-A Planned integration documents its boundary and present alternative. It does not provide runnable steps for the future implementation.
+A Planned integration names the available alternative. It does not provide runnable steps for the future implementation.
 
 ## Concept
 
@@ -59,7 +59,7 @@ Include:
 
 - The question or model the page explains.
 - The current mental model and its important invariants.
-- The boundary between implemented behavior and future intent.
+- The behavior readers can use and the limits that affect it.
 - A concrete example when it clarifies the model.
 - Links to the procedures and references readers need next.
 
@@ -77,10 +77,10 @@ Prefer generated or linked normative material over a copied inventory that can s
 
 Use `landing` to orient an audience and route it to more specific pages.
 
-State who the section serves, what is usable now, where to start, and where known boundaries lie. A landing page is not a link dump and must not be a bare placeholder.
+State who the section serves, what they can do, and where to start. A landing page is not a status report, link dump, or bare placeholder.
 
 ## Roadmap
 
 Use `roadmap` for a present-versus-future capability view.
 
-Separate what works, what is experimental, and what is planned. Never turn planned architecture into runnable instructions. Link readers back to the available path.
+Separate **Available now**, **In development**, and **Up next**. Keep internal issue status, acceptance checklists, and implementation history out of the public roadmap. Never turn planned architecture into runnable instructions. Link readers back to the available path.

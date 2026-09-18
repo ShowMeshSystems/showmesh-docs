@@ -27,7 +27,7 @@ Every public route belongs to one of these groups:
 | Identity and audit | Session, bootstrap, audit records, principals, roles, enable/disable, passwords, and API tokens. |
 | Runs and bindings | Action binding checks (`/actions/{id}/binding`, `/actions/bindings`), action invocation (`/actions/{id}/invocations`), and macro-run submission, listing, and detail. |
 
-The OpenAPI document is the exact inventory of methods, request bodies, responses, and required scopes. This table was checked against every route group in the current OpenAPI file.
+The OpenAPI document is the exact inventory of methods, request bodies, responses, and required scopes.
 
 ## Roles and scopes
 

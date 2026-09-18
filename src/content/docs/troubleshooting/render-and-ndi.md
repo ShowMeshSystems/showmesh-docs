@@ -7,7 +7,11 @@ maturity: experimental-testing
 
 Check the declared surface, local pipeline, and receiver separately, in that order.
 
-## Capture evidence
+:::note[Experimental output path]
+NDI is the supported render transport for this path. HDMI output is not available.
+:::
+
+## Record current state
 
 ```sh
 showmeshctl node <node-id>
@@ -49,5 +53,3 @@ Each command requires `render:command`. Confirm its result through fresh render 
 ## Symptom: receiver or projector remains blank
 
 A `PLAYING` sender proves only the local pipeline state. Check the NDI receiver, network, projector, and wall directly.
-
-HDMI output is not a supported render transport in the current runtime.

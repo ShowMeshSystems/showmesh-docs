@@ -29,6 +29,8 @@ Use the [documentation issue form](https://github.com/ShowMeshSystems/showmesh-d
 
 Pages live in `src/content/docs`. The sidebar is intentionally limited to eight top-level sections. Use Starlight components for standard notes, cautions, cards, and tabs.
 
+Put an unsupported or unverified condition in one short note or caution only when it affects a reader's action, safety, or recovery. Do not publish implementation history, verification ledgers, acceptance backlogs, or headings such as “Boundaries that remain open” and “What a future installation must verify.”
+
 MDX pages can import the maturity components:
 
 ```mdx

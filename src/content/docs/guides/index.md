@@ -1,11 +1,11 @@
 ---
 title: Guides
-description: Task-focused paths for common ShowMesh operations in the current development build.
+description: Task-focused paths for common ShowMesh operations.
 pageType: landing
 maturity: experimental-testing
 ---
 
-These guides begin with the result an operator needs and stop at the boundary the current implementation can verify.
+Choose the guide for the task you need to complete.
 
 - [Check show health](./check-show-health/): prioritize missing and stale evidence before making changes.
 - [Author a Show](./author-a-show/): create a Show, select participating instances, and build playlists, Cues, assets, automation, and a Night Session.

@@ -6,7 +6,7 @@ maturity: experimental-testing
 ---
 
 :::caution[Physical timecode behavior is unverified]
-Current source has audio-node LTC configuration and an LTC-generation path. It does not prove a physical route, a receiving-device lock, signal-loss behavior, or a supported production timing workflow.
+Test the configured frame rate, offset, channel separation, receiver lock, signal-loss behavior, long-run drift, and recovery on the equipment used for the show.
 :::
 
 ## Configure the output
@@ -37,11 +37,3 @@ Program audio can target several nodes. The coordinator selects a clock holder, 
 ## Rate and receiver limits
 
 All supported rates are non-drop-frame, including `29.97`. A receiver that expects drop-frame timecode at `29.97` can drift during a long session. Choose a rate that every receiving device supports and verify that choice on the receiving device.
-
-## What a future installation must verify
-
-Before treating this path as operational, verify frame rate and offset, channel separation, PTP lock and holdover, output-latency calibration, scheduled multi-node starts, receiver lock, signal loss, long-run drift, and recovery on the intended equipment. Until then, a successful configuration write or node observation is not a timing acceptance result.
-
-AES67 is the accepted target for primary program transport in a later architecture stage. The current runtime plays node-local files; do not document AES67 as the active program path.
-
-Use this material as an implementation boundary, not an installation recipe. A future operating guide needs real-host acceptance evidence before it can prescribe cabling or show-time recovery.

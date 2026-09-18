@@ -21,7 +21,7 @@ curl -s http://localhost:8080/version
 
 FPP or Resolume being down does not make `/readyz` fail. Inspect those resources separately.
 
-## Capture state and history
+## Record state and history
 
 ```sh
 showmeshctl version

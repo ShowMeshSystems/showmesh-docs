@@ -1,6 +1,6 @@
 ---
 title: What is ShowMesh?
-description: A human-first introduction to ShowMesh and the boundary of the current development build.
+description: A human-first introduction to ShowMesh and where it fits in a show system.
 pageType: concept
 maturity: experimental-active
 ---
@@ -15,13 +15,13 @@ The current system has three main pieces:
 
 ShowMesh separates **desired state** from **observed state**. A command being accepted is not automatically success. FPP and Resolume control paths wait for follow-up evidence and can report that the outcome was not confirmed.
 
-## Current maturity
-
-This is an active development build, not a released appliance. Its strongest usable path is observation and bounded control of existing FPP and Resolume systems. Show authoring, actions, macros, asset synchronization, an installation-wide operating mode, emergency stop, Show Night session lifecycle, and an experimental FSEQ-to-NDI render path are implemented.
-
-## What ShowMesh is not
+## Where ShowMesh fits
 
 - It is not a replacement scheduler for FPP.
 - It is not a video or pixel renderer for every output transport. The experimental NDI path is documented separately; HDMI has no runtime output path.
 - It does not make an offline node equivalent to a stopped show. A lost management connection is evidence about the control plane, not proof that local playback stopped.
 - It is not a TLS terminator. Keep it on a trusted show network or place your own TLS reverse proxy in front of the Operator UI.
+
+:::note[Development status]
+ShowMesh is under active development. FPP and Resolume observation and control, show authoring, assets, actions, macros, Show Mode, Emergency Stop, and Show Night are implemented. Media-node paths remain experimental.
+:::

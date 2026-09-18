@@ -19,6 +19,14 @@ Use the [Google Developer Documentation Style Guide](https://developers.google.c
 
 Do not optimize for word count. A short page that omits recovery is incomplete; a long page that repeats implementation history is still unclear.
 
+## Keep limitations concise
+
+State a limitation only when it changes what the reader can do, how safely they can proceed, or how they recover. Put confirmed unsupported or unverified behavior in one short `note` or `caution` callout near the top or bottom of the page.
+
+Do not publish standalone sections such as “Boundaries,” “What remains open,” “What a future installation must verify,” “Known gap,” or “What this does not verify.” Do not turn build history, test provenance, acceptance backlogs, source revisions, or release-process status into reader-facing prose.
+
+Use ordinary headings that name the reader's task or subject. Write “System requirements,” not “Platform floor”; “Recover Arena after a restart,” not “Recovery boundary.”
+
 ## Address the reader and name the actor
 
 Use second person for the reader and imperative voice for instructions:
@@ -65,7 +73,7 @@ Keep commands beside the explanation they support. Do not present a large comman
 - Explain when a secret can appear in shell history, process listings, logs, or generated files.
 - Distinguish a successful request from a confirmed device effect.
 
-Use caution callouts for risks readers must evaluate before proceeding. Do not use callouts merely to decorate ordinary information.
+Use caution callouts for risks readers must evaluate before proceeding. Use note callouts for a non-dangerous availability or verification limit. Do not use callouts merely to decorate ordinary information, and do not repeat a callout's limitation in a later section.
 
 ## Write accessible pages
 

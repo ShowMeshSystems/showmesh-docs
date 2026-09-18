@@ -37,11 +37,11 @@ This page lists the supported runtime entry points. Take secrets from the deploy
 - `SHOWMESH_INTEGRATION_BROKERS`: named brokers used by configured integration actions.
 - `SHOWMESH_RESOLUME_URL`, `SHOWMESH_RESOLUME_ID`: legacy/startup Resolume instance; the default ID is `resolume` when an instance URL is present. This pair blocks store-backed edits until its migration is deliberately resolved.
 - `SHOWMESH_RESOLUME_POLL_INTERVAL`, `SHOWMESH_RESOLUME_WEBSOCKET_DISABLED`: Resolume collection tuning.
-- `SHOWMESH_RESOLUME_RECOVERY_SETTLE`: recovery settle delay, default `8s`, maximum `60s`. The default is a ShowMesh hypothesis, not a measured production value.
+- `SHOWMESH_RESOLUME_RECOVERY_SETTLE`: recovery settle delay, default `8s`, maximum `60s`. Increase it if Arena needs longer to become usable after restart.
 
 ## Revisioned media configuration
 
-Some newer media settings are revisioned API configuration, not environment variables. Use the API or `showmeshctl` to inspect the exact schema in the binary you run:
+These media settings are revisioned API configuration, not environment variables. Use the API or `showmeshctl` to inspect the schema for the installed version:
 
 - `fppconnect.settings`: enablement and storage limits for experimental node-side FPP Connect ingestion.
 - `render.settings`: render-node defaults and limits.
@@ -66,7 +66,7 @@ The four `SHOWMESH_ASSET_*` settings in this section migrate as one group into r
 
 ## Native agent
 
-The agent has no config file and no command-line flags: every setting is an environment variable, read once at process start (`internal/agent/config/config.go`).
+The agent has no config file and no command-line flags. It reads every setting from the environment when the process starts.
 
 | Variable | Default | Purpose |
 |---|---|---|
@@ -98,13 +98,10 @@ These variables draw a moving diagnostic bar on a named surface as soon as the a
 
 ### GStreamer and tooling overrides
 
-Only needed on the `build-agent-native` (cgo) build, and only when the binary is not on `PATH` under its normal name or a test needs to substitute a non-hardware sink:
+These variables are needed only on the `build-agent-native` build when a binary is not on `PATH` under its normal name:
 
 - `SHOWMESH_GST_LAUNCH`, `SHOWMESH_GST_DISCOVERER`: override the resolved `gst-launch-1.0`/`gst-discoverer-1.0` paths.
 - `GST_PLUGIN_PATH`: only needed on a render node that also needs the NDI output element (`ndisink`), which this project does not build or ship; set it to the directory holding a separately built `libgstndi.so`.
-- `SHOWMESH_GST_AUDIO_SINK_FACTORY`: substitutes a non-hardware GStreamer sink factory (for example `fakesink`) for the production `alsasink`. Test and bench use only; setting this on a real node makes it report audio success without opening a real device.
-
-`SHOWMESH_HW_ALSA_DEVICE`, `SHOWMESH_HW_CHANNELS`, and `SHOWMESH_HW_RATE` are not agent configuration. They gate one manual, opt-in Go test (`go test -tags showmesh_hwdevice`) that opens a real ALSA device and are not read by the agent binary itself.
 
 ## CLI
 

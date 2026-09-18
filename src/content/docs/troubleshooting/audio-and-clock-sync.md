@@ -8,7 +8,7 @@ complexity: advanced
 
 First identify whether the problem is the asset, output route, clock, scheduled start, alignment, or physical receiver. Command acceptance does not prove audible or synchronized output.
 
-## Capture evidence
+## Record current state
 
 ```sh
 showmeshctl node <node-id>
@@ -59,6 +59,6 @@ Recalibrate after changing the device, sample rate, PipeWire quantum, buffer con
 
 Start an alignment run and compare it with the warning threshold. Separate PTP lock loss, a stable output-latency offset, and receiver behavior. Rerun the measurement after clock or routing changes.
 
-## What remains outside ShowMesh evidence
+## Check external audio hardware
 
 ShowMesh reports routes, scheduling, clocks, engine state, and measured alignment. Check amplifiers, cables, speakers, and external LTC receivers directly.

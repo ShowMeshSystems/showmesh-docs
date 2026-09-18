@@ -34,11 +34,11 @@ A `show.action` declares an `idempotent` field: `true` or `false` when the autho
 
 Invoking a stored action outside a macro run (`POST /api/v1/actions/{id}/invocations`, or `showmeshctl action invoke <id>`) requires the `show:action:invoke` scope. `showmeshctl action check [<id>] [--show <id>]` re-resolves one action's or every action's stored target against current integration state without dispatching anything; it needs no credential and exits `29` if any checked binding is broken. A binding whose target cannot be evaluated reports "unknown" and never causes that exit code.
 
-## Outcome model
+## Interpret action results
 
 Dispatch and confirmation are distinct. An action can be confirmed, unconfirmed, unconfirmable, refused, or failed depending on the adapter and available evidence. A client must preserve those distinctions; “the HTTP request returned” is not an action-success signal.
 
-## Integration guidance
+## Build reliable integrations
 
 - Prefer a logical action and a typed binding over embedding raw MQTT topics, REST paths, or device commands in macros.
 - Use idempotency keys as the API requires. Reusing one for a different target or payload causes a conflict.

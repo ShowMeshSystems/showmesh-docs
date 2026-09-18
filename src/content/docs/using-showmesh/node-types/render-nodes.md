@@ -10,7 +10,9 @@ A **render node** turns lighting-sequence data into a video surface. It holds it
 
 The initial path uses NDI to deliver that video to Resolume. Resolume remains responsible for projection composition and mapping after the source arrives; the render node does not launch clips, select decks, or control the projection layout.
 
-Treat the render path as experimental. The current runtime supports one active surface per node and NDI output; HDMI output is not available.
+:::caution[Experimental output path]
+The renderer supports one active NDI surface per node. HDMI output is not available.
+:::
 
 ## What the render node does
 
@@ -51,25 +53,24 @@ A [Cue catalog](../../cues/#cue-catalog) deploy that leaves a surface's resolved
 
 Set `SHOWMESH_RENDER_DIAGNOSTIC_SURFACE` (plus `SHOWMESH_RENDER_DIAGNOSTIC_WIDTH`, `_HEIGHT`, `_FRAME_RATE`, and `_NDI_SOURCE_NAME`) on the agent to run a node-local diagnostic idle surface, independent of any coordinator-assigned surface. It is for confirming a node's own transport path works before wiring it into a show.
 
-## Current scope
+## Supported configuration
 
-The implementation in current `main` includes:
+Render nodes support:
 
 - FSEQ parsing and bounded channel extraction;
-- one or more configured surface assignments at the protocol and schema level;
+- one active surface assignment per node;
 - GStreamer pipeline construction, supervision, restart, and diagnostic test patterns;
 - NDI transport probing and availability evidence;
 - surface apply, clear, pipeline restart, and transport probe operations;
 - coordinator, CLI, API, and Operator UI surfaces for renderer configuration and evidence.
 
-The first deployment profile concentrates on Linux/x86 hardware, one active surface per node, 40 fps, and NDI. The broader schema does not permanently encode the one-surface limit.
+The supported deployment profile uses Linux, 40 fps, and NDI.
 
-## Boundaries
+## How render nodes fit into a show
 
 - Render nodes do not run `fppd`; they listen for MultiSync as remotes.
 - A render node publishes a video source for Resolume. Resolume control belongs to the separate integration.
 - NDI support is dynamically detected. A missing runtime must degrade the render capability without preventing the rest of the agent from starting.
-- HDMI remains represented by the surface model but is not part of the current operating profile.
 - FPP Connect ingestion is experimental; manual targeted asset upload remains a valid fallback.
 
 For the operator procedure, including NDI runtime checks and surface authoring, see [Set up a video node](../../../guides/set-up-a-video-node/).

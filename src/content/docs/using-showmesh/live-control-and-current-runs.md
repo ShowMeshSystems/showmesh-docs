@@ -13,7 +13,7 @@ Each run identifies its runner, Show and generation, current item, freshness, an
 
 Treat stale, unavailable, unobserved, failed, and disconnected as different conditions. After reconnecting, the page fetches a fresh full frame.
 
-## FPP and audio authority
+## Who controls playback
 
 FPP remains the schedule and playhead authority for FPP-backed playback. ShowMesh reports observed position rather than inferring it from configured order.
 

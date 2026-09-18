@@ -43,7 +43,7 @@ showmeshctl media-playlist delete --confirm <playlist-id>
 
 Assets must belong to the same Show. The Night Session supplies the target audio nodes.
 
-## FPP definition and observation evidence
+## Check the FPP playlist definition
 
 An FPP Playlist binds to an imported definition. Inspect or republish it with:
 
@@ -74,6 +74,6 @@ Readiness checks:
 
 Multi-node audio clock or alignment concerns can produce readiness warnings. A warning remains visible and must not be rewritten as confirmed alignment.
 
-## Ownership boundary
+## Who controls scheduling
 
 A Playlist defines content order, not a calendar. FPP remains the schedule and playhead authority for FPP playback; [Show Night](../show-night/) manages the operating lifecycle.

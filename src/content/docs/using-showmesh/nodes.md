@@ -25,9 +25,9 @@ ShowMesh does not assign each node one fixed class. Nodes advertise versioned ca
 - [Render nodes](../node-types/render-nodes/), which turn node-local FSEQ data into a video surface. This role is experimental.
 - [Audio nodes](../node-types/audio-nodes/), which have experimental local-audio, mixing, and LTC software paths.
 
-See [Node types](../node-types/) for the shared agent foundation, why roles can eventually compose on one machine, and which ShowMesh components are not nodes.
+See [Node types](../node-types/) for the shared agent foundation and the ShowMesh components that are not nodes.
 
-## What a node does today
+## What the agent does
 
 The bundled agent publishes a retained hello record, ongoing health, last-will state, command results, and asset inventory through MQTT. It can receive asset-fetch commands, download content from the coordinator, verify its SHA-256 hash, store it in the configured asset directory, and publish the updated inventory.
 

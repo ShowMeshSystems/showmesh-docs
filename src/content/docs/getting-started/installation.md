@@ -1,14 +1,16 @@
 ---
 title: Install the coordinator
-description: Build and start the current coordinator appliance, establish an administrator, and protect its state.
+description: Build and start the coordinator, establish an administrator, and protect its state.
 pageType: procedure
 maturity: experimental-active
 complexity: advanced
 ---
 
-This is the supported installation path for the current pre-release. It starts three services on one host: the coordinator, an authenticated Mosquitto broker, and the Operator UI. Native nodes run elsewhere; add them only after this host is healthy.
+This procedure builds the pre-release from a reviewed source revision and starts three services on one host: the coordinator, an authenticated Mosquitto broker, and the Operator UI. Native nodes run elsewhere; add them only after this host is healthy.
 
-When the selected tag has published artifacts, the primary path pulls coordinator and Operator UI images at that pinned version. Source includes the release workflow, but that does not prove a particular tag or image is publicly available. Check the registry and release page before choosing this path. Building from source remains the reproducible fallback and the contribution path.
+:::note[Published releases]
+When a tagged release provides coordinator and Operator UI images, follow that release's instructions and verify its digests. Until then, use the source-build path below.
+:::
 
 :::caution[Start on an isolated show-management network]
 The default bundle publishes MQTT on `1883`, the coordinator API on `8080`, and the Operator UI on `8081`. The read API is open to every machine that can reach it, and ShowMesh does not terminate TLS. Do not expose this default stack directly to the public internet.
@@ -26,18 +28,16 @@ The coordinator must reach configured FPP and Resolume hosts. Each native node m
 
 ## 2. Obtain the deployment bundle and verify Docker
 
-Install Git, Docker Engine or Docker Desktop, and the Docker Compose v2 plugin. The `deploy/` directory (the Compose files, the Mosquitto configuration, and `generate-credentials.sh`) lives in the ShowMesh repository, so the deployment bundle and the source are the same clone. Check out the release tag you intend to run:
+Install Git, Docker Engine or Docker Desktop, and the Docker Compose v2 plugin. The `deploy/` directory (the Compose files, the Mosquitto configuration, and `generate-credentials.sh`) lives in the ShowMesh repository, so the deployment bundle and the source are the same clone. Check out the reviewed revision you intend to run:
 
 ```sh
 git clone https://github.com/ShowMeshSystems/showmesh.git
 cd showmesh
-git checkout v<release-version>
+git checkout <reviewed-ref>
 docker compose version
 ```
 
-`v<release-version>` is the pushed release tag, for example `v0.1.0`. Confirm that the exact tag produced the images or packages you intend to install, then verify their digests. See [Release artifacts](../../reference/release-artifacts/) for the artifact matrix and [Requirements](../requirements/) for platform boundaries.
-
-Building the coordinator and UI locally instead of pulling published images remains supported, for example when contributing to ShowMesh itself: skip step 4's `docker-compose.published.yml` override and run `make -C .. deploy-up` alone, which builds both images from this checkout before starting them.
+Use a commit or tag that you have reviewed. See [Requirements](../requirements/) before continuing.
 
 ## 3. Create installation-specific broker credentials
 
@@ -55,16 +55,16 @@ Do not create broker users by hand in the repository. Use the bundled scripts so
 
 ## 4. Start and verify the stack
 
-Run the bundle from the published images, at the release version you checked out (without the leading `v`, for example `0.1.0`):
+Build and start the bundle from the selected source revision:
 
 ```sh
-make -C .. deploy-up-published SHOWMESH_RELEASE_VERSION=<release-version>
+make -C .. deploy-up
 docker compose ps
 curl -fsS http://localhost:8080/healthz
 curl -fsS http://localhost:8080/readyz
 ```
 
-`make -C .. deploy-up-published` adds `docker-compose.published.yml` as a Compose override, which replaces the coordinator and Operator UI `build:` blocks with `image:` references pinned to `SHOWMESH_RELEASE_VERSION` and pulls them from GHCR instead of building. `SHOWMESH_RELEASE_VERSION` must be passed on the `make` command line as shown; setting it only in `deploy/.env` is read by a direct `docker compose` invocation but not by this `make` target's own precondition check, and the command exits with an error naming the variable before it reaches Compose. To build from source instead, run `make -C .. deploy-up` in place of the command above. Bypassing both and running `docker compose up -d --build` directly refuses to start: `deploy/docker-compose.yml` requires `VERSION`, `COMMIT`, and `BUILD_DATE` build arguments and names the `make` targets in its error rather than falling back to placeholder values.
+Use the Make target rather than running `docker compose up -d --build` directly. The target supplies the version, commit, and build-date values required by the Compose build.
 
 Open `http://<coordinator-host>:8081` from the trusted management network. The expected first result is:
 
@@ -176,7 +176,7 @@ Remove a migrated group only after the coordinator reports that its environment 
 If startup refuses because the environment and store configurations **disagree**, do not delete the variable merely to make startup succeed. Compare both configurations and deliberately choose the authority. To retain the environment change, record it, intentionally switch to the store-backed configuration, and then apply the recorded value through the Operator UI or CLI. To retain the store value, confirm it is correct before removing the matching legacy group. Restart once after a deliberate removal.
 :::
 
-## Secure the operating boundary
+## Secure the installation
 
 The recommended initial boundary is a trusted show-management VLAN. If operators need HTTPS from another network, put an operator-managed TLS reverse proxy in front of the Operator UI and API; the Compose bundle does not provide one. Set `SHOWMESH_API_SECURE_COOKIE=true` when that proxy terminates TLS.
 

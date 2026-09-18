@@ -11,7 +11,7 @@ Use this order when you need visibility before making a change.
 
 Have the coordinator address and a configured `showmeshctl` client available. These checks are read-only; preserve their output before restarting services or changing configuration.
 
-## 1. Confirm the management plane
+## 1. Check coordinator health
 
 ```sh
 curl -fsS http://<coordinator-host>:8080/healthz
@@ -20,7 +20,7 @@ showmeshctl snapshot --server http://<coordinator-host>:8080
 
 If health fails, check the coordinator container/process. Do not infer that local FPP or Resolume playback stopped.
 
-## 2. Find missing or stale evidence
+## 2. Find missing or stale status
 
 In the Operator UI, open the dashboard, then the Nodes, FPP, and Resolume pages. Prioritize collection failures and stale/unknown-age observations over cosmetic configuration differences.
 

@@ -1,6 +1,6 @@
 ---
 title: Roadmap
-description: See the current development priorities and the work still ahead.
+description: See what ShowMesh supports, what is in active development, and what is up next.
 pageType: roadmap
 maturity: experimental-active
 ---
@@ -9,7 +9,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 import StatusBadge from '../../../components/StatusBadge.astro';
 import StatusNote from '../../../components/StatusNote.astro';
 
-ShowMesh is being built so a show can keep running when a control-plane component, UI, integration, or media path has trouble. This page separates usable development features from work that is still in progress.
+ShowMesh is being built so a show can keep running when a coordinator, UI, integration, or media path has trouble. This page separates usable features, active development, and work planned next.
 
 For the meaning of Available, Experimental, and Planned labels, see [Maturity and complexity](../maturity/).
 
@@ -26,7 +26,7 @@ flowchart LR
   C --> D[Public release]
 ```
 
-## What is usable in the current development build
+## Available now
 
 <CardGrid>
   <Card title="Coordinator and operator controls" icon="rocket">
@@ -44,9 +44,14 @@ flowchart LR
   <Card title="Node installer" icon="setting">
     A scripted native-node install for a Debian 13 host, including systemd unit installation and preflight checks. [Install a native node →](/guides/add-a-node/)
   </Card>
+  <Card title="Show authoring and operation" icon="open-book">
+    Shows, Cues, Playlists, media playlists, assets, actions, macros, current runs, readiness checks, and the Show Night lifecycle are available through the API, CLI, and Operator UI. [Build a show →](/guides/author-a-show/)
+  </Card>
 </CardGrid>
 
-## What is next
+## In development
+
+These paths work in the documented build and are being extended or hardened. Their interfaces and operating requirements can still change.
 
 <CardGrid>
   <Card title="Render node and NDI" icon="server">
@@ -57,12 +62,12 @@ flowchart LR
   <Card title="Audio node" icon="warning">
     <StatusBadge status="experimental-testing" />
 
-    Audio-node software covers configuration, session control, gain/output control, and LTC generation. [Read about audio nodes →](/using-showmesh/node-types/audio-nodes/)
+    Audio nodes provide local playback, PipeWire routing, PTP-backed scheduling, output-latency calibration, LTC generation, and retained alignment measurements. [Read about audio nodes →](/using-showmesh/node-types/audio-nodes/)
   </Card>
   <Card title="Show Night" icon="open-book">
     <StatusBadge status="experimental-active" />
 
-    Show Night brings together a Show, FPP Playlists, background audio, Transition Steps, and a controlled start/end lifecycle. [Read Show Night →](/using-showmesh/show-night/)
+    Show Night brings together a Show, FPP Playlists, multi-node background audio, Transition Steps, readiness checks, and a controlled start/end lifecycle. [Read Show Night →](/using-showmesh/show-night/)
   </Card>
   <Card title="FPP Connect" icon="setting">
     <StatusBadge status="experimental-testing" />
@@ -72,25 +77,28 @@ flowchart LR
   <Card title="Multi-node audio" icon="warning">
     <StatusBadge status="experimental-active" />
 
-    Cue audio, announcements, Night beds, item changes, and resumes can target several nodes at one shared scheduled instant. Per-node evidence reports aligned or unaligned results. Physical timing, PTP lock, and recovery still need installation acceptance. [Read about audio nodes →](/using-showmesh/node-types/audio-nodes/)
+    Cue audio, announcements, Night beds, item changes, and resumes can target several nodes at one shared scheduled instant. Per-node status reports whether each target used that instant. [Set up an audio node →](/guides/set-up-an-audio-node/)
+  </Card>
+  <Card title="Audio asset delivery" icon="server">
+    <StatusBadge status="experimental-active" />
+
+    The asset path is being extended to normalize uploaded audio for playback, reuse bytes already held on a node, and preserve valid filenames that share the same content. [Read about assets →](/using-showmesh/assets/)
   </Card>
   <Card title="Signed FPP fallback program" icon="puzzle">
     <StatusBadge status="experimental-active" />
 
-    The coordinator builds and signs fallback programs, and the plugin can fetch, verify, install, acknowledge, and locally resolve entries. Coordinator-to-node activation delivery and real-host execution remain incomplete. [Read about FPP →](/integrations/fpp/)
+    The coordinator builds and signs fallback programs, and the plugin can fetch, verify, install, acknowledge, and locally resolve entries. Activation delivery and node execution are still being built. [Read about FPP →](/integrations/fpp/)
   </Card>
 </CardGrid>
 
-## Remaining work before the first public release
+## Up next
 
-The first public release needs an installation people can reproduce and a safe answer when something is missing. Remaining work includes:
+These items have not started as supported public paths:
 
-- publication and clean-machine verification of the exact coordinator images and agent packages defined by the release workflow;
-- a recorded Debian NDI plugin build recipe and tested runtime versions, plus real-hardware timing evidence for the render path;
-- audio hardware commissioning evidence for routing, PTP lock, LTC receiver behavior, output latency, long-run drift, and recovery;
-- a packaged FPP plugin installation verified on a real FPP host, including activation delivery and fallback execution;
-- Resolume per-version setup notes and a recovery test against a real Arena restart;
-- secure remote/TLS deployment, backup and restore drills, and a compatibility policy;
-- a final browser-verified Operator UI documentation pass against the prerelease candidate.
+- **Published release installation:** publish the coordinator images and native-agent packages, then document one reproducible install and upgrade path.
+- **Packaged FPP plugin:** provide a supported FPP installation path after activation delivery and node execution are complete.
+- **Supported media-node profiles:** publish known-good NDI, audio, PTP, and LTC combinations after testing the complete path on the target hardware.
+- **Secure remote access:** document TLS termination, remote administration, backup, restore, and recovery for installations that extend beyond an isolated show network.
+- **Versioned compatibility:** define the release compatibility policy and publish documentation for released versions.
 
-Use the current guides to stage and test a show deliberately, and retain native/manual controls for every show-critical system.
+Use the current guides to stage and test a show deliberately, and retain native controls for every show-critical system.

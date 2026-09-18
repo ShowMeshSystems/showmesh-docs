@@ -8,8 +8,8 @@ complexity: advanced
 
 This guide installs the shared native-agent foundation used by render and audio nodes, using the packaged installer and preflight checks in `deploy/node/`. The agent runs directly on the node host so it can access local media hardware; it is not another Compose service.
 
-:::note[Platform floor]
-The agent's cgo build requires Debian 13 (trixie) or newer: Debian 12's GLib is too old and the build fails with undefined symbols rather than a clear error. `preflight.sh` and `install.sh` both refuse plainly on an older Debian. Any other distribution is unverified; the installer proceeds with a warning rather than refusing.
+:::note[System requirements]
+Use Debian 13 (trixie) or newer. Debian 12 does not provide the required GLib version, and `preflight.sh` and `install.sh` refuse the install. Other distributions are not supported.
 :::
 
 ## Before you start
@@ -116,11 +116,9 @@ showmeshctl declare --label "<descriptive label>" <node-id>
 
 The node has fresh control-plane evidence and becomes declared. Declaration is required before a surface can target the node or ShowMesh can evaluate its show-targeted asset readiness.
 
-## What this install does NOT verify
-
-- Real audio output through a physical interface. `preflight.sh` checks that ALSA tooling and GStreamer elements exist, not that sound comes out of a real DAC.
-- Real NDI output. `ndisink` element resolution is reported as informational only; this repository does not build, vendor, or verify that element. A render node that needs NDI must build the `gst-plugins-rs` NDI plugin separately and set `GST_PLUGIN_PATH` in `agent.env`, then re-run preflight.
-- That the systemd unit boots correctly on real hardware. It has been checked for syntactic validity and exercised inside a container, but a container does not run systemd as PID 1, so no verification here proves the service actually starts under systemd on a real machine.
+:::caution[Test the installed node]
+Before show use, reboot the host and test the configured audio or NDI output on the target hardware. `preflight.sh` checks installed software; it does not prove that sound or video reaches the intended device.
+:::
 
 ## If the node does not appear
 

@@ -1,6 +1,6 @@
 ---
 title: Command-line interface
-description: Current showmeshctl command groups, global flags, and operational exit behavior.
+description: showmeshctl command groups, global flags, and operational exit behavior.
 pageType: reference
 maturity: available
 ---
@@ -20,9 +20,9 @@ Flags follow the command name. `showmeshctl` treats its first argument as the co
 - `--server <url>`: coordinator base URL; default `http://localhost:8080` or `SHOWMESH_SERVER`.
 - `--token <token>`: bearer token. Prefer `SHOWMESH_CTL_TOKEN` so the value is not exposed in a process listing. The coordinator rejects any request whose query string carries the token prefix, returning a `400 credential-in-url` problem; never place a token in a URL or query string.
 - `--output text|json`: human table/text, or JSON.
-- `--timeout <duration>`: request budget, default `10s`. Every `fpp <verb>` write subcommand raises a too-small value to its own larger minimum (`35s` in the documented build), because the coordinator holds a dispatched command's response open for its own confirmation deadline. Macro/action reads and invocations, plus run reads and follow loops, raise a too-small value to their own smaller minimum (`5s` in the documented build), scaled to the shorter accepted-then-asynchronous shape. Configuration writes such as `macro put` and `action put` do not apply that minimum. A too-small value on either kind of protected command prints a note to stderr naming both values rather than silently waiting longer than requested.
+- `--timeout <duration>`: request budget, default `10s`. FPP writes use a minimum of `35s`; macro/action reads and invocations, run reads, and follow loops use a minimum of `5s`. A smaller value prints the requested and applied timeout to stderr. Configuration writes do not apply these minimums.
 
-`--output json` behaves differently by command. For `nodes`, `node`, `snapshot`, `night status`, and `resolume recovery status`, it prints the coordinator's own response bytes unmodified, so a field the API grows reaches a script immediately. Every other command's JSON output re-serializes this CLI's own decoded structs: the decoder tolerates unknown fields from a newer coordinator (so a newer server does not break this CLI), but a field this build does not know about is silently absent from that JSON, even though it would still render in a text table. Do not assume passthrough for a command not named in this list.
+For `nodes`, `node`, `snapshot`, `night status`, and `resolume recovery status`, `--output json` prints the coordinator response unchanged. Other commands decode and re-serialize their response, so fields unknown to that CLI version are omitted. Do not assume passthrough for commands outside the named list.
 
 ## Command groups
 
@@ -71,4 +71,8 @@ The CLI uses stable, distinct nonzero codes so scripts do not have to parse pros
 | 28 | Night session degraded after an ambiguous restart; run `night end-session` then `night prepare-site` before any further command. |
 | 29 | `action check` found a broken binding on at least one checked action; `action check` never exits 29 for an "unknown" binding. |
 
-Use this page together with command-specific help before depending on exit codes in automation. The current top-level compiled help omits codes `16` and `29`, although their subcommands return them; do not treat that omission as meaning those outcomes are impossible.
+Use this page together with command-specific help before depending on exit codes in automation.
+
+:::note[Exit codes missing from top-level help]
+The top-level help omits codes `16` and `29`, but their subcommands return them.
+:::

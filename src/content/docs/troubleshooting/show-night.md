@@ -45,9 +45,9 @@ Preserve the session's current state before acting:
 showmeshctl night status
 ```
 
-Exit `28` means a restart, or evidence that contradicted what the session was doing, left it in a state this build cannot confirm is safe to resume from. Only four commands are accepted against a degraded session: `night final-show`, `night fade-out`, `night power-down`, and `night end-session`. Every other lifecycle command refuses while degraded.
+Exit `28` means a restart or contradictory status left the session unsafe to resume. Only four commands are accepted against a degraded session: `night final-show`, `night fade-out`, `night power-down`, and `night end-session`. Every other lifecycle command refuses while degraded.
 
-`night fade-out` and `night power-down` still issue a real stop to FPP and only report `stopped` once idle is observed; an unconfirmed stop degrades the session further rather than claiming success. `night end-session` is the provisional recovery action: it abandons the session outright, reaches `stopped` unconditionally, and launches nothing. It does not itself clear the degraded record.
+`night fade-out` and `night power-down` issue a stop to FPP and report `stopped` only after observing idle. `night end-session` abandons the session, reaches `stopped` unconditionally, and launches nothing. It does not clear the degraded record.
 
 1. Prefer `night fade-out` or `night power-down` when either is reachable; they perform the real shutdown work.
 2. If neither is reachable, run `night end-session`.
@@ -67,4 +67,6 @@ If a bed or announcement names several targets, inspect each node's assets, `nod
 
 ## Symptom: `night readiness` reports `unknown` or `not_verifiable`
 
-Read every check name in the readiness output before assuming this blocks the night. `resting:asset-exact-variant:<playlist>` is permanently `not_verifiable`: FPP exposes no content hash, so this build cannot confirm the live host is running the pinned asset's exact bytes. It is stated rather than defaulted to a pass, but excluded from the overall outcome, so `ready` is still reachable once every checkable check passes. A plain `unknown` outcome on another check does not by itself block `night start`; only a missing or stale readiness result does (exit `26`, described in the first symptom on this page). Do not treat `unknown` as equivalent to `ready`; investigate the named check's own reason before proceeding.
+:::note[Interpret incomplete readiness]
+FPP does not expose a content hash, so `resting:asset-exact-variant:<playlist>` remains `not_verifiable` and does not block `ready`. An `unknown` result requires investigation. A missing or stale readiness result blocks `night start` with exit `26`.
+:::

@@ -42,7 +42,7 @@ For a task, put the outcome, prerequisites, safety boundaries, ordered steps, ob
 
 Completeness is not length. Include a detail when it helps the reader act, interpret a result, avoid damage, or recover. Remove history, repetition, and internals that do not change any of those things. Link to one authoritative explanation rather than copying it across several pages.
 
-Never publish a bare `TODO`, an owner instruction, or a placeholder page. Future-facing material must explain what is available now, what is expected later, and where the working path ends.
+Never publish a bare `TODO`, an owner instruction, a placeholder page, or an internal acceptance backlog. Keep future work on the public roadmap. On other pages, state an unavailable or unverified condition once in a concise top or bottom callout only when it affects the reader.
 
 ## Follow the voice and editorial conventions
 
@@ -53,7 +53,7 @@ Use the [ShowMesh voice and style](../voice-and-style/). It defines the local op
 ShowMesh will introduce versioned documentation after the product release model exists. Until then:
 
 - Keep internal links version-neutral and relative when practical.
-- Avoid time-relative phrases such as “currently” when a maturity label or explicit development-state boundary is clearer.
+- Avoid time-relative phrases such as “currently” when a maturity label is clearer.
 - Keep release history out of operational procedures.
 - Do not add release numbers to ordinary page names or paths.
 - Write pages so the first released documentation set can become an immutable snapshot.
