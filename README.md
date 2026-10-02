@@ -57,4 +57,4 @@ The site builds and deploys to https://docs.showmesh.systems automatically when 
 
 ## Versioning
 
-The MVP documents the current development state only. Documentation versioning is intentionally deferred until ShowMesh has a prerelease/release model to follow.
+The MVP documents the v0.2.0 prerelease. Documentation versioning is intentionally deferred until a documentation maintenance and archive policy is agreed.

@@ -1,18 +1,47 @@
 ---
 title: Install the coordinator
-description: Build and start the current coordinator appliance, establish an administrator, and protect its state.
+description: Install and start the released coordinator appliance, establish an administrator, and protect its state.
 pageType: procedure
 maturity: experimental-active
 complexity: advanced
 ---
 
-This is the supported installation path for the current pre-release. It starts three services on one host: the coordinator, an authenticated Mosquitto broker, and the Operator UI. Native nodes run elsewhere; add them only after this host is healthy.
-
-When the selected tag has published artifacts, the primary path pulls coordinator and Operator UI images at that pinned version. Source includes the release workflow, but that does not prove a particular tag or image is publicly available. Check the registry and release page before choosing this path. Building from source remains the reproducible fallback and the contribution path.
+Install the v0.2.0 prerelease on Debian 13 or newer, on amd64 or arm64. The installer starts the coordinator, an authenticated Mosquitto broker, and the Operator UI, and installs `showmeshctl`. Add native nodes after the coordinator is healthy.
 
 :::caution[Start on an isolated show-management network]
 The default bundle publishes MQTT on `1883`, the coordinator API on `8080`, and the Operator UI on `8081`. The read API is open to every machine that can reach it, and ShowMesh does not terminate TLS. Do not expose this default stack directly to the public internet.
 :::
+
+## Install from the release
+
+1. Choose a host with root access, enough storage for assets and backups, and an address the show network can reach.
+2. Download the bootstrap from the [v0.2.0 release](https://github.com/ShowMeshSystems/showmesh/releases/tag/v0.2.0). Review the script before running it as root:
+
+   ```sh
+   curl -fL https://github.com/ShowMeshSystems/showmesh/releases/download/v0.2.0/get-showmesh.sh -o get-showmesh.sh
+   less get-showmesh.sh
+   sudo bash get-showmesh.sh --role coordinator
+   ```
+
+3. Answer the address, broker, and administrator prompts. The bootstrap verifies the installer bundle, and the installer checks HTTP health, administrator access, and broker login. It saves the local CLI credential in `/etc/showmesh/showmeshctl.env`; protect that file.
+4. Open `http://<coordinator-host>:8081`, sign in, and verify readiness:
+
+   ```sh
+   curl -fsS http://<coordinator-host>:8080/readyz
+   sudo showmeshctl version
+   sudo showmeshctl nodes
+   ```
+
+   A successful `/readyz` confirms store and broker access. Check that the reported version is 0.2.0. An empty node list is expected before enrollment.
+5. Configure integrations and content delivery as described below, then [enroll a native node](../../guides/add-a-node/).
+
+The installer opens the role's ports in active ufw or firewalld. With a hand-written nftables input drop policy, it prints rules for you to add and leaves the policy intact. `--no-firewall` skips handling; `--firewall` installs a ShowMesh nftables table when no firewall is active. Review network access before opting in.
+
+If installation fails, read the named error and `/var/log/showmesh-install.log`, fix the cause, and rerun. Do not post credentials or the full log publicly. Use `sudo showmesh-install --help` for unattended options.
+
+## Manual Compose installation
+
+Use this path for an existing manual deployment or source development. The installer path already creates the administrator and CLI identity; those steps below are for a manually started stack.
 
 ## 1. Choose the coordinator host
 
@@ -35,7 +64,7 @@ git checkout v<release-version>
 docker compose version
 ```
 
-`v<release-version>` is the pushed release tag, for example `v0.1.0`. Confirm that the exact tag produced the images or packages you intend to install, then verify their digests. See [Release artifacts](../../reference/release-artifacts/) for the artifact matrix and [Requirements](../requirements/) for platform boundaries.
+`v<release-version>` is the pushed release tag, for example `v0.2.0`. Confirm that the exact tag produced the images or packages you intend to install, then verify their digests. See [Release artifacts](../../reference/release-artifacts/) for the artifact matrix and [Requirements](../requirements/) for platform boundaries.
 
 Building the coordinator and UI locally instead of pulling published images remains supported, for example when contributing to ShowMesh itself: skip step 4's `docker-compose.published.yml` override and run `make -C .. deploy-up` alone, which builds both images from this checkout before starting them.
 
@@ -55,7 +84,7 @@ Do not create broker users by hand in the repository. Use the bundled scripts so
 
 ## 4. Start and verify the stack
 
-Run the bundle from the published images, at the release version you checked out (without the leading `v`, for example `0.1.0`):
+Run the bundle from the published images, at the release version you checked out (without the leading `v`, for example `0.2.0`):
 
 ```sh
 make -C .. deploy-up-published SHOWMESH_RELEASE_VERSION=<release-version>
@@ -151,7 +180,7 @@ Before assigning any ShowMesh asset to a separate native node, configure `assets
   --content-base-url http://<node-reachable-coordinator>:8080
 ```
 
-Use the externally reachable coordinator hostname, never `localhost` for a separate node host. When reads are closed, give each node a dedicated, least-privilege API identity. Never copy an administrator token into a node environment:
+Use the externally reachable coordinator hostname, never `localhost` for a separate node host. Enrollment supplies a node API identity. For a manually provisioned, download-only node, the viewer role can read assets; use the node role if it must also register FPP Connect uploads. Never copy an administrator token into a node environment:
 
 ```sh
 ./bin/showmeshctl principal create \
@@ -194,16 +223,17 @@ Before any upgrade and on a regular operating schedule:
    docker volume ls --filter name=showmesh-data
    ```
 
-2. Copy the returned volume to a protected backup location. For example, replace `<actual-volume-name>` with the name from the preceding command:
+2. Stop the coordinator so the database copy is consistent, then copy the returned volume to a protected backup location. For example, replace `<actual-volume-name>` with the name from the preceding command:
 
    ```sh
+   docker compose stop coordinator
    docker run --rm \
      -v <actual-volume-name>:/data \
      -v "$(pwd)":/backup alpine \
      tar czf /backup/showmesh-data-$(date +%Y%m%d).tar.gz -C /data .
    ```
 
-3. Verify the archive is non-empty with `tar tzf <archive>`. A wrong volume name can produce an empty archive with a successful exit code.
+3. Verify the archive is non-empty with `tar tzf <archive>`. A wrong volume name can produce an empty archive with a successful exit code. Restart the coordinator with `docker compose start coordinator` and check `/readyz`.
 
 After restoring a volume backup, start the stack and invalidate restored sessions immediately:
 
@@ -214,6 +244,10 @@ docker compose exec coordinator showmesh-coordinator invalidate-all-sessions -ye
 Restoring old session-generation data can otherwise revive sessions that were revoked after the backup.
 
 ## Upgrade deliberately
+
+For an installer-managed coordinator, stop the night first and run the bootstrap for the reviewed target version. The installer refuses while a night is running or its state cannot be checked. It backs up the database, environment, and broker files under `/var/backups/showmesh/` before changing versions, keeps the newest five backups, and writes `RESTORE.txt` with recovery steps. Keep a separate protected backup for longer retention. Upgrade Core and the FPP plugin together to 0.2.0, then run the node upgrade commands printed by the installer.
+
+An enrolled node upgrade preserves its settings and skips enrollment. It refuses a known running night, but only warns when the coordinator cannot be reached; confirm the show is stopped before restarting a node. Avoid `--force` during a show.
 
 On the published-image path, upgrading or rolling back is a pinned-version change: take a volume backup first (see above), then set `SHOWMESH_RELEASE_VERSION` to the reviewed target version and re-run:
 

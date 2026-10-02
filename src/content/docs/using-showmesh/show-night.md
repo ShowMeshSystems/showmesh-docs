@@ -47,7 +47,11 @@ Background audio can be inline or reference a media playlist. It supports order,
 
 A bed can target several audio nodes. ShowMesh prepares them for one shared instant and reports alignment per node.
 
+Show Night and `showmeshctl night status` list the configured background audio before the night starts, and identify speakers that should be playing but are not, with the reason. After an agent restart or host reboot, a node can rejoin the running bed at the other speakers’ track and position. A node waiting for its file joins when the file arrives. An operator’s deliberate stop is respected.
+
 Announcements can likewise target several nodes and start at one shared instant. LTC remains a one-node output.
+
+The end-of-night resting playlist repeats only when the session sets `endOfNightRepeat`. Check that setting before relying on continued resting playback.
 
 ## Transition Steps
 

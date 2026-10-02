@@ -17,8 +17,8 @@ Use Reference when you already know what you are trying to configure or call. Fo
 - [Roadmap](./roadmap/): current development priorities and remaining release work.
 - [Maturity and complexity](./maturity/): what the status labels mean.
 
-This reference describes the captured development state, not a released version. ShowMesh now has repository version metadata, a changelog, release instructions, and tag-driven automation; version-selected documentation is still deferred until the first public release establishes the compatibility policy.
+This reference describes the v0.2.0 prerelease. Later development features are unreleased. Version-selected documentation remains deferred while its maintenance and archive policy is established.
 
 ## Planned reference material
 
-Generated schema tables, protocol references, released compatibility matrices, and per-version documentation belong here after the first prerelease process exists.
+Generated schema tables, protocol references, released compatibility matrices, and per-version documentation belong here as the documentation maintenance policy is established.

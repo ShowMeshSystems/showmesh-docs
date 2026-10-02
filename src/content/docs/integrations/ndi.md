@@ -12,10 +12,10 @@ ShowMesh can now publish an NDI source from a native render node. The current im
 
 - A native ShowMesh agent, installed through [Install a native node](../../guides/add-a-node/).
 - The vendor NDI runtime installed by the operator. ShowMesh detects it dynamically and does not vendor the runtime.
-- A GStreamer `ndisink` element. Debian 13 does not package it; the current working path is a source build from `gst-plugins-rs`.
+- A GStreamer `ndisink` element, installed from the release package or built by the render installer when absent.
 - A free UDP `32320` listener on the render node for FPP MultiSync. Do not run `fppd` on the same node.
 
-Use a documented local recipe for `gst-plugins-rs`; do not guess package or Cargo commands.
+Use the [render-node installer procedure](../../guides/set-up-a-video-node/) to install the plugin and your separately obtained vendor runtime.
 
 ## What to verify
 

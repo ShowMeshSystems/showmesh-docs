@@ -16,7 +16,7 @@ Start here in order:
 5. Use the [Reference roadmap](/reference/roadmap/) to see current development priorities and remaining release work.
 
 :::caution[Development-state documentation]
-These pages describe the current `main` development state, not a stable release or versioned documentation set. Check the source revision and `showmeshctl version` before following an experimental procedure.
+These pages describe the v0.2.0 prerelease. Check `showmeshctl version` before following a procedure, and use Core and FPP plugin 0.2.0 together. Prerelease features remain experimental; later development commits are unreleased.
 :::
 
 ## What works now

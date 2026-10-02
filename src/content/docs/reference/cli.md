@@ -13,6 +13,22 @@ showmeshctl help
 showmeshctl <command> --help
 ```
 
+The released installer provides the CLI and a wrapper that reads `/etc/showmesh/showmeshctl.env`. On that host, use `sudo showmeshctl` so the wrapper can read the protected credential file.
+
+## Prerelease node and FPP commands
+
+```sh
+showmeshctl node enroll <node-id>
+showmeshctl node enrollments
+showmeshctl node enrollments cancel <enrollment-id>
+showmeshctl fpp pair <instance-id> <code>
+showmeshctl fpp pairing <instance-id>
+showmeshctl fpp set-brightness-ceiling <instance-id> <0-100>
+showmeshctl audio node choices <node-id>
+```
+
+See [Native node installation](../../guides/add-a-node/) and [FPP plugin pairing](../../integrations/fpp-plugin/) for permissions, confirmation, and recovery.
+
 ## Common command flags
 
 Flags follow the command name. `showmeshctl` treats its first argument as the command, so `showmeshctl --server … nodes` is invalid.
@@ -20,7 +36,7 @@ Flags follow the command name. `showmeshctl` treats its first argument as the co
 - `--server <url>`: coordinator base URL; default `http://localhost:8080` or `SHOWMESH_SERVER`.
 - `--token <token>`: bearer token. Prefer `SHOWMESH_CTL_TOKEN` so the value is not exposed in a process listing. The coordinator rejects any request whose query string carries the token prefix, returning a `400 credential-in-url` problem; never place a token in a URL or query string.
 - `--output text|json`: human table/text, or JSON.
-- `--timeout <duration>`: request budget, default `10s`. Every `fpp <verb>` write subcommand raises a too-small value to its own larger minimum (`35s` in the documented build), because the coordinator holds a dispatched command's response open for its own confirmation deadline. Macro/action reads and invocations, plus run reads and follow loops, raise a too-small value to their own smaller minimum (`5s` in the documented build), scaled to the shorter accepted-then-asynchronous shape. Configuration writes such as `macro put` and `action put` do not apply that minimum. A too-small value on either kind of protected command prints a note to stderr naming both values rather than silently waiting longer than requested.
+- `--timeout <duration>`: request budget, default `10s`. FPP command writes other than pairing raises a too-small value to its own larger minimum (`35s` in the documented build), because the coordinator holds a dispatched command's response open for its own confirmation deadline. Macro/action reads and invocations, plus run reads and follow loops, raise a too-small value to their own smaller minimum (`5s` in the documented build), scaled to the shorter accepted-then-asynchronous shape. Configuration writes such as `macro put` and `action put` do not apply that minimum. A too-small value on either kind of protected command prints a note to stderr naming both values rather than silently waiting longer than requested.
 
 `--output json` behaves differently by command. For `nodes`, `node`, `snapshot`, `night status`, and `resolume recovery status`, it prints the coordinator's own response bytes unmodified, so a field the API grows reaches a script immediately. Every other command's JSON output re-serializes this CLI's own decoded structs: the decoder tolerates unknown fields from a newer coordinator (so a newer server does not break this CLI), but a field this build does not know about is silently absent from that JSON, even though it would still render in a text table. Do not assume passthrough for a command not named in this list.
 

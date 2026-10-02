@@ -6,7 +6,7 @@ maturity: experimental-testing
 complexity: advanced
 ---
 
-ShowMesh publishes from version tags. Before installing, confirm that the exact version exists on the Releases page or in the package registry.
+Use the [Core v0.2.0 release](https://github.com/ShowMeshSystems/showmesh/releases/tag/v0.2.0) for the installer and native agents, and the separate [FPP plugin v0.2.0 release](https://github.com/ShowMeshSystems/showmesh-fpp-plugin/releases/tag/v0.2.0) for plugin binaries. Install or upgrade both versions together. These are pre-alpha prereleases with no compatibility or migration promise between `0.x` versions.
 
 ## Version and tag agreement
 
@@ -17,12 +17,13 @@ The tag and repository version must match. A development build is not a tagged r
 The release workflow defines:
 
 - coordinator container images for `linux/amd64` and `linux/arm64`;
-- Operator UI container images for `linux/amd64` only;
+- Operator UI container images for `linux/amd64` and `linux/arm64`;
+- `get-showmesh.sh` and the versioned installer bundle;
 - native node-agent packages for `amd64` and `arm64`;
 - a combined SHA-256 manifest covering retained downloadable artifacts;
 - a GitHub prerelease that remains distinct from final release publication.
 
-The workflow does not produce armv7 packages. “Linux” or “ARM” alone does not identify a supported Raspberry Pi model.
+Core does not publish armv7 node-agent packages. The separate FPP plugin release includes amd64, arm64, and armv7 helpers and FPP 10 native objects. “Linux” or “ARM” alone does not identify a supported Raspberry Pi model.
 
 ## Verify a download
 

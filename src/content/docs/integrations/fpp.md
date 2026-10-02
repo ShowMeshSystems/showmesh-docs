@@ -12,6 +12,10 @@ ShowMesh can poll configured FPP instances over REST, consume FPP status from MQ
 
 Use the Operator UI configuration page or `showmeshctl config set`. Each endpoint has a ShowMesh ID and an HTTP base URL. The coordinator can then show playlist state, volume, MultiSync evidence, and collection health exposed by the current collector.
 
+## Pair the plugin
+
+After adding the endpoint, install and [pair the FPP plugin](../fpp-plugin/#pair-by-code). Pairing, brightness readback, and playlist Re-import are available in Core and plugin 0.2.0.
+
 ## Configure FPP MQTT status
 
 FPP MQTT is separate from the native ShowMesh agent control plane. Configure the broker, credentials, topic prefix, and a mapping from ShowMesh FPP IDs to FPP host names. The default topic root is `falcon/player`.
@@ -64,9 +68,10 @@ showmeshctl fpp reset-observation-sequence --confirm <instance-id>
 showmeshctl fpp acknowledge-instance-uuid-change --confirm <instance-id>
 ```
 
-Two coordinator-owned operations sit beside the eight FPP primitives:
+Plugin operations sit beside the eight FPP primitives:
 
 ```sh
+showmeshctl fpp set-brightness-ceiling <instance-id> <0-100>
 showmeshctl fpp set-transition-gain <instance-id> <0-100>
 showmeshctl fpp republish-playlist-definitions <instance-id>
 ```
@@ -79,4 +84,4 @@ The coordinator builds and signs a bounded map from known playlist-entry keys to
 
 ## FPP-host plugin
 
-The experimental [FPP Plugin](../fpp-plugin/) submits ShowMesh macro runs from an FPP host and leaves a host-local status record. It is not a standard installation path, and it does not make ShowMesh the FPP scheduler.
+The experimental [FPP Plugin](../fpp-plugin/) submits ShowMesh macro runs from an FPP host and leaves a host-local status record. Install it through FPP Plugin Manager and pair by code. It leaves FPP as the scheduler.

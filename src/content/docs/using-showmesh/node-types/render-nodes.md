@@ -10,7 +10,7 @@ A **render node** turns lighting-sequence data into a video surface. It holds it
 
 The initial path uses NDI to deliver that video to Resolume. Resolume remains responsible for projection composition and mapping after the source arrives; the render node does not launch clips, select decks, or control the projection layout.
 
-Treat the render path as experimental. The current runtime supports one active surface per node and NDI output; HDMI output is not available.
+Treat the render path as experimental. A node can run several NDI surfaces with distinct channel ranges and source names, using the same FSEQ frame timing; HDMI output is not available.
 
 ## What the render node does
 
@@ -53,7 +53,7 @@ Set `SHOWMESH_RENDER_DIAGNOSTIC_SURFACE` (plus `SHOWMESH_RENDER_DIAGNOSTIC_WIDTH
 
 ## Current scope
 
-The implementation in current `main` includes:
+The v0.2.0 implementation includes:
 
 - FSEQ parsing and bounded channel extraction;
 - one or more configured surface assignments at the protocol and schema level;
@@ -62,7 +62,7 @@ The implementation in current `main` includes:
 - surface apply, clear, pipeline restart, and transport probe operations;
 - coordinator, CLI, API, and Operator UI surfaces for renderer configuration and evidence.
 
-The first deployment profile concentrates on Linux/x86 hardware, one active surface per node, 40 fps, and NDI. The broader schema does not permanently encode the one-surface limit.
+For a planned playlist sequence change, the node opens the next entry’s sequence ahead of time and switches when MultiSync first names it. Stage the next FSEQ asset before playback. If surfaces cannot move together because their frame timing differs, the mismatched surface stays black and reports the reason; render the sequences at the same timing in xLights before retrying.
 
 ## Boundaries
 

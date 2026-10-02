@@ -6,7 +6,7 @@ maturity: available
 complexity: advanced
 ---
 
-The machine-readable API is `api/openapi.yaml` in the main ShowMesh repository. This page is an orientation map, not a replacement schema.
+The machine-readable API is the [v0.2.0 OpenAPI document](https://github.com/ShowMeshSystems/showmesh/blob/v0.2.0/api/openapi.yaml). This page is an orientation map, not a replacement schema.
 
 Base path: `/api/v1`
 
@@ -37,10 +37,11 @@ Every principal holds exactly one role, a fixed bundle of scopes. A route's requ
 | --- | --- |
 | `viewer` | `node:read`, `fpp:read`, `observation:read`, `event:read`. |
 | `operator` | Everything `viewer` holds, plus `show:macro:run`, `device:power`, `fpp:command`, `resolume:action`, `render:command`, `show:action:invoke`, `audio:command`, `night:command`, `show:emergencystop:invoke`, and `cue:activate`. |
-| `admin` | Everything `operator` holds, plus `config:write`, `principal:write`, `audit:read`, `asset:write`, `principal:read`, `fpp:observe`, `night:override`, `node:observe`, `cuecatalog:deploy`, and `fpp:fallback`. |
+| `admin` | Everything `operator` holds, plus `config:write`, `principal:write`, `audit:read`, `asset:write`, `principal:read`, `fpp:observe`, `night:override`, `node:observe`, `cuecatalog:deploy`, `fpp:fallback`, and `node:enroll`. |
+| `node` | `node:read` and `asset:write`; machine authority for enrolled native nodes. |
 | `scheduler` | `show:macro:run`, `night:command`, `fpp:observe`, `fpp:fallback`. A machine role for the installed FPP plugin principal, not selectable for interactive use beyond that purpose. |
 
-`principal create --role` accepts `viewer`, `operator`, `admin`, or `scheduler`. A fifth role, `recovery`, is minted only for the built-in automatic Resolume-recovery principal and holds only `resolume:action`.
+`principal create --role` accepts `viewer`, `operator`, `admin`, `scheduler`, or `node` (the compiled help omits `node`). The `recovery`, is minted only for the built-in automatic Resolume-recovery principal and holds only `resolume:action`.
 
 ## API rules
 
