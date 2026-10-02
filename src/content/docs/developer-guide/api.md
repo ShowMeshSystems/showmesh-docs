@@ -6,7 +6,7 @@ maturity: available
 complexity: advanced
 ---
 
-The coordinator serves its public API at `/api/v1`. The machine-readable API description is `api/openapi.yaml` in the main ShowMesh repository.
+The coordinator serves its public API at `/api/v1`. Use the [v0.2.0 OpenAPI description](https://github.com/ShowMeshSystems/showmesh/blob/v0.2.0/api/openapi.yaml) for released request and response shapes. The default branch can contain unreleased changes.
 
 ## Connect
 

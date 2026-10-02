@@ -15,6 +15,7 @@ ShowMesh uses coordinator-local **principals**. Each principal is `human` or `ma
 | `viewer` | Node, FPP, observation, and event reads. |
 | `operator` | Viewer access plus show, FPP, Resolume, render, audio, Night, Cue, and Emergency Stop actions. |
 | `admin` | Operator access plus configuration, assets, identity, audit, interlock override, observation, catalog deployment, and fallback administration. |
+| `node` | Machine authority for asset reads and FPP Connect upload registration, issued during enrollment. |
 | `scheduler` | Narrow machine authority for macro/Night scheduling plus FPP observation and fallback exchange. |
 | `recovery` | Narrow built-in authority for Resolume recovery actions. |
 

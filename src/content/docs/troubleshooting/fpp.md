@@ -79,7 +79,7 @@ Fix the named cause, then rerun `fpp playlist-readiness` and confirm it reports 
 
 ## Symptom: the fallback program is missing, stale, or mismatched
 
-The coordinator builds and signs fallback programs. The separate plugin can fetch, verify, install, acknowledge, and locally resolve program entries. Coordinator-to-node activation delivery and node execution are not implemented, and real-host/public-package acceptance remains unverified. Inspect the coordinator's record directly:
+The coordinator builds and signs fallback programs. The separate plugin can fetch, verify, install, acknowledge, and locally resolve program entries. Coordinator-to-node activation delivery and node execution are not implemented, so a cached program is not an operational coordinator-outage safeguard. Inspect the coordinator's record directly:
 
 ```sh
 curl -fsS -H "Authorization: Bearer <token>" \

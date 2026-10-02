@@ -15,7 +15,7 @@ The listener is an unauthenticated compatibility shim for xLights, not part of t
 
 ## Required credential for upload registration
 
-`SHOWMESH_AGENT_API_TOKEN` is **required** on any node that will register an xLights upload. Without `asset:write` (currently admin-only), the node still assembles, hashes, and holds the upload but cannot register it with the coordinator. Registration state, asset ID, reason, problem type, held-file count, and event count are reported through node render evidence and `showmeshctl fppconnect status`; the local `assets/fppconnect-uploads/index.json` remains a deeper host-side record.
+`SHOWMESH_AGENT_API_TOKEN` is **required** on any node that will register an xLights upload. Enrollment supplies a `node` role token with `asset:write`. Without that scope, the node still assembles, hashes, and holds the upload but cannot register it with the coordinator. Registration state, asset ID, reason, problem type, held-file count, and event count are reported through node render evidence and `showmeshctl fppconnect status`; the local `assets/fppconnect-uploads/index.json` remains a deeper host-side record.
 
 The listener binds on `SHOWMESH_FPPCONNECT_LISTEN_ADDR` (default `:80`, matching where xLights itself expects to find FPP Connect hosts). Binding a privileged port requires the `CAP_NET_BIND_SERVICE` capability, which the packaged systemd unit grants explicitly. A node that cannot bind the listener still renders and still answers other agent traffic; check node status for the bind failure.
 

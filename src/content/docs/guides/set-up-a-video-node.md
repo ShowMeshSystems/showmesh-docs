@@ -14,7 +14,7 @@ A render node listens for FPP MultiSync on UDP `32320`; it must not share that p
 
 ## 1. Confirm the deployment profile
 
-The documented transport profile is a native node on Debian 13 amd64, one active surface, 40 fps, and NDI. HDMI output is not available.
+Use a native node on Debian 13 amd64 or arm64 with NDI. Start with one surface, then add surfaces with non-overlapping channel ranges, distinct NDI source names, and matching FSEQ frame timing. HDMI output is not available.
 
 Install the node first with [Install a native node](../add-a-node/). Give it local storage for the node-targeted FSEQ assets and network reachability to the broker.
 
@@ -22,7 +22,7 @@ Install the node first with [Install a native node](../add-a-node/). Give it loc
 
 Install the NDI runtime from its vendor source on the render node. ShowMesh loads that runtime dynamically; it does not package or redistribute it.
 
-Debian 13 does not package GStreamer's `ndisink` element. The working bench path builds it from `gst-plugins-rs`, but the exact source revision and build commands have not yet been captured in a reproducible public recipe. Use a known-good local build and record its version, plugin path, and runtime version before depending on it. Once built, point `GST_PLUGIN_PATH` at the directory containing the compiled plugin in the node's `agent.env`, so GStreamer's registry can find it.
+The release package includes the GStreamer NDI plugin. The render installer places it and can install your separately obtained NDI SDK with `--ndi <sdk-path>`. If the package lacks the plugin, the installer builds it using `deploy/node/ndi-plugin/build-ndi-plugin.sh`. Confirm plugin discovery and a running sender before assigning show content.
 
 First check that GStreamer sees the element:
 
@@ -82,9 +82,7 @@ showmeshctl assets settings set \
   --content-base-url http://<node-reachable-coordinator>:8080
 ```
 
-Use an HTTP(S) URL that the node can actually resolve and reach, not `localhost` unless the coordinator and node are the same machine. If the coordinator closes anonymous reads, a dedicated `machine` principal with the `viewer` role is sufficient for asset downloads. Put its token in `SHOWMESH_AGENT_API_TOKEN`; never copy a human administrator token to the node.
-
-FPP Connect registration is a separate write path requiring `asset:write`, which is currently admin-only. A node used as an xLights upload target therefore needs a separate, deliberately issued machine credential with that authority. Do not assume the viewer token used for closed asset reads can register uploads. [Install a native node](../add-a-node/) describes that boundary.
+Use an HTTP(S) URL the node can resolve and reach, not `localhost` for a separate host. Enrollment supplies a machine credential with the `node` role for asset reads and FPP Connect registration. Keep it in `SHOWMESH_AGENT_API_TOKEN`; never copy a human administrator token to the node. For manually provisioned credentials, use the `node` role. A viewer credential can read assets but cannot register uploads.
 
 ## 5. Create one surface and stage its FSEQ asset
 

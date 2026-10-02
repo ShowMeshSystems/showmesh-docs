@@ -69,7 +69,7 @@ The installer writes this node's agent environment to `/etc/showmesh/agent.env` 
 systemctl restart showmesh-agent
 ```
 
-See [Install a native node](../../guides/add-a-node/) for the full installation path. At minimum, set `SHOWMESH_NODE_ID` and the broker credentials issued by `add-agent-credential.sh`.
+See [Install a native node](../../guides/add-a-node/) for the full installation path. The released installer redeems an enrollment code and writes the node identity, broker credential, and API token into `/etc/showmesh/agent.env`.
 
 Node IDs accept lowercase letters, digits, and internal hyphens. The agent defaults to the OS hostname, but startup fails with a useful message if that hostname is invalid.
 
@@ -82,7 +82,7 @@ showmeshctl assets settings set \
   --content-base-url http://<node-reachable-coordinator>:8080
 ```
 
-`assets settings set` changes only the flags you pass; an omitted flag leaves its stored or default value alone. Use the coordinator's network hostname rather than `localhost` for a separate node. If the coordinator closes anonymous API reads, create a separate `machine` principal with the `viewer` role and issue a token for that node; place that token in `SHOWMESH_AGENT_API_TOKEN`. Do not reuse a human administrator token: the viewer role has the `node:read` permission the asset endpoint needs. [Install a native node](../../guides/add-a-node/) includes the exact issuance commands.
+`assets settings set` changes only the flags you pass; an omitted flag leaves its stored or default value alone. Use the coordinator's network hostname rather than `localhost` for a separate node. Enrollment supplies a machine token with the `node` role in `SHOWMESH_AGENT_API_TOKEN`, including asset-read and upload-registration access. A manually provisioned viewer token permits asset reads but not upload registration. Never reuse a human administrator token. See [Install a native node](../../guides/add-a-node/).
 
 ## Read health correctly
 

@@ -23,7 +23,7 @@ pageType: concept
 
 ## FPP plugin repositories
 
-Two separate repositories carry the experimental [FPP Plugin](../../integrations/fpp-plugin/): one holds the plugin runtime and a second holds Plugin Manager packaging, install scripts, and locked candidate-artifact digests. Repository contents prove build and packaging behavior, not public release availability; see the integration page for the current evidence boundary.
+Two separate repositories carry the experimental [FPP Plugin](../../integrations/fpp-plugin/): one holds the plugin runtime and a second holds Plugin Manager packaging, install scripts, and locked release-artifact digests. See the integration page for released installation and code pairing.
 
 ## `showmesh-docs` repository
 

@@ -37,4 +37,4 @@ Run the project's content, schema, build, link, anchor, and asset checks defined
 
 ## Process intentionally deferred
 
-Do not add an automated documentation-update workflow, linked-PR requirement, release gate, or versioned-doc archive yet. ShowMesh has not reached its first prerelease. Those mechanisms will be designed to match the product's release/versioning process rather than invented independently here.
+Do not add an automated documentation-update workflow, linked-PR requirement, release gate, or versioned-doc archive yet. ShowMesh has published pre-alpha prereleases. Those mechanisms will be designed to match the product's release/versioning process rather than invented independently here.

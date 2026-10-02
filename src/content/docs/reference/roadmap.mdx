@@ -13,9 +13,9 @@ ShowMesh is being built so a show can keep running when a control-plane componen
 
 For the meaning of Available, Experimental, and Planned labels, see [Maturity and complexity](../maturity/).
 
-<StatusNote status="experimental-active" label="No public release date yet">
+<StatusNote status="experimental-active" label="v0.2.0 prerelease">
 
-Tag-driven release automation and artifact definitions exist, but public availability and the compatibility promise must be checked against the selected release. Development builds remain for deliberate, isolated show-network evaluation, not unattended production use.
+Core and FPP plugin 0.2.0 are published for deliberate show-network testing. The pre-alpha `0.x` line makes no compatibility or migration promise. Later development work is unreleased until a new tag is published.
 
 </StatusNote>
 
@@ -23,14 +23,14 @@ Tag-driven release automation and artifact definitions exist, but public availab
 flowchart LR
   A[Coordinator and control plane] --> B[Integrations and media nodes]
   B --> C[Operator workflows and documentation]
-  C --> D[Public release]
+  C --> D[Stable operation]
 ```
 
-## What is usable in the current development build
+## What you can test in v0.2.0
 
 <CardGrid>
   <Card title="Coordinator and operator controls" icon="rocket">
-    Source-built Compose deployment, authenticated MQTT, inventory, observations, API, CLI, Operator UI, principals, audit, backups, and explicit recovery paths. [Install the coordinator →](/getting-started/installation/)
+    Released Debian installer and pinned Compose deployment, authenticated MQTT, inventory, observations, API, CLI, Operator UI, principals, audit, backups, and explicit recovery paths. [Install the coordinator →](/getting-started/installation/)
   </Card>
   <Card title="FPP control and observation" icon="puzzle">
     FPP REST/MQTT observation, evidence-confirmed playlist and volume controls, imported playlist definitions, readiness, actions, macros, assets, Shows, Cues, and Playlists. FPP remains the scheduler. [Configure FPP →](/integrations/fpp/)
@@ -46,13 +46,13 @@ flowchart LR
   </Card>
 </CardGrid>
 
-## What is next
+## Experimental operating paths
 
 <CardGrid>
   <Card title="Render node and NDI" icon="server">
     <StatusBadge status="experimental-testing" />
 
-    Native render nodes follow the FPP timeline, read node-local FSEQ content, and publish NDI. The current runtime supports one active surface per node; HDMI output is not available. [Set up a video node →](/guides/set-up-a-video-node/)
+    Native render nodes follow the FPP timeline, read node-local FSEQ content, and publish NDI. Several surfaces can share a node with distinct channel ranges and NDI names and matching frame timing. HDMI output is not available. [Set up a video node →](/guides/set-up-a-video-node/)
   </Card>
   <Card title="Audio node" icon="warning">
     <StatusBadge status="experimental-testing" />
@@ -77,20 +77,12 @@ flowchart LR
   <Card title="Signed FPP fallback program" icon="puzzle">
     <StatusBadge status="experimental-active" />
 
-    The coordinator builds and signs fallback programs, and the plugin can fetch, verify, install, acknowledge, and locally resolve entries. Coordinator-to-node activation delivery and real-host execution remain incomplete. [Read about FPP →](/integrations/fpp/)
+    The coordinator builds and signs fallback programs, and the plugin can fetch, verify, install, acknowledge, and locally resolve entries. Coordinator-to-node activation delivery remains incomplete. [Read about FPP →](/integrations/fpp/)
   </Card>
 </CardGrid>
 
-## Remaining work before the first public release
+## Work toward stable operation
 
-The first public release needs an installation people can reproduce and a safe answer when something is missing. Remaining work includes:
+HDMI output and coordinator-to-node signed fallback activation remain unavailable. Broader hardware support, timing acceptance, vendor-version recovery guidance, secure remote deployment, and long-term compatibility still need work.
 
-- publication and clean-machine verification of the exact coordinator images and agent packages defined by the release workflow;
-- a recorded Debian NDI plugin build recipe and tested runtime versions, plus real-hardware timing evidence for the render path;
-- audio hardware commissioning evidence for routing, PTP lock, LTC receiver behavior, output latency, long-run drift, and recovery;
-- a packaged FPP plugin installation verified on a real FPP host, including activation delivery and fallback execution;
-- Resolume per-version setup notes and a recovery test against a real Arena restart;
-- secure remote/TLS deployment, backup and restore drills, and a compatibility policy;
-- a final browser-verified Operator UI documentation pass against the prerelease candidate.
-
-Use the current guides to stage and test a show deliberately, and retain native/manual controls for every show-critical system.
+Use the guides to stage and test a show deliberately, and retain native/manual controls for every show-critical system.

@@ -24,7 +24,7 @@ The channel count must exactly match the canvas: `width × height × 3` for `rgb
 
 A surface defines **where and how pixel channels are intended to appear**. It does not contain media bytes, a sequence, an FPP playlist, or an action. Assets provide files; actions operate integrations; a render node consumes the surface only after the operator applies it with a specific sequence assignment.
 
-The Operator UI and the CLI can create, list, inspect, and revise these objects:
+Use the Shows editor or Node Detail to add, edit, and remove a render node’s surfaces. The CLI can create, list, inspect, and revise these objects:
 
 ```sh
 showmeshctl surface list --show <show-id>
@@ -35,13 +35,13 @@ showmeshctl surface revisions <surface-id>
 
 `surface set` is a full replacement. Supply the show, name, declared node, channel range, geometry, frame rate, transport, and the transport-specific NDI source name or HDMI display every time. Use `--help` for the exact flags before writing a revision.
 
-## Current limits
+## Apply and verify output
 
 :::caution[Applying a surface is experimental]
-The current render path runs one active surface per node. You can configure more than one surface for a node, but the agent will not run them together. HDMI has no runtime output path. A valid surface, an online node, or a successful configuration write is never evidence that frames are reaching the intended screen.
+A node can run several NDI surfaces. Their channel ranges must not overlap, their NDI source names must be distinct, and their FSEQ sequences must use the same frame timing. ShowMesh refuses conflicts and names the affected surface. HDMI has no runtime output path. A valid surface, an online node, or a successful configuration write is never evidence that frames are reaching the intended screen.
 :::
 
-Surface geometry must stay within the coordinator's safety limit: the last channel number, width, and height cannot exceed `8,388,608`. This prevents invalid or overflowing configuration; it is not a statement about the limits of FPP or a particular output device. Render telemetry can carry at most eight surface reports in one message, which is separate from the one-active-surface runtime limit.
+Surface geometry must stay within the coordinator's safety limit: the last channel number, width, and height cannot exceed `8,388,608`. This prevents invalid or overflowing configuration; it is not a statement about the limits of FPP or a particular output device. Render telemetry can carry at most eight surface reports in one message. Do not infer a hardware capacity from that reporting limit.
 
 Use `showmeshctl render apply <node-id> <surface-id> <sequence-id>` only after the exact FSEQ asset is ready on that node. Then run `showmeshctl render probe <node-id> <surface-id>` to make a real GStreamer transport transition, followed by `showmeshctl render status <node-id>` to inspect the fresh pipeline and transport evidence. `render apply` alone intentionally does not establish transport availability; the coordinator does not substitute a configuration write for that evidence.
 

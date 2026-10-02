@@ -12,6 +12,7 @@ Settings records installation-wide desired state. Use Monitor and current observ
 | Page | Purpose |
 | --- | --- |
 | **Connections** | FPP endpoints, integration MQTT, and related connectivity configuration. |
+| **Node enrollment** | Create, list, and cancel one-time node enrollment codes. |
 | **Content delivery** | Asset and FPP Connect delivery behavior. |
 | **Render recovery** | Render settings and recovery policy. |
 | **Appearance** | Browser-local display preferences. |
@@ -29,9 +30,13 @@ Most settings are revisioned full replacements. Read the current object before e
 
 Node routing edits two objects: `audio.node` selects roles, routes, channels, output backend, clock domain, and output latency; `node.clock` selects managed, external, or FPP PTP behavior. Live reports show what the node currently observes.
 
+Channel selectors use the outputs the node reports, with manual entry for older agents. `showmeshctl audio node choices <node-id>` shows the same program and LTC choices. A refused audio setting appears as a warning on Settings Audio and Node Detail.
+
 ShowMesh refuses configuration that contradicts required capability evidence. A saved route or clock provider does not prove the output is present, locked, or aligned.
 
 ## Connection state
+
+Connections includes plugin code pairing, brightness ceilings, and observed player brightness.
 
 Connection pages separate configured endpoints from observed reachability. Unavailable, stale, failed, and never observed are different states.
 
