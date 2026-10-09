@@ -30,6 +30,8 @@ Only a Show-role audio session can start LTC. The node starts timecode from the 
 
 Cue activation keeps audio and timecode together: the node starts the Cue's audio asset, seeks to the observed Cue position, and derives LTC from that same session rather than a separate timing source.
 
+On one measured installation, the LTC output stayed within two frames of program audio after a start, a seek, and a resume. See [Measured timing behavior](../../reference/measured-timing/) for the values, the conditions they apply to, and how to correct for them in a receiver.
+
 Program audio can target several nodes. The coordinator selects a clock holder, reads the shared media clock once, prepares every target, and schedules one future start instant. Each node reports whether it used that instant. LTC remains on the single `program+ltc` node.
 
 `node.clock` selects a managed, external, or FPP-provided PTP relationship and reports lock/holdover evidence. Static output-latency calibration can compensate for measured output-chain delay. Alignment runs retain program-to-LTC drift measurements. These mechanisms expose evidence; they do not prove receiver lock or acoustic alignment without physical observation.

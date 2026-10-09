@@ -16,6 +16,7 @@ Use Reference when you already know what you are trying to configure or call. Fo
 - [Release artifacts](./release-artifacts/): tag-driven images, native packages, architectures, and checksum verification.
 - [Roadmap](./roadmap/): current development priorities and remaining release work.
 - [Maturity and complexity](./maturity/): what the status labels mean.
+- [Measured timing behavior](./measured-timing/): small timing differences to expect between outputs, and how to correct for them in a receiving device.
 
 This reference describes the v0.2.0 prerelease. Later development features are unreleased. Version-selected documentation remains deferred while its maintenance and archive policy is established.
 
