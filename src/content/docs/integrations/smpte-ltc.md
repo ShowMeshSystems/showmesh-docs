@@ -30,7 +30,7 @@ Only a Show-role audio session can start LTC. The node starts timecode from the 
 
 Cue activation keeps audio and timecode together: the node starts the Cue's audio asset, seeks to the observed Cue position, and derives LTC from that same session rather than a separate timing source.
 
-On one audio node, LTC on the wire stayed within two frames of program audio after starts, seeks, and resumes. [Measured timing behavior](../../reference/measured-timing/) has the numbers, the equipment, and what the measurement did not cover.
+On one measured installation, the LTC output stayed within two frames of program audio after a start, a seek, and a resume. See [Measured timing behavior](../../reference/measured-timing/) for the values, the conditions they apply to, and how to correct for them in a receiver.
 
 Program audio can target several nodes. The coordinator selects a clock holder, reads the shared media clock once, prepares every target, and schedules one future start instant. Each node reports whether it used that instant. LTC remains on the single `program+ltc` node.
 
