@@ -43,7 +43,7 @@ Each render node is its own FPP Connect target, so repeat these steps for every 
 4. Leave the Media checkbox off unless you also want the sequence's music or video sent.
 5. Upload.
 
-If you pick no playlist, the upload binds to the Show that is currently active on the coordinator. If a typed name matches no Show, or more than one, or no Show is active, the node keeps the file, registers nothing, and records it as unbound. It never guesses.
+If you pick no playlist, or the typed name matches no Show or more than one, the upload binds to the Show that is currently active on the coordinator. A file that was uploaded before keeps the Show it was bound to then, even after you switch Shows. If no Show is active, the node keeps the file, registers nothing, and records it as unbound.
 
 ## Channel ranges
 
