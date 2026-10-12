@@ -15,7 +15,7 @@ The listener is an unauthenticated compatibility shim for xLights, not part of t
 
 ## Required credential for upload registration
 
-`SHOWMESH_AGENT_API_TOKEN` is **required** on any node that will register an xLights upload. Enrollment supplies a `node` role token with `asset:write`. Without that scope, the node still assembles, hashes, and holds the upload but cannot register it with the coordinator. Registration state, asset ID, reason, problem type, held-file count, and event count are reported through node render evidence and `showmeshctl fppconnect status`; the local `assets/fppconnect-uploads/index.json` remains a deeper host-side record.
+`SHOWMESH_AGENT_API_TOKEN` is **required** on any node that will register an xLights upload. Enrollment supplies a `node` role token with `asset:write`. Without that scope, the node still assembles, hashes, and holds the upload but cannot register it with the coordinator.
 
 The listener binds on `SHOWMESH_FPPCONNECT_LISTEN_ADDR` (default `:80`, matching where xLights itself expects to find FPP Connect hosts). Binding a privileged port requires the `CAP_NET_BIND_SERVICE` capability, which the packaged systemd unit grants explicitly. A node that cannot bind the listener still renders and still answers other agent traffic; check node status for the bind failure.
 
@@ -29,13 +29,59 @@ showmeshctl fppconnect settings set --help
 showmeshctl fppconnect status <node-id>
 ```
 
-`status` reports the most recently pushed channel-range outcome for one node. A range may be formatted, empty because no surface is configured, or dropped with a reason. Treat a dropped range as an explicit configuration problem, not an invitation to guess at a replacement mapping.
+`status` reports only the most recently pushed channel-range outcome for one node. It does not report uploads. A range may be formatted, empty because no surface is configured, or dropped with a reason. Treat a dropped range as an explicit configuration problem, not an invitation to guess at a replacement mapping.
 
-## What to inspect
+The defaults are ingestion enabled, 2 GiB per file, and 20 GiB for the whole node asset directory. A file over the per-file limit, or an upload that would pass the directory limit, is refused.
 
-An upload binds to one Show. When the request does not identify a Show, the agent resolves the active Show only when that choice is unambiguous; otherwise it holds the upload and reports why it cannot register it.
+## Set up xLights
 
-Sequences register automatically through the assets API. Music and video files remain held for manual registration rather than being silently assigned to a Show or target. After a controlled upload, inspect `fppconnect status` and the node's render report for every target. A formatted channel range or registered asset confirms only that recorded step; it does not verify FPP deployment or rendered output.
+Each render node is its own FPP Connect target, so repeat these steps for every node you upload to.
+
+1. Confirm the node's agent is running and the listener is bound. The node must be reachable from the xLights machine on port 80 (see above).
+2. In xLights, open the FPP Connect dialog and pick the node. It identifies itself as an FPP player (version 9.5.0) so the dialog offers the playlist list and sparse sequence rendering.
+3. Pick the ShowMesh Show in the playlist field. The node lists its Show names there, so the playlist you pick is the Show the upload binds to.
+4. Leave the Media checkbox off unless you also want the sequence's music or video sent.
+5. Upload.
+
+If you pick no playlist, or the typed name matches no Show or more than one, the upload binds to the Show that is currently active on the coordinator. A file that was uploaded before keeps the Show it was bound to then, even after you switch Shows. If no Show is active, the node keeps the file, registers nothing, and records it as unbound.
+
+## Channel ranges
+
+The node tells xLights which channels it renders, so xLights sends a sparse sequence holding only those channels. The ranges come from the channel ranges of the Show's surfaces on that node. ShowMesh counts channels from 1; xLights counts from 0 and writes an inclusive end, so a surface starting at channel 1025 with 512 channels is advertised as `1024-1535`. Several surfaces are advertised as a comma-separated list in start order.
+
+A node with no surface configured advertises no range. A range is also dropped when its list is too long for the discovery packet, or when it is a single channel starting at channel 1, which xLights ignores. `showmeshctl fppconnect status <node-id>` shows which of these happened.
+
+## What the node accepts
+
+The node accepts files only into the `sequences`, `music`, and `videos` folders. Any other folder, including `effects`, is refused, and so is a file name that is not a plain name.
+
+| What xLights sends | Folder | What the node does today |
+| --- | --- | --- |
+| Sequence (FSEQ) | `sequences` | Holds the file, then registers it as a node-targeted FSEQ asset through the assets API. |
+| Music (Media checkbox) | `music` | Holds the file. It is not registered. |
+| Video (Media checkbox) | `videos` | Holds the file. It is not registered. |
+
+Music registration is changing; this page describes today's behavior.
+
+## Where uploads land
+
+Files are written under the node's asset directory (`SHOWMESH_ASSET_DIR`, `/var/lib/showmesh/assets` by default):
+
+- `fppconnect-uploads/held/<folder>/<file name>` holds each completed upload. A partial upload sits in `fppconnect-uploads/staging/` and is discarded if the agent restarts, so an interrupted upload registers nothing.
+- `fppconnect-uploads/index.json` records each held file, whether it is bound to a Show, and its registration state.
+
+The coordinator does not show held files or their registration state. Read `index.json` on the node for that.
+
+## How to tell it worked
+
+A sequence upload worked when both of these are true:
+
+1. In `index.json`, the file's entry has `registrationState` of `registered`.
+2. `showmeshctl assets list --node <node-id>` lists a current FSEQ asset for that file name's sequence.
+
+`skipped` is the expected state for a music or video file. `pending` means the node is retrying, and `failed` carries a `registrationReason`. An entry that is not bound to a Show has no registration state and is never registered; its `unboundReason` says why. See [FPP Connect upload is accepted but never registers](../../troubleshooting/nodes/) for the usual causes.
+
+A registered asset confirms only that step. It does not verify FPP deployment or rendered output.
 
 ## Boundaries that remain open
 
