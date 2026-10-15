@@ -33,16 +33,24 @@ ShowMesh applies calibrated output latency as a static offset. Store its measure
 
 If the shared clock cannot be established, the operation can report visible unaligned fallback. Never translate that result into “synchronized.”
 
-Cue audio, announcements, Night beds, item changes, and resumes use this scheduling model. LTC remains single-target.
+Announcements, Night beds, item changes, and resumes use scheduled playback. LTC remains single-target.
+
+## FPP-backed Cue starts
+
+A node uses its deployed Cue catalog to prepare audio on a MultiSync sequence OPEN and start it on sequence START. The coordinator supplies a fallback when the node misses the start packet. Media START packets are not Cue start triggers.
+
+A node that finishes preparation after the scheduled instant catches up to the song's reached position. With a usable media clock it can schedule a new start just ahead; if that instant is missed or scheduling is unavailable, it starts and seeks to the reached position. Preserve the reported scheduling and alignment result rather than calling every catch-up synchronized.
+
+The coordinator prepares the next Cue's audio on all intended nodes, including nodes with no audio in the current Cue, and stages the opening Cue before show playback. Assets and catalog acknowledgement remain prerequisites.
 
 ## Alignment runs
 
 Alignment-run endpoints manage long-running program-to-LTC measurements for one node. A retained run covers only its recorded configuration and interval; it does not prove later PTP lock or receiver behavior.
 
-## Failure contract
+## Handle scheduling failures
 
 - Preparation failure names the affected node and prevents it from being silently counted as aligned.
-- A scheduled instant already passed is an error, not permission to claim alignment after starting late.
+- A passed scheduled instant cannot establish alignment. Cue playback can catch up as described above; callers must retain its actual outcome.
 - Missing assets, routes, or capabilities remain per-node failures.
 - Clock unavailability can degrade to an explicitly unaligned result where the caller permits execution.
 - A node that starts but reports it did not use the shared instant is reported unaligned.

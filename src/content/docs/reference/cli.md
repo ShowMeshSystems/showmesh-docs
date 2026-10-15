@@ -25,6 +25,8 @@ showmeshctl fpp pair <instance-id> <code>
 showmeshctl fpp pairing <instance-id>
 showmeshctl fpp set-brightness-ceiling <instance-id> <0-100>
 showmeshctl audio node choices <node-id>
+showmeshctl system versions
+showmeshctl release settings get
 ```
 
 See [Native node installation](../../guides/add-a-node/) and [FPP plugin pairing](../../integrations/fpp-plugin/) for permissions, confirmation, and recovery.
@@ -43,7 +45,7 @@ Flags follow the command name. `showmeshctl` treats its first argument as the co
 ## Command groups
 
 - Inventory and state: `nodes`, `node`, `snapshot`, `events`, `watch`.
-- FPP: `fpp`, eight primitive controls, transition gain, playlist-definition republish, `fpp-mqtt`, stored definitions, entry reconciliation, and readiness.
+- FPP: `fpp`, eight primitive controls, brightness ceiling and excluded ranges, transition gain, playlist-definition republish, `fpp-mqtt`, stored definitions, entry reconciliation, and readiness.
 - Configuration and discovery: `config`, `discover`, `declare`, `undeclare`.
 - Shows: `show` and participation, `surface`, `cue` and direct activation, `playlist`, `media-playlist`, `action`, `macro`, `run`, and `night`; revisioned objects also expose tombstone deletion where their help lists it.
 - Actions: `action list|show|put`, `action check` (re-resolves stored action bindings without dispatching anything), and `action invoke` (invokes one stored action outside a macro run, requires `show:action:invoke`).
@@ -53,8 +55,16 @@ Flags follow the command name. `showmeshctl` treats its first argument as the co
 - Resolume: `resolume composition`, `resolume action`, `resolume status`, and recovery commands.
 - Assets: `assets list|get|upload|fetch|manifest|unused|remove|resync` and settings.
 - Identity: `session`, `audit`, `principal`, and `token`.
+- Playlist migration: `playlist move-to-newer-fpp <id>` previews the change; add `--confirm` to save it.
 - Runs: `run show <runId>` and `run list [--macro <id>] [--show <id>] [--state]`.
-- Compatibility: `version`.
+- Weather delay: `weather-delay status|start|cancel-night|resume|clear|presign|decision|trigger`. Starting or cancelling requires `show:weatherdelay:invoke`; resuming or clearing requires `show:weatherdelay:resume`. Presigning requires `config:write`.
+- FPP fallback: `fallback list`, `fallback show <fpp-instance-uuid>`, and `fallback clear --confirm <fpp-instance-uuid>`. Clearing forgets stored coordinator state; it does not stop the player.
+- Fleet versions: `system versions` reports component versions and the cached newest-release result; `release settings get|set|revisions` controls the check. It installs nothing.
+- Compatibility: `version` compares this CLI and the coordinator API. Use [Upgrade and restore ShowMesh](../../guides/upgrade-and-restore-showmesh/) to check the fleet before changing releases.
+
+:::note[Companion report commands]
+`companion-reports list` and `companion-reports get <report-id>` require a Core 0.4.0 or newer coordinator and CLI. Core 0.4.0 is not yet published. These commands inspect uploaded evidence; they do not control the remote computer.
+:::
 
 Use command-specific help for required scopes, flags, replacement semantics, and idempotency options. The compiled help is the exact inventory for that binary.
 

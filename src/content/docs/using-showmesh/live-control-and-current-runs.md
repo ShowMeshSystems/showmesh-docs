@@ -27,7 +27,9 @@ Use direct activation only for operator-triggered Cues. Check the result for mis
 
 ## Emergency controls
 
-Emergency Stop affects all three immediate target kinds: FPP, declared audio nodes, and configured Resolume instances. See [Emergency stop](../emergency-stop/) before show operation; the higher levels also alter the active Night lifecycle.
+Emergency Stop stops configured FPP instances, silences declared audio nodes, and blackouts configured Resolume instances and declared render surfaces. **Stop** holds the active Night until you deliberately resume. **Resume** restarts its show playlist from the first song after confirmation. See [Emergency stop](../emergency-stop/) for the levels and recovery.
+
+**Weather delay** stops the display and starts the configured weather alert. **Cancel night** ends tonight's operation for weather. Their banner remains visible across the workspace; it reports target and power-group evidence and offers Resume or Clear cancellation as appropriate. Use [Handle a weather delay](../../guides/handle-a-weather-delay/) to configure alerts, answer automatic trigger questions, and recover.
 
 ## Before acting
 

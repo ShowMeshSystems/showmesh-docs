@@ -25,7 +25,11 @@ showmeshctl night status
 showmeshctl night prepare-site
 ```
 
-`prepare-site` creates a new epoch. A readiness result from an earlier epoch cannot authorize this one.
+`prepare-site` creates a new epoch. A readiness result from an earlier epoch cannot authorize this one. The CLI leaves FPP playback running; add `--stop-fpp-playback` only when you intend to stop this Night's players.
+
+:::caution[Check the Prepare site playback choice]
+In **Show Night** or **Live Control**, the **Prepare site** dialog starts with the stop-FPP option checked. Leave it off if FPP's schedule already started playback that must continue. Check the named players before confirming.
+:::
 
 ## 2. Run readiness
 
@@ -49,6 +53,8 @@ Confirm the intended resting/preshow presentation and background audio on every 
 showmeshctl night start
 ```
 
+In the Operator UI, **Start night** asks for confirmation and offers to start without the lead-in. The announcement Cue still plays when you skip the lead-in.
+
 If the saved readiness result became stale, start automatically reruns it and uses the fresh result. A failure names the current blocking check; do not rely on the earlier pass.
 
 Monitor current runs rather than assuming one global playhead. FPP and ShowMesh audio can run at the same time.
@@ -67,11 +73,19 @@ showmeshctl night fade-out
 showmeshctl night power-down
 ```
 
+During a show, `night fade-out` waits until that show ends before fading and stopping FPP. Watch the lifecycle and fresh FPP evidence; a submitted closing command is not proof that playback stopped. For an immediate intervention, use Emergency Stop.
+
 These commands remain available when the session is degraded so the site can still close through the standard path.
+
+## Stop or interrupt for weather
+
+**Stop** holds the active Night. After resolving the cause and checking the site, choose **Resume** in Live Control or Show Night and confirm. It starts the show playlist from its first song. See [Emergency Stop](../../using-showmesh/emergency-stop/) for target outcomes and refused Resume commands.
+
+For a weather interruption, follow [Handle a weather delay](../handle-a-weather-delay/). Weather Resume can restart an interrupted show from the top; clearing a cancelled night does not restart it.
 
 ## Degraded recovery
 
-If a restart or contradictory evidence marks the session degraded, use the permitted closing commands. `night end-session` returns it to `stopped` and preserves the degraded record:
+If a restart or contradictory evidence marks the session degraded, use the permitted closing commands. If normal closing is unavailable, `night end-session` abandons it to `stopped` and preserves the degraded record. It does not stop FPP or power anything off; check affected devices separately:
 
 ```sh
 showmeshctl night end-session
@@ -81,4 +95,4 @@ To operate again, begin with a new `prepare-site` epoch and a new readiness pass
 
 ## Emergency intervention
 
-Use [Emergency Stop](../../using-showmesh/emergency-stop/) when playout must stop immediately. Every level stops FPP, silences declared audio nodes, and blackouts configured Resolume. `stop-power-down` starts Night shutdown; `hard-stop` abandons the session after a separate arm/fire gate.
+Use [Emergency Stop](../../using-showmesh/emergency-stop/) when playout must stop immediately. Every level stops FPP, silences declared audio nodes, and blackouts configured Resolume and declared render surfaces. `stop-power-down` starts Night shutdown; `hard-stop` abandons the session after a separate arm/fire gate.

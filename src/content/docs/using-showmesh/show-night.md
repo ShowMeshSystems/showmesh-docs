@@ -16,18 +16,21 @@ FPP remains responsible for calendar scheduling, Playlist selection, and playhea
 
 | Command | Effect |
 | --- | --- |
-| `night prepare-site` | Opens a new preparation epoch. |
+| `night prepare-site` | Opens a new preparation epoch; preserves FPP playback unless `--stop-fpp-playback` is supplied. |
 | `night readiness` | Runs readiness for the current epoch. |
 | `night preshow` | Enters the configured pre-show presentation. |
 | `night start` | Authorizes the night after current-epoch readiness. |
 | `night final-show` | Stops admitting new shows after one final complete show. |
-| `night fade-out` | Fades the active presentation and stops FPP. |
+| `night fade-out` | Fades the presentation and stops FPP; during a show, waits until that show ends. |
 | `night power-down` | Closes the session after playback and fade stop. |
-| `night end-session` | Provisional unconditional recovery to `stopped`, preserving degraded evidence. |
+| `night end-session` | Abandons the session to `stopped` without stopping devices, preserving degraded evidence. |
+| `night resume-show` | Clears a Stop hold and starts the show playlist from its first song. |
 
 ## Preparation and readiness
 
 Every `prepare-site` creates a new epoch. Earlier readiness results do not apply.
+
+The **Prepare site** dialog starts with its stop-FPP option checked. Leave it off when FPP's own schedule started playback that must continue. The CLI preserves playback unless you pass `--stop-fpp-playback`.
 
 `night start` requires current-epoch readiness. It reruns a stale result automatically and refuses to start when the fresh check fails.
 
@@ -58,6 +61,18 @@ The end-of-night resting playlist repeats only when the session sets `endOfNight
 A Transition Step invokes a same-Show action with timing and failure policy. Use a [Cue](../cues/) for reusable show output and an [Action](../actions-and-macros/) for a reusable provider operation.
 
 The first outward-facing step can require stored retry-safety policy.
+
+## Presentation timing
+
+Author the definition under **Shows → your Show → Night Session**; use **Show Night** to operate it. The resting sequence's length sets the resting cycle duration. Select the sequence and target that match the intended resting output.
+
+Blackout hold and blackout-after-show set transition timing. Optional lights fade-out finishes as the resting sequence ends before a show; lights fade-in begins when resting playback starts after a show. Leaving either fade empty disables that fade. Check the selected enter-show and return-to-resting steps before starting.
+
+The **Start night** dialog can skip the lead-in. An announcement Cue still plays when this option is selected.
+
+## Stop and weather holds
+
+[Emergency Stop](../emergency-stop/) holds the active Night against automatic playback restart. Resume requires a deliberate command and starts the show playlist from its first song. A [weather delay](../../guides/handle-a-weather-delay/) also inhibits output starts; its Resume and cancellation recovery have separate behavior.
 
 ## Configuration commands
 

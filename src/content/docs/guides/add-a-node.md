@@ -6,7 +6,7 @@ maturity: experimental-active
 complexity: advanced
 ---
 
-Install the v0.2.0 native agent directly on a Debian 13 or newer amd64 or arm64 host. The installer obtains the runtime packages and the checksum-verified agent package, redeems an enrollment code, and starts the systemd service.
+Install the v0.3.1 native agent directly on a Debian 13 or newer amd64 or arm64 host. The installer obtains the runtime packages and the checksum-verified agent package, redeems an enrollment code, and starts the systemd service.
 
 ## Before you start
 
@@ -35,7 +35,7 @@ Use a new code if the previous code expired, was cancelled, or was already redee
 Download and review the bootstrap before running it as root:
 
 ```sh
-curl -fL https://github.com/ShowMeshSystems/showmesh/releases/download/v0.2.0/get-showmesh.sh -o get-showmesh.sh
+curl -fL https://github.com/ShowMeshSystems/showmesh/releases/download/v0.3.1/get-showmesh.sh -o get-showmesh.sh
 less get-showmesh.sh
 sudo bash get-showmesh.sh --role audio
 ```
@@ -61,11 +61,11 @@ sudo showmeshctl node <node-id>
 sudo showmeshctl declare --label "<descriptive label>" <node-id>
 ```
 
-Confirm fresh control-plane evidence and the capabilities required for its role. Declaration is required before a surface can target the node. Configure a node-reachable content base URL in [Content delivery](../../using-showmesh/settings/) before assigning assets.
+Confirm fresh control-plane evidence and the capabilities required for its role. Declaration is required before a surface can target the node. Check the node-reachable URL in [Content delivery](../../using-showmesh/settings/) before assigning assets. The coordinator installer saves it when no asset settings exist; manual deployments need to set it.
 
 ## Upgrade or recover
 
-Run the target release's bootstrap again. An enrolled node keeps its environment and state and skips enrollment unless `--reenroll` is supplied. Verify the version and fresh evidence after the restart.
+Follow [Upgrade and restore ShowMesh](../upgrade-and-restore-showmesh/), then run the target release's bootstrap again. An enrolled node keeps its environment and state and skips enrollment unless `--reenroll` is supplied. Verify the version and fresh evidence after the restart.
 
 - If the platform check refuses, use Debian 13 or newer on amd64 or arm64; Core has no armv7 agent package.
 - If redemption fails, verify the coordinator address and create a new code.

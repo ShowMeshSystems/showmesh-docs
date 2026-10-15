@@ -284,7 +284,7 @@ showmeshctl show mode get
 Switch back to `program` when you need to resume live Cue editing between shows.
 
 :::caution[Emergency Stop is show-affecting]
-Confirm you can reach [Emergency stop](../../using-showmesh/emergency-stop/) and know which level you would use before a night runs. Every level immediately stops configured FPP instances, silences declared audio nodes, and blackouts configured Resolume instances. Show Mode never gates it.
+Confirm you can reach [Emergency stop](../../using-showmesh/emergency-stop/) and know which level you would use before a night runs. Every level immediately stops configured FPP instances, silences declared audio nodes, and blacks out configured Resolume instances and native render surfaces. Level-one Stop holds the Night until explicit Resume, which starts the show playlist from its first song. Show Mode never gates it.
 :::
 
 ```sh

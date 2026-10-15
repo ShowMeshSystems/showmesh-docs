@@ -1,45 +1,38 @@
 ---
 title: Compatibility
-description: Interfaces and compatibility limits for the v0.2.0 prerelease.
+description: Interfaces and compatibility limits for the v0.3.1 prerelease.
 pageType: reference
 maturity: experimental-active
 ---
 
-These interfaces describe the v0.2.0 prerelease. Upgrade Core and the FPP plugin together; the pre-alpha `0.x` line makes no compatibility or migration promise between versions. Validate hardware and vendor behavior in your installation.
+Use Core 0.3.1 and its native agents with FPP plugin 0.3.0. The pre-alpha `0.x` line makes no compatibility or migration promise between versions. Validate media hardware and vendor behavior in your installation.
 
-## Implemented interfaces
+## Systems and interfaces
 
-- Coordinator and native agent communicate through Mosquitto-compatible MQTT broker URLs using `tcp`, `ssl`, `tls`, `mqtt`, `mqtts`, `ws`, or `wss` schemes.
-- FPP is observed through its HTTP API and optionally FPP MQTT topics; eight playlist/volume commands are implemented with evidence-based outcomes.
-- Native nodes have experimental xLights FPP Connect ingestion and report per-node channel-range outcomes.
-- Native audio nodes implement local playback, plural Cue/Night targets, shared scheduled starts, gain/output control, PTP-backed node clocks, latency calibration, alignment runs, and one-node LTC generation. Full physical-interface and live-show support remains installation-specific.
-- An installation-wide operating mode (`show.mode`: `program` or `show`) and an emergency-stop command surface (`emergency-stop stop`, `stop-power-down`, and a two-step hard stop) are implemented and available at the coordinator's API and CLI.
-- Signed FPP fallback programs exist on the coordinator side (`/fallback-programs*`). The separate plugin can fetch, verify, install, acknowledge, and locally resolve entries; coordinator-to-node activation delivery remains incomplete.
-- Resolume Arena is observed and controlled through its REST API, with a WebSocket used only as a change signal. Composition metadata is uploaded from an `.avc` file.
-- External clients use HTTP API version 1 and Server-Sent Events.
+The table identifies available interfaces and the requirements that affect their use.
 
-## Important limits
+| System or interface | Scope |
+| --- | --- |
+| Coordinator and native-agent MQTT | Mosquitto-compatible broker URLs using `tcp`, `ssl`, `tls`, `mqtt`, `mqtts`, `ws`, or `wss`. The installer’s external-broker setup accepts `tcp` or `mqtt` only. |
+| FPP | HTTP observation and playlist/volume control, optional MQTT status, plugin pairing, brightness ceilings, and excluded channel ranges. FPP remains the scheduler. |
+| FPP plugin | Released experimental Plugin Manager installation for FPP 9.4–9.x and 10.x. Use [plugin installation and pairing](../../integrations/fpp-plugin/) for the version-specific path. |
+| Resolume Arena | REST observation/control, WebSocket change signals, and an uploaded `.avc` identity map. ShowMesh uses targeted live reads rather than full `GET /composition`. OSC is not implemented. |
+| Native audio nodes | Experimental local playback, plural Cue/Night targets, shared scheduled starts, gain/output control, PTP-backed clocks, output-latency calibration, alignment runs, and one-node LTC. The native agent requires Debian 13 or newer; the plain source `make build` agent has no audio engine. |
+| Native render nodes | Experimental FSEQ-to-NDI output. Several surfaces can share a node with distinct channel ranges and NDI names and matching frame timing. HDMI output is unavailable. |
+| xLights FPP Connect | Experimental native-node ingestion and channel-range reporting. See [xLights / FPP Connect](../../integrations/xlights/) for setup and file-transfer behavior. |
+| Signed FPP fallback | The plugin can run a held program during coordinator loss. The coordinator leaves that player’s Cue activation to the plugin until its playlist ends. See [Recover after coordinator loss](../../guides/recover-after-coordinator-loss/) for delivery prerequisites and recovery. |
+| External clients | HTTP API version 1 and Server-Sent Events. Clients must tolerate unknown response fields. |
 
-- No runtime path calls Resolume's full `GET /composition`; ShowMesh uses an uploaded `.avc` map and targeted live reads.
-- Resolume OSC is not implemented.
-- The experimental NDI render path supports NDI output; HDMI output is not available.
-- FPP Connect is experimental. Its page names the deployment limitation.
-- Audio and LTC have software configuration and command paths. See [SMPTE / LTC](../../integrations/smpte-ltc/) for timing and receiver limits.
-- The experimental FPP plugin has a released Plugin Manager installation for FPP 9.4–9.x and 10.x. See [FPP plugin](../../integrations/fpp-plugin/) for pairing and testing.
-- The native audio-capable agent build (`make build-agent-native`) requires Debian 13 (trixie) or newer; the plain agent build has no audio engine.
+:::note[Test experimental outputs]
+Software configuration and fresh status do not establish physical output, timing alignment, or live-show reliability. Test audio, PTP, LTC, NDI, FPP Connect, and fallback operation on the exact hardware and software versions you intend to use. No public hardware matrix covers every combination.
+:::
 
-## Not available
+An NDI configuration alone is not evidence of output. Confirm a prepared render node, ready node-local FSEQ content, applied surfaces, a working transport probe, and fresh pipeline status.
 
-- HDMI surface output.
-- A supported public audio/LTC operating path.
-- A supported FPP Connect deployment path.
-- A supported FPP plugin/provider development kit.
-- Coordinator-to-node signed fallback activation delivery and execution.
-- A supported multi-node audio hardware matrix and live-show acceptance. Implemented scheduling and retained measurements are narrower evidence.
-- Documentation version selection.
+## Component versions and API negotiation
 
-The presence of a surface configuration is not evidence that a renderer is producing output. NDI requires a prepared render node, a ready node-local FSEQ asset, an applied surface, a working transport probe, and fresh pipeline evidence.
+Use `showmeshctl system versions` to inspect the coordinator, native-agent, and FPP plugin versions. Core 0.3.1 agents match the coordinator; FPP plugin 0.3.0 is the matching plugin. Follow [Upgrade and restore ShowMesh](../../guides/upgrade-and-restore-showmesh/) when changing versions.
 
-## Version negotiation
+Use `showmeshctl version` to compare the CLI and coordinator API. API v1 is additive within its major version; the API number does not identify the product release. Do not assume compatibility between `0.x` releases or with unreleased development commits.
 
-Use `showmeshctl version` to compare the CLI and coordinator API. API v1 is additive within the major version; clients must tolerate unknown response fields. Do not assume compatibility between `0.x` releases or with unreleased development commits.
+Companion report upload/read support requires Core 0.4.0 or newer, which is not yet published. The [Companion integration guide](../../integrations/showmesh-companion/) identifies the available source-build path. Documentation version selection is not available.

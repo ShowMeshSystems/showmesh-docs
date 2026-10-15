@@ -46,7 +46,9 @@ Clock reports distinguish synchronized, holdover, and unavailable. The holdover 
 
 A single-node start can use `scheduledAtNs`. For several nodes, aligned start prepares every target and schedules them for one shared instant.
 
-Cues, Night beds, announcements, and resumes use this behavior. Each target reports aligned or unaligned operation.
+Night beds, announcements, and resumes use scheduled playback. For FPP-backed Cues, nodes prepare from MultiSync OPEN and start from MultiSync START, with a coordinator fallback if the packet is missed. A node that loads too late joins at the song's reached position rather than playing the entire song late. Each target reports its start and alignment evidence.
+
+ShowMesh prepares the next song on every intended audio target, including a node sitting out the current song. Stage the assets and deploy the Cue catalog before playback.
 
 Output-latency calibration offsets known output-chain delay and records its method, configuration, timestamp, and confidence.
 
@@ -66,6 +68,6 @@ Alignment runs record program-to-LTC drift. Their warning threshold supports pre
 
 Device loss fails silent. ShowMesh does not move audio to another node or back to FPP. Recovery restores the route, channels, clock, assets, gain, and session position.
 
-A session waiting for a usable binding reports `restore_pending` and retries with bounded backoff.
+A session waiting for a usable binding reports `restore_pending` and retries with bounded backoff. After an agent restart, a running session rejoins at its scheduled position when its clock is locked. A returning Night bed follows the current track and position; an operator stop is respected.
 
 Use [Set up an audio node](../../../guides/set-up-an-audio-node/) for the procedure and [Audio and clock sync](../../../troubleshooting/audio-and-clock-sync/) for diagnosis.

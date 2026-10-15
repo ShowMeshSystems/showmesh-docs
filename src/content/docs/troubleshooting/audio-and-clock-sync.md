@@ -47,6 +47,8 @@ For a managed provider, verify the service can access the interface and requeste
 
 Alignment is reported per node. Find the target that failed preparation, lacked an asset, missed the scheduled instant, or did not use it. One aligned node does not make the group aligned.
 
+For an FPP-backed Cue, check whether the node started from MultiSync or the coordinator fallback. A slow-loading node can join at the reached position after a short gap. Inspect its actual start and alignment result before retrying; replaying the Cue may interrupt nodes already playing correctly. If the next song repeatedly starts late, confirm its assets are staged and the Cue catalog is acknowledged, including on nodes sitting out the current song.
+
 Retry only after correcting the named condition. A retry can change playback state without fixing stale clock evidence.
 
 ## Symptom: a stable offset remains

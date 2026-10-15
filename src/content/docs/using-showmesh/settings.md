@@ -15,6 +15,7 @@ Settings records installation-wide desired state. Use Monitor and current observ
 | **Node enrollment** | Create, list, and cancel one-time node enrollment codes. |
 | **Content delivery** | Asset and FPP Connect delivery behavior. |
 | **Render recovery** | Render settings and recovery policy. |
+| **Weather delay** | Alert assets, power groups, automatic trigger timing, and the optional weather-service poller. |
 | **Appearance** | Browser-local display preferences. |
 | **Audio defaults** | Engine-wide drift, gain, fade, announcement, and LTC defaults. |
 | **Node routing** | Per-node audio routes, PipeWire targets, channel placement, output latency, and node clocks. |
@@ -36,12 +37,14 @@ ShowMesh refuses configuration that contradicts required capability evidence. A 
 
 ## Connection state
 
-Connections includes plugin code pairing, brightness ceilings, and observed player brightness.
+Connections includes plugin code pairing, brightness ceilings, observed player brightness, and release-check settings. Use **Monitor → Fleet → Versions** to compare coordinator, node-agent, and FPP-plugin versions before planning an update.
 
 Connection pages separate configured endpoints from observed reachability. Unavailable, stale, failed, and never observed are different states.
 
 ## Permissions
 
 Settings writes generally require `config:write` and are administrator-only. Read-only operational pages may remain visible to viewers or operators while editor controls stay unavailable.
+
+Use [Handle a weather delay](../../guides/handle-a-weather-delay/) to configure and verify weather handling.
 
 See [Access and permissions](../access-and-permissions/) for role boundaries and [Show Mode](../show-mode/) for the operating-mode contract.

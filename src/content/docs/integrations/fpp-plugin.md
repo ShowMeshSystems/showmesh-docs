@@ -9,13 +9,13 @@ complexity: advanced
 Install the ShowMesh plugin on the FPP player to submit macros, control brightness, and report playlist-entry identity. FPP retains scheduling, playlist order, and playback authority.
 
 :::caution[Test the player before a show]
-Core and FPP plugin 0.2.0 are pre-alpha prereleases and must be upgraded together. Test installation, brightness, playlist reporting, and recovery on your player before using them during a show. Signed fallback entries can be cached and resolved locally, but they do not provide coordinator-to-node activation delivery or an operational coordinator-outage safeguard. Local fallback refuses to run when `/etc/showmesh-fpp-plugin` is not owned by root.
+Core 0.3.1 and FPP plugin 0.3.0 are pre-alpha releases. Upgrade the coordinator and every node agent together, using the matching plugin. Test installation, brightness, playlist reporting, and coordinator-loss recovery on a separate player before show use. Local fallback refuses to run when `/etc/showmesh-fpp-plugin` is not owned by root.
 :::
 
 ## Install the plugin
 
 1. Use FPP's Plugin Manager to install [ShowMeshSystems/fpp-showmesh](https://github.com/ShowMeshSystems/fpp-showmesh).
-2. Check the installation result. The installer downloads the helper for amd64, arm64, or armv7 from the [plugin 0.2.0 release](https://github.com/ShowMeshSystems/showmesh-fpp-plugin/releases/tag/v0.2.0) and verifies it against committed artifact digests. It refuses a mismatch.
+2. Check the installation result. The installer downloads the helper for amd64, arm64, or armv7 from the [plugin 0.3.0 release](https://github.com/ShowMeshSystems/showmesh-fpp-plugin/releases/tag/v0.3.0) and verifies it against committed artifact digests. It refuses a mismatch.
 3. Confirm the native component loads for your FPP version. The adapters support FPP 9.4–9.x and FPP 10.x; FPP 8 is unsupported. FPP 10 objects are built against FPP 10.0. When a matching prebuilt object is unavailable, the installer compiles native source against the host's installed FPP headers.
 4. Open the plugin page, save the **Coordinator address** as the coordinator API URL (for example, `http://<coordinator-host>:8080`), then pair it with the coordinator. The player must be able to reach that address.
 
@@ -45,6 +45,24 @@ showmeshctl fpp set-brightness-ceiling <instance-id> <0-100>
 ShowMesh reports confirmation only after the plugin reads the ceiling back. Transition gain is a separate multiplier and does not overwrite the scheduled ceiling. If the result is unconfirmed, inspect the player before retrying.
 
 Use the Playlists tab's **Re-import** button after changing an FPP playlist. It asks the host plugin to send definitions again and distinguishes a sent request from an import that landed. An unconfirmed result gives the reason. See [FPP](../fpp/) for the read-only playlist evidence commands.
+
+## Exclude fixture channels from brightness changes
+
+Exclude channels such as pan, tilt, gobo, and speed when changing their values would move a fixture or change its behavior. In the FPP instance page, save the complete excluded-channel list. The CLI equivalent is:
+
+```sh
+showmeshctl fpp set-brightness-excluded-ranges <instance-id> "1-512, 1025-512"
+```
+
+Each pair is a **start channel and channel count**. Channels are counted from 1: this example excludes channels 1–512 and 1025–1536. It is not start–end syntax. The command requires `fpp:command` and replaces the entire list; preserve existing exclusions when adding another range. It changes neither the ceiling nor transition gain.
+
+The list reads as saved only after the plugin reports it back. If confirmation is missing, inspect the player's current list before retrying. Test brightness on a separate fixture setup and confirm the excluded channels retain their values.
+
+To restore an earlier configuration, write its complete saved list. Use `none` only when you intend to remove every exclusion; subsequent brightness changes will affect those channels again.
+
+## Recover after coordinator loss
+
+The plugin can cache a signed fallback program and send its pre-resolved Cue activations directly to authorized nodes. When the coordinator returns, it holds new Cue starts for that player while the plugin runs the fallback playlist. Follow [Recover after coordinator loss](../../guides/recover-after-coordinator-loss/) to inspect the program, wait for handback, or deliberately clear a stuck state. A cached program alone does not prove the installation can continue through an outage.
 
 ## Read the local macro outcome
 

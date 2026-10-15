@@ -13,9 +13,9 @@ ShowMesh is being built so a show can keep running when a control-plane componen
 
 For the meaning of Available, Experimental, and Planned labels, see [Maturity and complexity](../maturity/).
 
-<StatusNote status="experimental-active" label="v0.2.0 prerelease">
+<StatusNote status="experimental-active" label="v0.3.1 prerelease">
 
-Core and FPP plugin 0.2.0 are published for deliberate show-network testing. The pre-alpha `0.x` line makes no compatibility or migration promise. Later development work is unreleased until a new tag is published.
+Core 0.3.1 and FPP plugin 0.3.0 are published for deliberate show-network testing. The pre-alpha `0.x` line makes no compatibility or migration promise. Later development work is unreleased until a new tag is published.
 
 </StatusNote>
 
@@ -26,7 +26,7 @@ flowchart LR
   C --> D[Stable operation]
 ```
 
-## What you can test in v0.2.0
+## Available now
 
 <CardGrid>
   <Card title="Coordinator and operator controls" icon="rocket">
@@ -46,7 +46,7 @@ flowchart LR
   </Card>
 </CardGrid>
 
-## Experimental operating paths
+## In development
 
 <CardGrid>
   <Card title="Render node and NDI" icon="server">
@@ -74,15 +74,20 @@ flowchart LR
 
     Cue audio, announcements, Night beds, item changes, and resumes can target several nodes at one shared scheduled instant. Per-node evidence reports aligned or unaligned results. Physical timing, PTP lock, and recovery still need installation acceptance. [Read about audio nodes →](/using-showmesh/node-types/audio-nodes/)
   </Card>
+  <Card title="Companion crash reports" icon="desktop">
+    <StatusBadge status="experimental-active" />
+
+    Companion 0.2.0 can collect Arena crash reports. Uploading and reading them through ShowMesh requires the unpublished Core 0.4.0 source build. [Read about ShowMesh Companion →](/integrations/showmesh-companion/)
+  </Card>
   <Card title="Signed FPP fallback program" icon="puzzle">
     <StatusBadge status="experimental-active" />
 
-    The coordinator builds and signs fallback programs, and the plugin can fetch, verify, install, acknowledge, and locally resolve entries. Coordinator-to-node activation delivery remains incomplete. [Read about FPP →](/integrations/fpp/)
+    The coordinator builds and signs fallback programs. During coordinator loss, the plugin can run its held program, and the coordinator avoids competing for that player when it returns. Test the complete path on your installation. [Recover after coordinator loss →](/guides/recover-after-coordinator-loss/)
   </Card>
 </CardGrid>
 
-## Work toward stable operation
+## Up next
 
-HDMI output and coordinator-to-node signed fallback activation remain unavailable. Broader hardware support, timing acceptance, vendor-version recovery guidance, secure remote deployment, and long-term compatibility still need work.
+HDMI output remains unavailable. Broader hardware support, physical timing acceptance, secure remote deployment, and version-selected documentation still need work.
 
 Use the guides to stage and test a show deliberately, and retain native/manual controls for every show-critical system.

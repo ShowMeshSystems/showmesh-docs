@@ -69,7 +69,7 @@ For a ShowMesh render node, configure the NDI source and mapping in Arena after 
 
 Use [Set up a video node](../../guides/set-up-a-video-node/) for the sender side. Configure LTC separately from the NDI source and mapping; see [SMPTE / LTC](../smpte-ltc/) for timecode behavior.
 
-## Recovery boundary
+## Recover after an Arena restart
 
 ShowMesh can record known Arena state and offer manual or opt-in automatic recovery after a detected restart. Test recovery with the intended composition on a non-show machine first.
 
@@ -83,7 +83,7 @@ showmeshctl resolume recovery revisions
 
 The auto-restore toggle (`enable`/`disable`) is store-backed configuration and requires `config:write`. The settle delay the automatic gate waits after Arena becomes reachable again, before issuing anything beyond the liveness probe that noticed the return, is a separate coordinator setting: `SHOWMESH_RESOLUME_RECOVERY_SETTLE` (default 8 seconds, 0-60 seconds). It is not part of the `resolume.recovery` store-backed configuration and changing it requires a coordinator restart. `resolume recovery restore` runs the same restore on demand, without the settle wait, regardless of the toggle.
 
-ShowMesh does not change Arena preferences, load a composition, manage shortcuts or presets, or start, stop, restart, or signal the Arena process. Those remain operator responsibilities and manual fallbacks.
+ShowMesh does not change Arena preferences, load a composition, manage shortcuts or presets, or start, stop, restart, or signal the Arena process. Those remain operator responsibilities and manual fallbacks. To launch Arena locally when its process disappears, configure [ShowMesh Companion](../showmesh-companion/). Keep local supervision distinct from coordinator-side composition restore.
 
 ## Show Mode and the WebSocket connection
 

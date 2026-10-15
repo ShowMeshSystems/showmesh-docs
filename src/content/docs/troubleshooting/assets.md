@@ -43,7 +43,7 @@ showmeshctl assets unused <node-id>
 showmeshctl assets remove <node-id> <content-hash>
 ```
 
-Removal is refused when a Cue still references the hash. To roll back an upload, re-upload or reselect the intended content revision and confirm delivery; do not edit node files behind the agent.
+Removal is refused when a Cue still references the hash. To roll back an upload, follow the [asset version procedure](../../using-showmesh/assets/#versions-resync-and-removal) and confirm delivery; do not edit node files behind the agent.
 
 For multi-node Cue or Night audio, every target must hold the required asset. One ready node does not make the group ready.
 
