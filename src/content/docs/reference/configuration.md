@@ -30,6 +30,16 @@ This page lists the supported runtime entry points. Take secrets from the deploy
 - `SHOWMESH_API_TRUST_CLIENT_ADDR`: trust the forwarded client-address boundary when deliberately configured.
 - `SHOWMESH_API_LOGIN_CONCURRENCY`, `SHOWMESH_API_LOGIN_QUEUE_WAIT`, `SHOWMESH_API_LOGIN_PER_SOURCE_DELAY`, `SHOWMESH_API_LOGIN_MAX_DELAY`: login cost and delay controls.
 
+## Node enrollment
+
+The installer fills these coordinator settings. Manual deployments must supply addresses reachable by nodes:
+
+- `SHOWMESH_PUBLIC_URL`: HTTP(S) coordinator API URL returned during enrollment; empty by default.
+- `SHOWMESH_NODE_BROKER_URL`: broker URL returned during enrollment; empty by default. Do not use a Compose-only hostname such as `mosquitto` for remote nodes.
+- `SHOWMESH_NODE_MQTT_USERNAME` and `SHOWMESH_NODE_MQTT_PASSWORD`: external-broker credentials returned to nodes when using an external broker. With the built-in broker, enrollment provisions each node its own credential.
+
+Use [native node enrollment](../../guides/add-a-node/) rather than sharing an administrator API token.
+
 ## Integrations
 
 - `SHOWMESH_FPP_ENDPOINTS`: legacy/startup comma-separated `id=url` endpoints. The active configuration is revisioned through `fpp.endpoints`; this legacy value blocks store-backed edits until its migration is deliberately resolved.
@@ -37,11 +47,11 @@ This page lists the supported runtime entry points. Take secrets from the deploy
 - `SHOWMESH_INTEGRATION_BROKERS`: named brokers used by configured integration actions.
 - `SHOWMESH_RESOLUME_URL`, `SHOWMESH_RESOLUME_ID`: legacy/startup Resolume instance; the default ID is `resolume` when an instance URL is present. This pair blocks store-backed edits until its migration is deliberately resolved.
 - `SHOWMESH_RESOLUME_POLL_INTERVAL`, `SHOWMESH_RESOLUME_WEBSOCKET_DISABLED`: Resolume collection tuning.
-- `SHOWMESH_RESOLUME_RECOVERY_SETTLE`: recovery settle delay, default `8s`, maximum `60s`. The default is a ShowMesh hypothesis, not a measured production value.
+- `SHOWMESH_RESOLUME_RECOVERY_SETTLE`: recovery settle delay, default `8s`, maximum `60s`. Increase it if Arena needs longer to become usable after restart.
 
-## Revisioned media configuration
+## Revisioned configuration
 
-Some newer media settings are revisioned API configuration, not environment variables. Use the API or `showmeshctl` to inspect the exact schema in the binary you run:
+These settings are revisioned API configuration, not environment variables. Use the API or `showmeshctl` to inspect the exact schema in the binary you run:
 
 - `fppconnect.settings`: enablement and storage limits for experimental node-side FPP Connect ingestion.
 - `render.settings`: render-node defaults and limits.
@@ -51,6 +61,10 @@ Some newer media settings are revisioned API configuration, not environment vari
 - `show`, `show.surface`, `show.cue`, `show.playlist`, `media.playlist`, `show.action`, `show.macro`, and `show.active`: show authoring objects and the active-show pointer.
 - `show.emergencystop`: each emergency-stop level's optional follow-up action list.
 - `night.session` and `night.session.active`: Show Night session objects and the active-session pointer.
+- `show.weatherdelay`: weather-delay fallback plan and trigger configuration.
+- `release.settings`: newest-release checks; enabled by default, every six hours. `checkIntervalSeconds` accepts 300–604800 seconds. `showmeshctl release settings set --enabled=false` disables the check without changing installed versions.
+
+`SHOWMESH_RELEASE_CHECK` and `SHOWMESH_RELEASE_CHECK_INTERVAL` are legacy startup inputs migrated into `release.settings`. The stored value takes precedence once it exists. Confirm migration succeeded before removing either variable, then remove both and restart to allow API edits. If migration was deferred, keep them and repair the store first.
 
 Do not invent environment variables for these records; use the OpenAPI schema (`api/openapi.yaml`) and compiled CLI help.
 
@@ -66,7 +80,7 @@ The four `SHOWMESH_ASSET_*` settings in this section migrate as one group into r
 
 ## Native agent
 
-The agent has no config file and no command-line flags: every setting is an environment variable, read once at process start (`internal/agent/config/config.go`).
+The agent reads settings from its environment at startup. The installed service loads `/etc/showmesh/agent.env`. Restart the service outside the show window after changing it.
 
 | Variable | Default | Purpose |
 |---|---|---|
@@ -76,7 +90,7 @@ The agent has no config file and no command-line flags: every setting is an envi
 | `SHOWMESH_MQTT_BROKER` | `tcp://localhost:1883` | Control-plane broker. |
 | `SHOWMESH_MQTT_CLIENT_ID` | `showmesh-agent-<node-id>` | Must be unique; two agents sharing a client ID disconnect each other. |
 | `SHOWMESH_ASSET_DIR` | `./assets` | Node-local downloaded assets and the agent's own durable state (render assignments, audio sessions). Set this explicitly; the default is relative to the process's working directory. |
-| `SHOWMESH_AGENT_API_TOKEN` | empty | Bearer token this agent sends to the coordinator. Required on any node that will ever receive an FPP Connect upload: registering the resulting asset is a write gated by `asset:write`, and this listener binds on every node regardless of the coordinator's read policy. Also needed for `asset.fetch`'s own read from the coordinator when the coordinator has closed anonymous reads (`SHOWMESH_API_CLOSE_READS=true`); a node with reads left open needs no token for that half. Only the `admin` role carries `asset:write` in the documented build. |
+| `SHOWMESH_AGENT_API_TOKEN` | empty | Bearer token for the node’s own API identity, supplied by enrollment. The `node` role grants `node:read` for asset downloads when reads are closed and `asset:write` for FPP Connect upload registration. Keep this token in the protected agent environment; never substitute an administrator token. |
 | `SHOWMESH_ASSET_INVENTORY_INTERVAL` | `2m` | Periodic asset-inventory publication. |
 | `SHOWMESH_RENDER_REPORT_INTERVAL` | `15s` | Render-report publication cadence. |
 | `SHOWMESH_AUDIO_REPORT_INTERVAL` | `15s` | Audio-report publication cadence. |
@@ -98,11 +112,10 @@ These variables draw a moving diagnostic bar on a named surface as soon as the a
 
 ### GStreamer and tooling overrides
 
-Only needed on the `build-agent-native` (cgo) build, and only when the binary is not on `PATH` under its normal name or a test needs to substitute a non-hardware sink:
+Use these overrides when the native agent cannot find a required tool or GStreamer plugin in its normal search path:
 
 - `SHOWMESH_GST_LAUNCH`, `SHOWMESH_GST_DISCOVERER`: override the resolved `gst-launch-1.0`/`gst-discoverer-1.0` paths.
-- `GST_PLUGIN_PATH`: only needed on a render node that also needs the NDI output element (`ndisink`), which this project does not build or ship; set it to the directory holding a separately built `libgstndi.so`.
-- `SHOWMESH_GST_AUDIO_SINK_FACTORY`: substitutes a non-hardware GStreamer sink factory (for example `fakesink`) for the production `alsasink`. Test and bench use only; setting this on a real node makes it report audio success without opening a real device.
+- `GST_PLUGIN_PATH`: directory containing the GStreamer NDI output element (`libgstndi.so`) when it is outside the normal plugin path. Release agent packages include the plugin; the installer can build it when absent. Obtain the vendor NDI runtime separately.
 
 `SHOWMESH_HW_ALSA_DEVICE`, `SHOWMESH_HW_CHANNELS`, and `SHOWMESH_HW_RATE` are not agent configuration. They gate one manual, opt-in Go test (`go test -tags showmesh_hwdevice`) that opens a real ALSA device and are not read by the agent binary itself.
 

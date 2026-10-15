@@ -6,11 +6,15 @@ maturity: experimental-testing
 complexity: advanced
 ---
 
-Use the [Core v0.2.0 release](https://github.com/ShowMeshSystems/showmesh/releases/tag/v0.2.0) for the installer and native agents, and the separate [FPP plugin v0.2.0 release](https://github.com/ShowMeshSystems/showmesh-fpp-plugin/releases/tag/v0.2.0) for plugin binaries. Install or upgrade both versions together. These are pre-alpha prereleases with no compatibility or migration promise between `0.x` versions.
+Use the [Core v0.3.1 release](https://github.com/ShowMeshSystems/showmesh/releases/tag/v0.3.1) for the installer and native agents, and the separate [FPP plugin v0.3.0 release](https://github.com/ShowMeshSystems/showmesh-fpp-plugin/releases/tag/v0.3.0) for plugin binaries. Use Core 0.3.1 with plugin 0.3.0; upgrade every native agent to the Core version. These are pre-alpha prereleases with no compatibility or migration promise between `0.x` versions.
 
 ## Version and tag agreement
 
-The tag and repository version must match. A development build is not a tagged release candidate.
+Core ships one version for its coordinator, Operator UI, and native agents. The FPP plugin and ShowMesh Companion version independently; use the combinations named by the Core release notes. The tag and repository version must match. A development build is not a published release.
+
+The [product versioning policy](https://github.com/ShowMeshSystems/showmesh/blob/main/docs/RELEASING.md) defines season major versions and optional `alpha`, `beta`, and `rc` suffixes. Prereleases and the experimental `0.x` line carry no compatibility promise. The public `/api/v1` version is separate from the product release number.
+
+Core 0.4.0 adds Companion report APIs in source but is not yet published. Do not use a source version number as proof that matching installer downloads or images exist.
 
 ## Artifact matrix
 

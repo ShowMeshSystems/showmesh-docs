@@ -6,7 +6,7 @@ pageType: procedure
 
 ## Before you start
 
-- Go 1.26 or newer in the repository's supported range (`go.mod` requires `go 1.26.0`; current CI pins Go 1.26.6).
+- Go 1.26 or newer in the repository's supported range (`go.mod` requires `go 1.26.0`; current CI pins Go 1.26.9).
 - Node 22, matching `.nvmrc`.
 - Docker for Compose and integration suites.
 - `make`.
@@ -35,6 +35,8 @@ pageType: procedure
    ```
 
 `make build` creates five binaries in `./bin`: `showmesh-coordinator`, `showmesh-agent`, `showmesh-multisync-probe`, `showmeshctl`, and `showmesh-fpp-plugin`. `make check` is the fast project check and includes Go formatting, vetting, linting and unit tests plus UI lint, types, tests, build, and generated-type verification.
+
+A plain source build reports `dev`. To stamp binaries for a selected release checkout, pass its bare version explicitly, for example `make build VERSION=0.3.1`. This changes build metadata; it does not publish a release.
 
 Use only synthetic or isolated integration targets during development. Never point tests or discovery tools at the live fleet without explicit owner authorization.
 

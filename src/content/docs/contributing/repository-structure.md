@@ -11,7 +11,7 @@ pageType: concept
 - `pkg/`: shared protocol and domain packages. Notable areas include audio scheduling/contracts, capabilities, commands, Cue activation/authorization/catalogs, coordinator signatures, FPP identity and fallback programs, FSEQ parsing, MQTT envelopes, MultiSync, observations, and Resolume composition parsing. Treat the directory itself as the current inventory; this summary is intentionally not exhaustive.
 - `api/openapi.yaml`: machine-readable public HTTP API description.
 - `ui/`: TypeScript operator client.
-- `deploy/`: Docker Compose deployment and deployment-specific operator material, including `deploy/node/` (`agent.env.example`, `install.sh`, `preflight.sh`, `README.md`, and `showmesh-agent.service` for a natively installed node).
+- `deploy/`: Docker Compose deployment, `deploy/install/` for the released bootstrap and role-based installer, and deployment-specific operator material, including `deploy/node/` (`agent.env.example`, `install.sh`, `preflight.sh`, `README.md`, and `showmesh-agent.service` for a natively installed node).
 - `test/`: assembled-system integration tests.
 - `bench/`: isolated research and hardware/protocol bench scaffolding, never the product.
 - `docs/architecture/`: engineering architecture specifications.
@@ -24,6 +24,10 @@ pageType: concept
 ## FPP plugin repositories
 
 Two separate repositories carry the experimental [FPP Plugin](../../integrations/fpp-plugin/): one holds the plugin runtime and a second holds Plugin Manager packaging, install scripts, and locked release-artifact digests. See the integration page for released installation and code pairing.
+
+## ShowMesh Companion repository
+
+The separate `ShowMeshSystems/showmesh-companion` repository contains the desktop companion for the Resolume computer. It versions independently of Core. Use the [Companion integration guide](../../integrations/showmesh-companion/) for setup and coordinator-version requirements.
 
 ## `showmesh-docs` repository
 
