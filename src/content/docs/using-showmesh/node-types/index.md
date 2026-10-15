@@ -7,7 +7,7 @@ maturity: experimental-active
 
 “Node type” is useful operator shorthand, but ShowMesh does not store a fixed type such as `render` or `audio` on a node. A node runs the native ShowMesh agent and advertises a set of versioned **capabilities**. The coordinator uses those capabilities, configuration assignments, and current evidence to decide what the machine can do.
 
-This matters because hardware roles can evolve without changing the node identity model. A machine may eventually provide more than one compatible role, and transport support can vary independently. For example, a render node might advertise NDI send without HDMI output; support for one is never evidence for the other.
+This matters because hardware roles can evolve without changing the node identity model. A machine can provide more than one compatible role, and transport support can vary independently. For example, a render node might advertise NDI send without HDMI output; support for one is never evidence for the other.
 
 ## Shared agent foundation
 
@@ -39,6 +39,7 @@ Capability advertisement is evidence, not a wish list. Do not manually advertise
 ## What is not a node type
 
 - The **coordinator** is the management plane, not a media node.
+- **ShowMesh Companion** runs beside show software for local supervision and observation. It does not enroll as a native agent; see [Set up ShowMesh Companion](../../integrations/showmesh-companion/).
 - **FPP** and **Resolume Arena** are integrations with their own configuration and evidence. Installing either application does not automatically create a native ShowMesh node.
 - Projectors, displays, amplifiers, relays, and similar equipment are **controlled devices**. They do not run the native agent and cannot advertise node capabilities.
 - **NDI**, **HDMI**, **local audio**, **FM**, and **LTC** are transport or output capabilities, not standalone node roles.
