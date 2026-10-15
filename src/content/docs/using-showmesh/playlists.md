@@ -58,6 +58,12 @@ showmeshctl fpp republish-playlist-definitions <instance-id>
 
 Republish reports request acceptance. Confirm the imported definition afterward.
 
+## Move to a newer FPP definition
+
+When FPP's imported playlist changes, open **Shows → your Show → Playlists** and inspect the affected Show Playlist. Choose **Review changes**. The preview identifies saved Cue bindings that will be kept, moved, removed, or need checking, plus new FPP entries with no Cue.
+
+Review every changed binding and new entry before choosing **Move to FPP’s newest playlist**. Cancel leaves the saved definition unchanged. If the playlist changed during review, choose **Review again**; do not overwrite the newer revision. After saving, assign Cues to new entries as needed and rerun Playlist readiness. Moving the binding does not prove the new playlist is ready or start playback.
+
 ## Readiness
 
 `showmeshctl fpp playlist-readiness <playlist-id>` is a read-only preflight. It does not start playback.

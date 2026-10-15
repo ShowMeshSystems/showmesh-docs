@@ -9,7 +9,7 @@ Use this order when you need visibility before making a change.
 
 ## Before you start
 
-Have the coordinator address and a configured `showmeshctl` client available. These checks are read-only; preserve their output before restarting services or changing configuration.
+Have the coordinator address and a configured `showmeshctl` client available. Preserve read results before restarting services or changing configuration. The readiness step can deploy stale Cue catalogs; review that step before using it during operation.
 
 ## 1. Confirm the management plane
 
@@ -22,7 +22,9 @@ If health fails, check the coordinator container/process. Do not infer that loca
 
 ## 2. Find missing or stale evidence
 
-In the Operator UI, open the dashboard, then the Nodes, FPP, and Resolume pages. Prioritize collection failures and stale/unknown-age observations over cosmetic configuration differences.
+In the Operator UI, open **Dashboard**, then **Monitor → Fleet** for nodes and participating FPP and Resolume instances. Use **Signals** for observations, **Activity** for recent events, **Capabilities** for advertised node support, and **Manifest** for required files. Prioritize collection failures and stale or unknown-age observations.
+
+In Fleet's **Versions** section, compare the coordinator, node agents, and FPP plugins. Preserve any mismatch or unreported-version reason before changing software.
 
 ```sh
 showmeshctl nodes
@@ -65,5 +67,7 @@ showmeshctl run list --state running
 Look for a command still waiting for evidence, a failed macro step, or a collection transition near the reported symptom.
 
 ## Before retrying a command
+
+If Live Control reports a stopped Night or a weather banner, follow [Emergency Stop recovery](../../using-showmesh/emergency-stop/#resume-after-stop) or [Handle a weather delay](../handle-a-weather-delay/) before restarting output.
 
 Check the target device directly. A confirmation timeout is uncertain, not a clean “nothing happened.” Repeating a start, next-item, or toggle-like operation blindly can make the state worse.

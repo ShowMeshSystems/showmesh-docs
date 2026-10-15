@@ -24,6 +24,8 @@ Audio and announcement `targets` contain distinct audio-node IDs. An empty or om
 
 Open a Show and select **Cues**. Target pickers show the audio nodes allowed by current configuration.
 
+For render output, the **Sequence** picker lists this Show's current FSEQ assets as logical sequence name and runtime filename. The Cue stores the logical sequence name, not the filename or upload ID. Upload the sequence in **Assets** first. If **Sequence not uploaded** appears for a retained value, restore the matching upload or select the intended current sequence before using the Cue.
+
 ```sh
 showmeshctl cue list --show <show-id>
 showmeshctl cue get <cue-id>

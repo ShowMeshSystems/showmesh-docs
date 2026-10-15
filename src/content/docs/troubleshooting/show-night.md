@@ -6,6 +6,14 @@ pageType: troubleshooting
 
 `showmeshctl night <verb>` drives a closed lifecycle state machine: `inactive`, `preparing`, `preshow`, `transition-to-show`, `live`, `transition-to-resting`, `resting-intershow`, `end-of-night-resting`, `fading-out`, `stopped`. Every lifecycle write requires the `night:command` scope; reads are open.
 
+## Symptom: the show is stopped and does not restart
+
+Check `showmeshctl night status` and the stopped banner in Live Control. **Stop** holds the Night so its loop and Cue activation loop start no output. After resolving the cause and checking the site, choose **Resume** and confirm, or run `showmeshctl night resume-show`. It starts the show playlist from its first song.
+
+If Resume is refused, read the named state: a degraded session requires the closing/recovery path below; a Night before its shows needs the normal start path; a Night after its final show or already shutting down must close. A weather delay requires [weather recovery](../../guides/handle-a-weather-delay/).
+
+Confirm recovery with a cleared hold, the expected show transition, and fresh playback evidence. Do not interpret the unchanged lifecycle state during a hold as continued output.
+
 ## Symptom: a night command exits `26` (not ready)
 
 Preserve the command's own output before retrying:
