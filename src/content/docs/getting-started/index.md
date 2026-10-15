@@ -35,7 +35,7 @@ These pages describe the v0.3.1 prerelease. Check `showmeshctl system versions` 
 
 ## Before show use
 
-HDMI output is unavailable. Test FPP Connect, audio, LTC, and render outputs on your own hardware before show use. The FPP plugin can run a signed fallback program during coordinator loss. Confirm catalog delivery and fallback behavior on your installation before relying on it; see [Recover after coordinator loss](../../guides/recover-after-coordinator-loss/).
+HDMI output is unavailable. Test FPP Connect, audio, LTC, and render outputs on your own hardware before show use. The FPP plugin can run a signed fallback program during coordinator loss. Confirm catalog delivery and fallback behavior on your installation before relying on it; see [Recover after coordinator loss](/guides/recover-after-coordinator-loss/).
 
 ## How to read a maturity label
 

@@ -28,13 +28,15 @@ Before operation, open **Settings → Weather delay**.
 4. Optionally enable the **Weather service poller**. It reads US National Weather Service alerts and is off by default. Enter the site latitude, longitude, and required contact, then select the event types and polling interval. Defaults are a 60-second interval and Tornado Warning and Severe Thunderstorm Warning events.
 5. Choose **Save weather delay**. Resolve any validation or stale-revision error before continuing.
 
+Official weather warnings do not cover ordinary lightning. Configure a separate lightning source or monitor conditions directly; do not treat the NWS poller as lightning detection.
+
 The alert, power groups, and triggers are optional. Leaving an alert unset does not prevent the stop, but provides no alert file for that kind of interruption. In **Live Control**, check alert readiness for every intended node. The CLI reports the same file-presence evidence:
 
 ```sh
 showmeshctl weather-delay status
 ```
 
-A present, hash-verified alert is ready for delivery; confirm audible playback separately in a safe test window. Check source health after enabling the poller rather than treating a saved configuration as a working feed.
+A present, hash-verified alert confirms the file is cached on the named node; confirm audible playback separately in a safe test window. Check source health after enabling the poller rather than treating a saved configuration as a working feed.
 
 ## 2. Start a delay or cancel the night
 
@@ -61,7 +63,7 @@ A weather source can raise a question across the workspace. Read the reason, dea
 
 An ordinary question defaults to delaying when its answer window expires. A source that explicitly suggests cancellation raises the delay-or-cancel question, whose default is cancellation. The banner states which action will run. Do not assume ShowMesh inferred the remaining show time from FPP's calendar. An automatic trigger never resumes the display.
 
-Dismiss runs neither stop action and suppresses that same warning for the configured quiet period. A new warning can still raise a question. A stale or expired question can disappear without running its action; check the banner and current state before acting on an earlier notification.
+Dismiss runs neither stop action and suppresses that same warning for the configured quiet period. A new warning can still raise a question. If the warning has expired, or the coordinator returns more than ten minutes after the decision deadline, the stale question is dropped without running its action; check the banner and current state before acting on an earlier notification.
 
 External systems can report triggers or hold a pre-signed start for use when the coordinator is unreachable. Use `showmeshctl weather-delay trigger --help` and `showmeshctl weather-delay presign --help` with the [API reference](../../reference/api/) when commissioning that integration. A pre-signed start can delay or cancel, never resume. Treat its payload as a credential and keep it out of public logs and screenshots.
 

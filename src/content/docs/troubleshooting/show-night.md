@@ -4,7 +4,7 @@ description: Distinguish a not-yet-ready night command, a state-table refusal, a
 pageType: troubleshooting
 ---
 
-`showmeshctl night <verb>` drives a closed lifecycle state machine: `inactive`, `preparing`, `preshow`, `transition-to-show`, `live`, `transition-to-resting`, `resting-intershow`, `end-of-night-resting`, `fading-out`, `stopped`. Every lifecycle write requires the `night:command` scope; reads are open.
+`showmeshctl night <verb>` drives a closed lifecycle state machine: `inactive`, `preparing`, `preshow`, `transition-to-show`, `live`, `transition-to-resting`, `resting-intershow`, `end-of-night-resting`, `fading-out`, `stopped`. Every lifecycle write requires the `night:command` scope; reads follow the coordinator's observation-read policy.
 
 ## Symptom: the show is stopped and does not restart
 

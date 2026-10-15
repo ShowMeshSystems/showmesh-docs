@@ -51,7 +51,7 @@ showmeshctl resolume status
 showmeshctl fppconnect status <node-id>
 ```
 
-`night status` and `show mode` are open reads. `render status` exits `22` when a node has never published surface render evidence at all; a node that has reported, even stale or unknown evidence, prints normally. `fppconnect status` reports whether a node's most recently pushed FPP Connect channel range was formatted, empty (no surface configured), or dropped, and why.
+`night status` and `show mode` follow the coordinator's configured read policy. `render status` exits `22` when a node has never published surface render evidence at all; a node that has reported, even stale or unknown evidence, prints normally. `fppconnect status` reports whether a node's most recently pushed FPP Connect channel range was formatted, empty (no surface configured), or dropped, and why.
 
 The snapshot is authoritative for its resources. Capture `GET /api/v1/current-runs` or Live Control separately for the full runner-neutral playback frame. Event history is ordered by its durable sequence number, but retained history can have a gap. The audit log requires `audit:read`.
 

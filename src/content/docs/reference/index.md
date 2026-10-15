@@ -13,7 +13,7 @@ Use Reference when you already know what you are trying to configure or call. Fo
 - [Command-line interface](./cli/): global flags, command groups, and exit semantics.
 - [Compatibility](./compatibility/): current compatibility and integration boundaries.
 - [API surface](./api/): route groups and the machine-readable source of truth.
-- [Upgrade and restore ShowMesh](../../guides/upgrade-and-restore-showmesh/): component-version checks, backups, upgrades, and rollback.
+- [Upgrade and restore ShowMesh](/guides/upgrade-and-restore-showmesh/): component-version checks, backups, upgrades, and rollback.
 - [Release artifacts](./release-artifacts/): tag-driven images, native packages, architectures, and checksum verification.
 - [Roadmap](./roadmap/): current development priorities and remaining release work.
 - [Maturity and complexity](./maturity/): what the status labels mean.

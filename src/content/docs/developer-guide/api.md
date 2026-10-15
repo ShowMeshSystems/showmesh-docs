@@ -55,7 +55,7 @@ The current API covers:
 - Weather-delay state, start/cancel/resume commands, automatic triggers, and presigned starts.
 - Component versions and revisioned release-check settings.
 
-Companion report upload/list/detail routes and the `companion` role require Core 0.4.0 or newer. Core 0.4.0 is not yet published. For that source build, use the [development OpenAPI description](https://github.com/ShowMeshSystems/showmesh/blob/main/api/openapi.yaml) and the [Companion integration guide](../../integrations/showmesh-companion/).
+Companion report upload/list/detail routes and the `companion` role require Core 0.4.0 or newer. Core 0.4.0 is not yet published. For that source build, use the [development OpenAPI description](https://github.com/ShowMeshSystems/showmesh/blob/fb955c9de477f2aebaad89186fbcf60c64515cee/api/openapi.yaml) and the [Companion integration guide](../../integrations/showmesh-companion/).
 
 Use the OpenAPI document for exact schemas and status codes. Do not infer a write operation from a read route; no state change is reachable by `GET`.
 

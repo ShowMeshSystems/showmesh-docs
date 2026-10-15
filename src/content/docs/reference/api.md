@@ -9,7 +9,7 @@ complexity: advanced
 The machine-readable API is the [v0.3.1 OpenAPI document](https://github.com/ShowMeshSystems/showmesh/blob/v0.3.1/api/openapi.yaml). This page maps the route groups; use the schema for exact requests and responses.
 
 :::note[Companion report support]
-Companion reports and the `companion` role require Core 0.4.0 or newer. Core 0.4.0 is not yet published; use the [development OpenAPI document](https://github.com/ShowMeshSystems/showmesh/blob/main/api/openapi.yaml) when evaluating that source build. The installation guides use released Core 0.3.1.
+Companion reports and the `companion` role require Core 0.4.0 or newer. Core 0.4.0 is not yet published; use the [development OpenAPI document](https://github.com/ShowMeshSystems/showmesh/blob/fb955c9de477f2aebaad89186fbcf60c64515cee/api/openapi.yaml) when evaluating that source build. The installation guides use released Core 0.3.1.
 :::
 
 Base path: `/api/v1`
@@ -29,7 +29,7 @@ Every public route belongs to one of these groups:
 | Resolume | Action vocabulary, actions, recovery, and instance state. |
 | Fallback programs | `/fallback-programs`, per-FPP-instance fallback programs, and their acknowledgement route. |
 | Enrollment | `/node-enrollments`, cancellation, and unauthenticated one-time-code redemption. Minting, listing, and cancellation require `node:enroll`. |
-| Companion reports (Core 0.4.0+) | `/companion-reports` upload/list and `/companion-reports/{reportId}` detail. Uploads require `companion:report`; reads use the deployment read policy and `node:read`. |
+| Companion reports (Core 0.4.0+) | `/companion-reports` upload/list and `/companion-reports/{reportId}` detail. Uploads require `companion:report`; reads use the deployment read policy and `observation:read`. |
 | Identity and audit | Session, bootstrap, audit records, principals, roles, enable/disable, passwords, and API tokens. |
 | Runs and bindings | Action binding checks (`/actions/{id}/binding`, `/actions/bindings`), action invocation (`/actions/{id}/invocations`), and macro-run submission, listing, and detail. |
 

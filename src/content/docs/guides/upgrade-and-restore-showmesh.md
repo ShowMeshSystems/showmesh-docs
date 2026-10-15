@@ -12,6 +12,10 @@ Upgrade an installer-managed coordinator and its native nodes outside the show w
 An upgrade restarts services. Stop the night before proceeding and retain native controls for FPP and Resolume. Backups include credentials and integration secrets; store them with restricted access. The experimental `0.x` line makes no compatibility or migration promise between versions.
 :::
 
+## Before you start
+
+You need administrator access to the coordinator and each node, protected storage for backups, and the reviewed release packages. Identify whether the installation uses the installer or manual Compose; follow the matching path below. Keep local FPP and Resolume controls available during the maintenance window.
+
 ## 1. Check the installed components
 
 Run these commands on the installer-managed coordinator. `sudo` lets the installed CLI wrapper read its protected credential file:

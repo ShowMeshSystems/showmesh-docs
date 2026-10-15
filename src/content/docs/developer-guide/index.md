@@ -5,7 +5,7 @@ pageType: landing
 maturity: experimental-active
 ---
 
-This section is for software that uses ShowMesh: operator tools, automation clients, integration adapters. If you are changing ShowMesh source, use [Contributing](/contributing/).
+This section is for software that uses ShowMesh: operator tools, automation clients, and integration adapters. If you are changing ShowMesh source, use [Contributing](/contributing/).
 
 ## Public interfaces
 
@@ -23,4 +23,4 @@ The current public extension surface is the HTTP API. There is no released plugi
 
 ## Companion reports
 
-Core 0.4.0 adds authenticated report uploads and observation reads at `/api/v1/companion-reports`. Core 0.3.1 does not expose these routes, and Core 0.4.0 release artifacts are not yet published. [Set up ShowMesh Companion](../../integrations/showmesh-companion/) covers credentials, platform limits, retention, and retrieval. The [API reference](../../reference/api/) links the applicable schemas.
+Core 0.4.0 adds authenticated report uploads and observation reads at `/api/v1/companion-reports`. Core 0.3.1 does not expose these routes, and Core 0.4.0 release artifacts are not yet published. [Set up ShowMesh Companion](/integrations/showmesh-companion/) covers credentials, platform limits, retention, and retrieval. The [API reference](/reference/api/) links the applicable schemas.
