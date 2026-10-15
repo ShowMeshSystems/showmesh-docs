@@ -79,7 +79,14 @@ Fix the named cause, then rerun `fpp playlist-readiness` and confirm it reports 
 
 ## Symptom: the fallback program is missing, stale, or mismatched
 
-The coordinator builds and signs fallback programs. The separate plugin can fetch, verify, install, acknowledge, and locally resolve program entries. Coordinator-to-node activation delivery and node execution are not implemented, so a cached program is not an operational coordinator-outage safeguard. Inspect the coordinator's record directly:
+The plugin can cache a signed program and send authorized Cue activations directly to target nodes. Inspect the player and program first:
+
+```sh
+showmeshctl fallback list
+showmeshctl fallback show <fpp-instance-uuid>
+```
+
+Use the player UUID reported by `fallback list`, which may differ from its configured endpoint ID. For the API record:
 
 ```sh
 curl -fsS -H "Authorization: Bearer <token>" \
@@ -90,4 +97,4 @@ curl -fsS -H "Authorization: Bearer <token>" \
 
 The list endpoint returns metadata only, never the signed payload. The per-instance endpoint returns the full signed program the coordinator most recently published for that FPP instance, plus `acknowledgedStatus` (`fallback-program-current`, `fallback-program-stale`, `fallback-program-rejected`, or `fallback-program-unacknowledged`) and, when set, the `acknowledgedPackageId` and `acknowledgedAt` a host last reported back through `POST /api/v1/fallback-programs/{fppInstanceId}/acknowledge`. `published: false` with no `program` or `signatureBase64` means this coordinator has never successfully compiled and published a program for this host at all. Publication itself runs as a background reconciliation loop on the coordinator; these endpoints only read what that loop has already written.
 
-Do not assume a real FPP host is executing activations merely because it acknowledged a package. Local program handling, delivery to an executing node, and observed show output are separate evidence layers.
+A package acknowledgement does not prove a Cue executed. Check node outcomes and the actual outputs. If the coordinator holds the player after returning, follow [Recover after coordinator loss](../../guides/recover-after-coordinator-loss/) before clearing its fallback state.

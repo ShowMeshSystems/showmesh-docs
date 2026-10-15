@@ -14,7 +14,7 @@ Use the Operator UI configuration page or `showmeshctl config set`. Each endpoin
 
 ## Pair the plugin
 
-After adding the endpoint, install and [pair the FPP plugin](../fpp-plugin/#pair-by-code). Pairing, brightness readback, and playlist Re-import are available in Core and plugin 0.2.0.
+After adding the endpoint, install and [pair the FPP plugin](../fpp-plugin/#pair-by-code). Use the matching plugin for your Core release; see the plugin installation instructions before upgrading.
 
 ## Configure FPP MQTT status
 
@@ -72,15 +72,16 @@ Plugin operations sit beside the eight FPP primitives:
 
 ```sh
 showmeshctl fpp set-brightness-ceiling <instance-id> <0-100>
+showmeshctl fpp set-brightness-excluded-ranges <instance-id> "<start-channel>-<channel-count>"
 showmeshctl fpp set-transition-gain <instance-id> <0-100>
 showmeshctl fpp republish-playlist-definitions <instance-id>
 ```
 
-Transition gain changes the plugin brightness multiplier and does not overwrite FPP's scheduled ceiling. Republish asks the host plugin to send definitions again; acceptance is not proof that an import arrived.
+[Brightness exclusions](../fpp-plugin/#exclude-fixture-channels-from-brightness-changes) protect selected fixture channels from brightness changes. Transition gain changes the plugin brightness multiplier and does not overwrite FPP's scheduled ceiling. Republish asks the host plugin to send definitions again; acceptance is not proof that an import arrived.
 
 ## Signed fallback program
 
-The coordinator builds and signs a bounded map from known playlist-entry keys to pre-resolved Cue activations. The plugin can fetch, verify, install, acknowledge, and locally resolve those entries. Coordinator-to-node activation delivery and node execution remain absent, and readiness does not turn package presence into an operational safeguard. See the [FPP Plugin](../fpp-plugin/) boundary.
+The coordinator builds and signs a bounded map from known playlist-entry keys to pre-resolved Cue activations. The plugin can cache that program and send authorized activations directly to its target nodes when the coordinator is unavailable. The nodes verify the program and player signatures before executing. On return, the coordinator holds new Cue starts for that player while its fallback playlist runs. Follow [Recover after coordinator loss](../../guides/recover-after-coordinator-loss/) for readiness checks, handback, and recovery. Test the complete path on your installation before relying on it during a show.
 
 ## FPP-host plugin
 
