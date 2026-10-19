@@ -1,6 +1,6 @@
 ---
 title: Requirements
-description: Choose hosts and network access for the v0.2.0 prerelease.
+description: Choose hosts and network access for the v0.3.1 prerelease.
 pageType: reference
 maturity: experimental-active
 ---

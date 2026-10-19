@@ -32,7 +32,7 @@ Macros are asynchronous runs composed from logical actions. Submitting a run ret
 
 ## Media-node runtime path
 
-Surface objects describe geometry, channel ranges, node assignment, and an `ndi` or `hdmi` transport. The v0.2.0 prerelease includes an experimental render-node runtime that consumes an applied NDI surface and node-local FSEQ asset. HDMI has no runtime output path. See the [render-node](../../using-showmesh/node-types/render-nodes/) page for the operating boundary.
+Surface objects describe geometry, channel ranges, node assignment, and an `ndi` or `hdmi` transport. The native agent includes an experimental render-node runtime that consumes an applied NDI surface and node-local FSEQ asset. HDMI has no runtime output path. See the [render-node](../../using-showmesh/node-types/render-nodes/) page for the operating boundary.
 
 The separate [audio-node](../../using-showmesh/node-types/audio-nodes/) role provides experimental playback and LTC paths. Both roles build on the same native agent and advertise composable capabilities rather than belonging to a hardcoded node class. An installation can declare more than one `audio.node`, each with a role (`program`, `program+ltc`, or `zone`). Cue audio, announcements, and Night beds can target several nodes; the coordinator prepares them and chooses one shared media-clock instant. LTC remains a one-node output. Every target reports aligned or unaligned evidence rather than letting request acceptance stand in for synchronization.
 
@@ -40,6 +40,8 @@ The separate [audio-node](../../using-showmesh/node-types/audio-nodes/) role pro
 
 ## Show operation and safety
 
-An installation-wide operating mode (`program` or `show`) and a show-scoped Emergency Stop surface are implemented at the coordinator's API, UI, and CLI. Emergency Stop is not gated by mode and concurrently stops FPP, silences declared audio nodes, and blackouts configured Resolume instances. Show Night session objects and lifecycle commands are also implemented.
+An installation-wide operating mode (`program` or `show`) and a show-scoped Emergency Stop surface are implemented at the coordinator's API, UI, and CLI. Emergency Stop is not gated by mode and concurrently stops FPP, silences declared audio nodes, and blacks out configured Resolume instances and native render surfaces. Level-one Stop holds the Night until explicit Resume, which starts the show playlist from its first song. [Weather delay](../../guides/handle-a-weather-delay/) adds a separate hold, alert, and deliberate resume path.
 
-Signed FPP fallback programs are built and served by the coordinator. The separate FPP plugin can fetch, verify, install, acknowledge, and locally resolve their entries. Coordinator-to-node activation delivery and execution remain incomplete, so do not use it as an operational coordinator-outage safeguard.
+Signed FPP fallback programs let the plugin resolve entries locally and send signed activations to prepared native nodes when the coordinator is unavailable. When the coordinator returns, it leaves a player running fallback alone until its playlist ends. Prepare and test this path using [Recover after coordinator loss](../../guides/recover-after-coordinator-loss/).
+
+[ShowMesh Companion](../../integrations/showmesh-companion/) runs beside Arena for local process supervision and received-LTC observation. Its arming policy can follow Show Night; it does not put the coordinator in the local media path.

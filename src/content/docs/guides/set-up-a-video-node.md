@@ -133,6 +133,8 @@ showmeshctl render status <node-id>
 
 `render apply`, `clear`, and `restart` exit `9` when the coordinator's own confirmation wait ends with no evidence either way, and exit `23` specifically when fresh evidence shows the surface's pipeline in its `failed` state: exit `23` is the sharper signal, a direct failure rather than an absence of confirmation. `render status`, `render probe`, and `render transport` exit `22` when the surface has no transport evidence, or when transport is confirmed unavailable.
 
+If a render apply is refused or fails, the CLI exits non-zero and reports the node's reason. Correct that condition, then confirm fresh per-surface evidence. An accepted command alone does not establish visible output.
+
 If the surface reports `Drawing: stale`, the MultiSync timeline has moved on to a sequence this surface holds no assignment for; the surface goes black rather than continuing to draw the wrong content, and recovers automatically once its own sequence is playing again. Do not confuse a stale surface with a failed one: `render status` distinguishes them.
 
 In Resolume, select the exact NDI source name configured on the surface and route it into the intended composition. ShowMesh does not create Arena's source routing, mapping, or projection output.

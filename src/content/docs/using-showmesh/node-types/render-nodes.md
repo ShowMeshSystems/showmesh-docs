@@ -51,12 +51,12 @@ A [Cue catalog](../../cues/#cue-catalog) deploy that leaves a surface's resolved
 
 Set `SHOWMESH_RENDER_DIAGNOSTIC_SURFACE` (plus `SHOWMESH_RENDER_DIAGNOSTIC_WIDTH`, `_HEIGHT`, `_FRAME_RATE`, and `_NDI_SOURCE_NAME`) on the agent to run a node-local diagnostic idle surface, independent of any coordinator-assigned surface. It is for confirming a node's own transport path works before wiring it into a show.
 
-## Current scope
+## Supported operations
 
-The v0.2.0 implementation includes:
+Render nodes support:
 
 - FSEQ parsing and bounded channel extraction;
-- one or more configured surface assignments at the protocol and schema level;
+- several surface assignments with distinct channel ranges and NDI source names, using matching FSEQ frame timing;
 - GStreamer pipeline construction, supervision, restart, and diagnostic test patterns;
 - NDI transport probing and availability evidence;
 - surface apply, clear, pipeline restart, and transport probe operations;
@@ -64,7 +64,7 @@ The v0.2.0 implementation includes:
 
 For a planned playlist sequence change, the node opens the next entry’s sequence ahead of time and switches when MultiSync first names it. Stage the next FSEQ asset before playback. If surfaces cannot move together because their frame timing differs, the mismatched surface stays black and reports the reason; render the sequences at the same timing in xLights before retrying.
 
-## Boundaries
+## Prepare the node
 
 - Render nodes do not run `fppd`; they listen for MultiSync as remotes.
 - A render node publishes a video source for Resolume. Resolume control belongs to the separate integration.

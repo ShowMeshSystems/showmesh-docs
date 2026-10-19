@@ -6,7 +6,7 @@ maturity: experimental-testing
 complexity: advanced
 ---
 
-ShowMesh can now publish an NDI source from a native render node. The current implementation follows FPP MultiSync locally, reads a node-local FSEQ asset, renders the configured surface, and supervises a GStreamer NDI sender. Resolume receives and composes that source downstream.
+ShowMesh publishes an NDI source from a native render node. The node follows FPP MultiSync locally, reads a node-local FSEQ asset, renders the configured surface, and supervises a GStreamer NDI sender. Resolume receives and composes that source downstream.
 
 ## What the node needs
 
@@ -17,7 +17,7 @@ ShowMesh can now publish an NDI source from a native render node. The current im
 
 Use the [render-node installer procedure](../../guides/set-up-a-video-node/) to install the plugin and your separately obtained vendor runtime.
 
-## What to verify
+## Test the sender
 
 Element discovery is not enough: the NDI plugin loads the NDI runtime when a pipeline changes state. A node that passes `gst-inspect-1.0 ndisink` can still fail when it attempts to send a frame.
 
@@ -31,7 +31,7 @@ gst-launch-1.0 videotestsrc num-buffers=5 is-live=true \
 
 A clean exit after the pipeline reaches `PLAYING` is the relevant result. If it fails, the agent remains usable and advertises its render capability without `transport.ndi.send`; investigate the runtime, plugin, and its library path rather than treating the node as healthy NDI output.
 
-## Boundaries
+## Connect the receiver
 
 - NDI carries the render node's video surface. It does not replace FPP MultiSync as the timing path.
 - Resolume owns source routing, composition, projection mapping, and output. ShowMesh does not edit Arena preferences or start/restart Arena.

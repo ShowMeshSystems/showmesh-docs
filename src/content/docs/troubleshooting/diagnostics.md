@@ -25,15 +25,20 @@ FPP or Resolume being down does not make `/readyz` fail. Inspect those resources
 
 ```sh
 showmeshctl version
+showmeshctl system versions
 showmeshctl snapshot --output json
 showmeshctl events --output json
 showmeshctl audit --output json
 ```
 
-`showmeshctl version` reports the client's own version and, on success, confirms it could reach and negotiate a compatible API version with the coordinator. Collect the following alongside the snapshot when the symptom touches a specific subsystem:
+`showmeshctl version` reports the client's own version and, on success, confirms it could reach and negotiate a compatible API version with the coordinator. `showmeshctl system versions` reports installed component versions, mismatches, and the release-check result. See [Upgrade and restore ShowMesh](../../guides/upgrade-and-restore-showmesh/) before acting on a newer-release notice.
+
+Collect the following alongside the snapshot when the symptom touches a specific subsystem:
 
 ```sh
 showmeshctl night status
+showmeshctl weather-delay status
+showmeshctl fallback list
 showmeshctl show mode
 showmeshctl show active
 showmeshctl show participation get <show-id>
@@ -46,7 +51,7 @@ showmeshctl resolume status
 showmeshctl fppconnect status <node-id>
 ```
 
-`night status` and `show mode` are open reads. `render status` exits `22` when a node has never published surface render evidence at all; a node that has reported, even stale or unknown evidence, prints normally. `fppconnect status` reports whether a node's most recently pushed FPP Connect channel range was formatted, empty (no surface configured), or dropped, and why.
+`night status` and `show mode` follow the coordinator's configured read policy. `render status` exits `22` when a node has never published surface render evidence at all; a node that has reported, even stale or unknown evidence, prints normally. `fppconnect status` reports whether a node's most recently pushed FPP Connect channel range was formatted, empty (no surface configured), or dropped, and why.
 
 The snapshot is authoritative for its resources. Capture `GET /api/v1/current-runs` or Live Control separately for the full runner-neutral playback frame. Event history is ordered by its durable sequence number, but retained history can have a gap. The audit log requires `audit:read`.
 
@@ -80,3 +85,7 @@ Common distinctions:
 For the Compose deployment, collect logs from the coordinator, UI, and Mosquitto services around the same timestamp. Do not publish environment files, bearer tokens, passwords, session cookies, or complete URLs containing credentials.
 
 Increase `SHOWMESH_LOG_LEVEL` to `debug` only for a bounded diagnostic window. Accepted levels are `debug`, `info`, `warn`, and `error`.
+
+## Companion crash reports
+
+When the required Core version is installed, [Set up ShowMesh Companion](../../integrations/showmesh-companion/) explains how to list and retrieve uploaded Arena crash reports. Preserve the original report and inspect it for sensitive data before sharing. A coordinator snapshot does not establish whether Companion supervision or its local LTC input is healthy.

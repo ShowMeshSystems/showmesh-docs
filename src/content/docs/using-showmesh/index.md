@@ -12,12 +12,12 @@ ShowMesh separates saved configuration from observed runtime evidence. A saved o
 | Area | Purpose |
 | --- | --- |
 | **Dashboard** | Active Show, current runs, attention items, and high-level readiness. |
-| **Live Control** | Current playback, direct Cue announcements, transport controls, and Emergency Stop. |
+| **Live Control** | Current playback, direct Cue announcements, transport controls, Emergency Stop, and weather interruption controls. |
 | **Show Night** | Preparation, readiness, lifecycle transitions, warnings, and recovery. |
 | **Monitor** | Fleet, signals, activity, capabilities, manifests, and node inspectors. |
 | **Shows** | Show-scoped authoring for playlists, Cues, assets, presentation, automation, and Night Sessions. |
 | **Assets** | Global and Show-scoped content, versions, delivery evidence, and node maintenance. |
-| **Settings** | Connections, delivery, recovery, appearance, audio defaults, node routing, operating mode, and Resolume. |
+| **Settings** | Connections, node enrollment, delivery, render recovery, weather delay, appearance, audio defaults, node routing, operating mode, and Resolume. |
 | **Access** | Human and machine principals, roles, passwords, tokens, and revocation. |
 
 ## Core objects
@@ -47,7 +47,9 @@ These are separate revisioned objects linked to a Show by ID.
 
 ## Safety and access
 
-[Emergency Stop](./emergency-stop/) stops FPP, silences audio nodes, and blackouts Resolume. Higher levels also move the Show Night lifecycle.
+[Emergency Stop](./emergency-stop/) stops FPP, silences audio nodes, and blackouts Resolume and render surfaces. Stop holds the active Night until explicit Resume; higher levels start shutdown or abandon the session.
+
+[Handle a weather delay](/guides/handle-a-weather-delay/) explains alerts, automatic trigger questions, resuming an interrupted show, and cancelling the night.
 
 [Access and permissions](./access-and-permissions/) explains roles, scopes, credentials, and revocation.
 

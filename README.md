@@ -10,10 +10,10 @@ Requires Node.js 22.12 or newer.
 
 ```sh
 npm ci
-npm run dev
+npx astro dev --background
 ```
 
-Open `http://localhost:4321`. Before opening a pull request, run:
+Open `http://localhost:4321`. Manage the server with `npx astro dev status`, `npx astro dev logs`, and `npx astro dev stop`. Before opening a pull request, run:
 
 ```sh
 npm run check
@@ -57,4 +57,4 @@ The site builds and deploys to https://docs.showmesh.systems automatically when 
 
 ## Versioning
 
-The MVP documents the v0.2.0 prerelease. Documentation versioning is intentionally deferred until a documentation maintenance and archive policy is agreed.
+The operating procedures use Core 0.3.1 with FPP plugin 0.3.0. Instructions for features requiring a newer coordinator identify the minimum version. Documentation versioning is intentionally deferred until a documentation maintenance and archive policy is agreed.

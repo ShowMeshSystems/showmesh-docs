@@ -25,7 +25,10 @@ Do not guess route names or declare hardware that the agent has not advertised. 
 ```sh
 showmeshctl node <node-id>
 showmeshctl audio node get <node-id>
+showmeshctl audio node choices <node-id>
 ```
+
+In **Settings > Node routing**, choose the program and timecode channels from the node's reported outputs. The CLI `choices` command shows the same choices; add `--verbose` when you need full device names. Older agents may require manual entry.
 
 Identify the advertised audio route. Program and LTC must use that same route, with LTC on a channel not used by program audio.
 
@@ -127,6 +130,8 @@ showmeshctl audio session aligned-start <session-id> <node-id> <node-id> ...
 ```
 
 The result reports alignment per target. `unaligned` is degraded operation, not synchronized success.
+
+For FPP-backed Cues, deploy the Cue catalog and stage its assets before testing FPP playback. Nodes prepare from MultiSync OPEN and start from MultiSync START; the coordinator provides a fallback if a node misses the start packet. A node that loads too late joins at the song's reached position after a short gap. Confirm each node's start and alignment evidence, then listen to the physical outputs. ShowMesh also prepares the next song on nodes that sit out the current one.
 
 ## 8. Record a drift run
 

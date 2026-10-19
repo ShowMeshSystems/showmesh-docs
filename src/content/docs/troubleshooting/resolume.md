@@ -49,3 +49,7 @@ Automatic recovery does not prove Arena reopened a project or that a receiver or
 ## Symptom: Emergency Stop blackout is incomplete
 
 Every Emergency Stop level sends Resolume blackout alongside FPP stop and audio-node silence. A failed blackout is an immediate-stop failure and appears as a Resolume target outcome. Inspect Arena directly when it is refused, failed, or unconfirmed.
+
+## Symptom: Arena does not relaunch or a crash report is missing
+
+Use [ShowMesh Companion](../../integrations/showmesh-companion/) to inspect local arming, the configured application path, and upload status. Coordinator-side restore controls do not start the Arena process. Confirm the required Core version before using Companion report commands; inspect the recovered composition and physical output after any relaunch.

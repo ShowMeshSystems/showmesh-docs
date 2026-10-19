@@ -57,9 +57,12 @@ xLights reports the upload as accepted, but the sequence never becomes usable on
 cat /var/lib/showmesh/assets/fppconnect-uploads/index.json
 ```
 
-Look at the affected entry's `registrationState`: `skipped`, `pending`, `registered`, or `failed`, with a `registrationReason` field alongside it. A `failed` state, or one that stays `pending` indefinitely, most often means this node has no `SHOWMESH_AGENT_API_TOKEN` set, or the token it has does not carry the `asset:write` scope. The node's FPP Connect HTTP listener accepts, assembles, and hashes every upload it receives regardless of this credential; only registration (`POST /api/v1/assets`) is gated, so a missing token produces no visible error at upload time.
+Record the affected entry's Show binding, logical sequence name, `registrationState`, and `registrationReason` before changing anything. Look at its `registrationState`: `skipped`, `pending`, `registered`, or `failed`, with a `registrationReason` field alongside it. A `failed` state, or one that stays `pending` indefinitely, most often means this node has no `SHOWMESH_AGENT_API_TOKEN` set, or the token it has does not carry the `asset:write` scope. The node's FPP Connect HTTP listener accepts, assembles, and hashes every upload it receives regardless of this credential; only registration (`POST /api/v1/assets`) is gated, so a missing token produces no visible error at upload time.
 
-Provision a machine principal and an admin-role token from the coordinator, set `SHOWMESH_AGENT_API_TOKEN` in `/etc/showmesh/agent.env`, then restart the agent:
+If the entry is unbound, activate or select the intended Show and upload again. A song can remain pending for up to two minutes while the node waits for its matching sequence. Music then registers as show-wide audio; video remains `skipped`. If two file names resolve to the same sequence name, rename one and upload again rather than overwriting the other asset.
+
+If authentication failed, restore the enrolled node's machine credential with `asset:write` in `/etc/showmesh/agent.env`; do not replace it with a human administrator token. Schedule the restart outside playback, because it interrupts the node's audio or render process:
+
 
 ```sh
 sudo systemctl restart showmesh-agent
@@ -67,7 +70,7 @@ sudo systemctl restart showmesh-agent
 
 ### Confirm recovery
 
-Re-upload, or wait for the agent's own capped retry loop, then recheck `index.json`. Recovery is confirmed only when the entry's `registrationState` reads `registered`.
+Re-upload, or wait for the agent's own capped retry loop, then recheck `index.json`. Registration is confirmed when the entry reads `registered`. Then check the current asset and target manifest. For music, verify the intended sequence name and readiness on every audio target; registration alone does not prove audible output.
 
 ## Symptom: a render surface shows black and reports `Drawing: stale`
 

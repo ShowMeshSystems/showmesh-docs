@@ -62,6 +62,10 @@ Use **Presentation** for presentation settings. Use **Automation** for FPP, Reso
 
 In **Night Session**, select Show and resting Playlists, background audio, Transition Steps, announcements, site-control actions, and interlocks. Calendar scheduling stays in FPP.
 
+Select the resting sequence and target, then check the [presentation timing](../../using-showmesh/show-night/#presentation-timing) for the resting cycle, blackout, and optional lights fades. Set **Repeat the end-of-night playlist** deliberately rather than assuming the final resting output repeats.
+
+Review the enter-show and return-to-resting steps and the installation's retry-safety and interlock policies. Configure weather alerts separately in **Settings → Weather delay** using [Handle a weather delay](../handle-a-weather-delay/).
+
 ## 9. Review revisions and readiness
 
 Before showtime:

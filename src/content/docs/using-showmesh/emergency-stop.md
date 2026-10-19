@@ -10,7 +10,8 @@ Every Emergency Stop level acts on these targets in parallel:
 
 - `stopPlaylist` to every configured FPP instance;
 - `audio.node.silence` to every declared audio node;
-- `resolume.blackout` to every configured Resolume instance.
+- `resolume.blackout` to every configured Resolume instance;
+- `render.surface.blackout` to every declared render surface.
 
 Each target reports its own outcome. Any failed immediate target fails the operation. Emergency Stop requires `show:emergencystop:invoke` and works in both Program Mode and Show Mode.
 
@@ -18,7 +19,7 @@ Each target reports its own outcome. Any failed immediate target fails the opera
 
 | Level | Immediate stop | Active Show Night effect |
 | --- | --- | --- |
-| `stop` | Stops FPP, silences audio, and blackouts Resolume. | None. |
+| `stop` | Stops FPP, silences audio, and blackouts Resolume and render surfaces. | Holds the active Night so its playback does not restart automatically. |
 | `stop-power-down` | Performs the same immediate stop. | Starts the session's standard graceful shutdown immediately. |
 | `hard-stop` | Performs the same immediate stop. | Abandons the session directly to `stopped`, with no wait. Requires arm and fire. |
 
@@ -28,7 +29,7 @@ Each level can run optional follow-up actions, such as work lights. Their failur
 
 - Use a principal carrying `show:emergencystop:invoke`.
 - Use an administrator credential when changing follow-up configuration.
-- Expect all configured FPP, declared audio, and configured Resolume targets to be affected.
+- Expect all configured FPP, declared audio, configured Resolume, and declared render-surface targets to be affected.
 - Do not assume one successful target means the entire stop succeeded.
 
 ## Run a stop
@@ -85,8 +86,27 @@ An unconfirmed result does not prove failure. Inspect current state before repea
 ## What Emergency Stop does not do
 
 - It does not change Show Mode or configuration.
-- `stop` does not move the active Show Night lifecycle; `stop-power-down` and `hard-stop` do.
+- `stop` preserves the lifecycle state but holds the active Night. `stop-power-down` starts shutdown; `hard-stop` abandons it.
 - It does not make failed or unreachable targets safe; operators must follow up.
 - It does not prove physical amplifiers, projectors, or fixtures reached a safe state.
 
-Resolve failed targets, then repeat [Show Night](../show-night/) preparation and readiness before resuming.
+## Resume after Stop
+
+Resolve failed targets and confirm that the site can run again. While the Night is held, its loop and Cue activation loop start no output. Live Control and Show Night show the stopped state.
+
+:::caution[Resume starts the show again]
+**Resume** starts the show playlist from its first song. It does not continue from the interrupted position.
+:::
+
+In **Live Control** or **Show Night**, choose **Resume** and confirm. The CLI equivalent requires `night:command`:
+
+```sh
+showmeshctl night resume-show
+showmeshctl night status
+```
+
+Confirm that the hold cleared, the expected show transition began, and fresh target evidence matches the intended output. Resume is refused during a weather delay, before the night's shows, after the final show, during shutdown, or while the session is degraded. Follow the reported remedy; use [Show Night recovery](../../troubleshooting/show-night/) for a degraded session.
+
+If the stop result says the Night could not be held, it can start another show. Run `showmeshctl night end-session` to abandon that session, then check every target directly. End session does not stop devices itself.
+
+After shutdown or hard stop, repeat [Show Night](../show-night/) preparation and readiness before operating again. For weather interruptions, use [Handle a weather delay](../../guides/handle-a-weather-delay/).

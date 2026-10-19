@@ -45,7 +45,11 @@ When reads are closed, an agent needs `SHOWMESH_AGENT_API_TOKEN` to fetch conten
 
 ## Versions, resync, and removal
 
-Uploading different bytes for the same logical identity creates a new current asset while retaining older metadata. Rollback is a deliberate new selection or upload of the intended bytes; do not edit the coordinator or node asset stores by hand.
+Uploading different bytes for the same logical identity creates a new current asset while retaining older metadata. To roll back in the Operator UI, open the asset inspector's **History**, choose **Make current** on the intended version, type its sequence ID when prompted, and choose **Confirm rollback**. ShowMesh re-uploads those bytes and makes that version current. Uploading bytes that already exist as an older version also offers a rollback warning. Check the Show, sequence, target, and hash before confirming; then verify delivery on every affected node. Do not edit the coordinator or node asset stores by hand.
+
+The runtime filename is distinct from the logical sequence ID, and another asset can share the filename. Use the Show, sequence, target, and content hash to identify the intended file.
+
+Deleting an asset record and removing bytes from a node are different operations. `showmeshctl assets delete --confirm <asset-id>` permanently deletes one metadata record. Deleting the current record leaves that identity without a current asset; it does not restore an older version. Preserve any version you need before deletion.
 
 Request fresh node evidence and inspect safe removal candidates with:
 

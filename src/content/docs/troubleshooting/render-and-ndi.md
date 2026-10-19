@@ -20,7 +20,7 @@ showmeshctl render transport <surface-id>
 
 ## Symptom: surface is unassigned
 
-Confirm the surface's node, geometry, channel range, frame rate, and transport. A node can declare several surfaces, but only one can be active.
+Confirm the surface's node, geometry, channel range, frame rate, and transport. Several surfaces can run on one node when their channel ranges and NDI source names are distinct and their FSEQ frame timing matches. Read any conflict reason before changing the assignment. If an assignment was lost, redeploy the active Show's Cue catalog and confirm fresh node evidence.
 
 ## Symptom: asset is missing or stale
 
@@ -30,7 +30,7 @@ Compare the Show manifest with the node's assets. Request a fresh inventory befo
 
 The NDI probe requires the pipeline to reach `PLAYING`; finding `ndisink` is not enough. Check the GStreamer plugin, pipeline error, sender name, route, and render report.
 
-Do not bind a second UDP 32320 listener on an FPP render node; FPP owns that port for MultiSync.
+The native render node must own its UDP 32320 listener. Do not run `fppd` or another listener on that node.
 
 ## Symptom: output is stale, idle, or failed
 

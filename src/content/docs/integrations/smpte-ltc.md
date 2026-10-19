@@ -5,8 +5,8 @@ pageType: integration
 maturity: experimental-testing
 ---
 
-:::caution[Physical timecode behavior is unverified]
-Current source has audio-node LTC configuration and an LTC-generation path. It does not prove a physical route, a receiving-device lock, signal-loss behavior, or a supported production timing workflow.
+:::caution[Test the receiver before a show]
+Verify frame rate, offset, channel separation, receiver lock, signal-loss behavior, drift, and recovery on the equipment used for the show. The measured results linked here cover one installation.
 :::
 
 ## Configure the output
@@ -32,7 +32,7 @@ Cue activation keeps audio and timecode together: the node starts the Cue's audi
 
 On one measured installation, the LTC output stayed within two frames of program audio after a start, a seek, and a resume. See [Measured timing behavior](../../reference/measured-timing/) for the values, the conditions they apply to, and how to correct for them in a receiver.
 
-Program audio can target several nodes. The coordinator selects a clock holder, reads the shared media clock once, prepares every target, and schedules one future start instant. Each node reports whether it used that instant. LTC remains on the single `program+ltc` node.
+Program audio can target several nodes. For aligned-start requests, the coordinator selects a clock holder, prepares the targets, and schedules one future instant. FPP-backed Cues start from MultiSync with a coordinator fallback; see [Audio nodes](../../using-showmesh/node-types/audio-nodes/#scheduled-starts). Each node reports its start and alignment evidence. LTC remains on the single `program+ltc` node.
 
 `node.clock` selects a managed, external, or FPP-provided PTP relationship and reports lock/holdover evidence. Static output-latency calibration can compensate for measured output-chain delay. Alignment runs retain program-to-LTC drift measurements. These mechanisms expose evidence; they do not prove receiver lock or acoustic alignment without physical observation.
 
@@ -40,10 +40,6 @@ Program audio can target several nodes. The coordinator selects a clock holder, 
 
 All supported rates are non-drop-frame, including `29.97`. A receiver that expects drop-frame timecode at `29.97` can drift during a long session. Choose a rate that every receiving device supports and verify that choice on the receiving device.
 
-## What a future installation must verify
+## Recover missing timecode
 
-Before treating this path as operational, verify frame rate and offset, channel separation, PTP lock and holdover, output-latency calibration, scheduled multi-node starts, receiver lock, signal loss, long-run drift, and recovery on the intended equipment. Until then, a successful configuration write or node observation is not a timing acceptance result.
-
-AES67 is the accepted target for primary program transport in a later architecture stage. The current runtime plays node-local files; do not document AES67 as the active program path.
-
-Use this material as an implementation boundary, not an installation recipe. A future operating guide needs real-host acceptance evidence before it can prescribe cabling or show-time recovery.
+Check that only the intended node has the `program+ltc` role and that its LTC channel is separate from program audio. Confirm a Show-role session is playing and inspect the node's LTC outcome. Restore the route or receiver connection before restarting playback; verify receiver lock and the actual output afterward. Follow [Audio or clock sync is wrong](../../troubleshooting/audio-and-clock-sync/) for diagnosis and [Set up an audio node](../../guides/set-up-an-audio-node/) for routing and clock configuration.

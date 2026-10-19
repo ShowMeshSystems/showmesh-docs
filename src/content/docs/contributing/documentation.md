@@ -50,7 +50,7 @@ Use the [ShowMesh voice and style](../voice-and-style/). It defines the local op
 
 ## Keep pages ready for versioning
 
-ShowMesh will introduce versioned documentation after the product release model exists. Until then:
+ShowMesh publishes pre-alpha releases with a [product versioning policy](https://github.com/ShowMeshSystems/showmesh/blob/main/docs/RELEASING.md). Documentation archives and version selection remain deferred. Until their maintenance policy is agreed:
 
 - Keep internal links version-neutral and relative when practical.
 - Avoid time-relative phrases such as “currently” when a maturity label or explicit development-state boundary is clearer.
@@ -58,7 +58,7 @@ ShowMesh will introduce versioned documentation after the product release model 
 - Do not add release numbers to ordinary page names or paths.
 - Write pages so the first released documentation set can become an immutable snapshot.
 
-The post-release routing, maintenance, backport, search, and retirement workflow is tracked separately. Do not invent a documentation-only version scheme before the product defines one.
+The post-release routing, maintenance, backport, search, and retirement workflow is tracked separately. Follow the product versioning policy rather than inventing a documentation-only version scheme.
 
 ## Review before publishing
 
@@ -72,4 +72,4 @@ Before merging a documentation change:
 6. Run `npm run check` and resolve every blocking failure.
 7. Review the page as an operator; automation cannot prove factual sufficiency, good judgment, or usable prose.
 
-Linked-PR enforcement, documentation release checks, and version archives remain deferred until the first ShowMesh release workflow exists. The editorial and review standard applies now.
+Linked-PR enforcement, documentation release checks, and version archives remain deferred until their maintenance and enforcement policy is agreed. The editorial and review standard applies now.

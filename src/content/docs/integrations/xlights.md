@@ -6,7 +6,7 @@ maturity: experimental-testing
 ---
 
 :::caution[Experimental development capability]
-Current source includes an FPP Connect listener on native nodes and revisioned coordinator settings. It is not yet a supported production deployment path: no end-to-end xLights-to-FPP installation result or real-show commissioning is established here.
+Use FPP Connect on an isolated show network and test upload, registration, delivery, and playback before relying on it during a show. Manual ShowMesh asset upload remains available.
 :::
 
 ShowMesh can accept FPP Connect sequence content for a native render node. The node remains its own xLights upload target; ShowMesh does not become FPP's scheduler, playlist editor, or playback authority.
@@ -40,7 +40,7 @@ Each render node is its own FPP Connect target, so repeat these steps for every 
 1. Confirm the node's agent is running and the listener is bound. The node must be reachable from the xLights machine on port 80 (see above).
 2. In xLights, open the FPP Connect dialog and pick the node. It identifies itself as an FPP player (version 9.5.0) so the dialog offers the playlist list and sparse sequence rendering.
 3. Pick the ShowMesh Show in the playlist field. The node lists its Show names there, so the playlist you pick is the Show the upload binds to.
-4. Leave the Media checkbox off unless you also want the sequence's music or video sent.
+4. Select **Media** to upload the sequence's song as well. ShowMesh registers music as a show-wide audio asset for delivery to every audio node. Videos are held without automatic registration.
 5. Upload.
 
 If you pick no playlist, or the typed name matches no Show or more than one, the upload binds to the Show that is currently active on the coordinator. A file that was uploaded before keeps the Show it was bound to then, even after you switch Shows. If no Show is active, the node keeps the file, registers nothing, and records it as unbound.
@@ -58,10 +58,10 @@ The node accepts files only into the `sequences`, `music`, and `videos` folders.
 | What xLights sends | Folder | What the node does today |
 | --- | --- | --- |
 | Sequence (FSEQ) | `sequences` | Holds the file, then registers it as a node-targeted FSEQ asset through the assets API. |
-| Music (Media checkbox) | `music` | Holds the file. It is not registered. |
+| Music (Media checkbox) | `music` | Pairs it with its sequence and registers a show-wide audio asset for every audio node. |
 | Video (Media checkbox) | `videos` | Holds the file. It is not registered. |
 
-Music registration is changing; this page describes today's behavior.
+xLights can send a song before its sequence. The node waits up to two minutes for the matching sequence in the same Show, then registers the song using that sequence's name. If none arrives, it registers under the song's own name and records that choice in `registrationReason`. Check this name before assigning the audio to a Cue.
 
 ## Where uploads land
 
@@ -79,14 +79,8 @@ A sequence upload worked when both of these are true:
 1. In `index.json`, the file's entry has `registrationState` of `registered`.
 2. `showmeshctl assets list --node <node-id>` lists a current FSEQ asset for that file name's sequence.
 
-`skipped` is the expected state for a music or video file. `pending` means the node is retrying, and `failed` carries a `registrationReason`. An entry that is not bound to a Show has no registration state and is never registered; its `unboundReason` says why. See [FPP Connect upload is accepted but never registers](../../troubleshooting/nodes/) for the usual causes.
+For music, confirm a current show-wide audio asset under the intended sequence name and check readiness on every audio target. `skipped` is expected for video, which requires manual registration. `pending` means the node is retrying, and `failed` carries a `registrationReason`. An entry that is not bound to a Show has no registration state and is never registered; its `unboundReason` says why. See [FPP Connect upload is accepted but never registers](../../troubleshooting/nodes/) for the usual causes.
 
 A registered asset confirms only that step. It does not verify FPP deployment or rendered output.
 
-## Boundaries that remain open
-
-- Supported xLights versions, FPP Connect compatibility, and an end-to-end deployed upload path are not yet documented as verified.
-- Manual ShowMesh asset upload remains a valid fallback for node-local FSEQ content.
-- FPP remains responsible for schedule, playlist order, and playhead; the render node follows the local FPP timeline after content is available.
-
-xLights calls the listener's models endpoint during every ordinary upload, before any file transfer starts, whether or not you use the xLights models feature. The listener answers that call, so an otherwise successful upload does not surface as an error in xLights on its account. That behavior was observed against a real xLights client; it does not establish a verified end-to-end xLights-to-FPP path.
+Manual ShowMesh asset upload remains a fallback for node-local FSEQ content. FPP owns schedule, playlist order, and playhead; the render node follows its MultiSync timeline after content is available.

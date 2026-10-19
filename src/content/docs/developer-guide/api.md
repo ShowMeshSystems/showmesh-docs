@@ -6,7 +6,7 @@ maturity: available
 complexity: advanced
 ---
 
-The coordinator serves its public API at `/api/v1`. Use the [v0.2.0 OpenAPI description](https://github.com/ShowMeshSystems/showmesh/blob/v0.2.0/api/openapi.yaml) for released request and response shapes. The default branch can contain unreleased changes.
+The coordinator serves its public API at `/api/v1`. Use the [v0.3.1 OpenAPI description](https://github.com/ShowMeshSystems/showmesh/blob/v0.3.1/api/openapi.yaml) for released request and response shapes. The default branch can contain unreleased changes.
 
 ## Connect
 
@@ -44,14 +44,18 @@ Every cookie-authenticated write is checked this way, but a bearer-token request
 The current API covers:
 
 - Snapshot, runner-neutral current runs, nodes, discovery, observations, event history, and live stream.
-- FPP instances and commands.
-- Sessions, audit records, principals, and API tokens.
+- FPP instances and commands, plugin pairing, brightness ceilings, and excluded channel ranges.
+- Sessions, audit records, principals, API tokens, and one-time node enrollment.
 - Revisioned FPP, FPP MQTT, Resolume, asset, Show/participation, Surface, Cue, Show Playlist, media Playlist, Action, Macro, Show Mode, Emergency Stop, and active-Show configuration.
 - Macro runs, action invocations and binding checks, and Resolume actions/recovery.
 - Show Night session configuration and lifecycle commands, direct Cue activation, and Emergency Stop trigger routes.
 - Cue catalogs, FPP Connect settings/status, and signed FPP fallback programs.
 - Asset metadata, bytes, manifests, node inventories, unused-asset inspection/removal, and resync.
 - Node clocks, single- and multi-node scheduled audio starts, audio silence, and alignment runs.
+- Weather-delay state, start/cancel/resume commands, automatic triggers, and presigned starts.
+- Component versions and revisioned release-check settings.
+
+Companion report upload/list/detail routes and the `companion` role require Core 0.4.0 or newer. Core 0.4.0 is not yet published. For that source build, use the [development OpenAPI description](https://github.com/ShowMeshSystems/showmesh/blob/fb955c9de477f2aebaad89186fbcf60c64515cee/api/openapi.yaml) and the [Companion integration guide](../../integrations/showmesh-companion/).
 
 Use the OpenAPI document for exact schemas and status codes. Do not infer a write operation from a read route; no state change is reachable by `GET`.
 
@@ -66,4 +70,4 @@ Errors are `application/problem+json`. Branch on HTTP status and stable problem 
 
 ## Configuration writes
 
-Configuration objects are revisioned and writes are full replacements where the route says so. Read the current object and revision before writing. Some environment-supplied configuration temporarily blocks API writes with `409`; migrate or remove the environment override rather than retrying blindly.
+Configuration objects are revisioned and writes are full replacements where the route says so. Read the current object and revision before writing. Some environment-supplied configuration temporarily blocks API writes with `409`. Confirm successful migration and reconcile any mismatch before removing an environment value; see [legacy configuration migration](../../getting-started/installation/#confirm-legacy-migration-before-removing-its-environment-values). Do not remove the only configuration copy to bypass a refusal.

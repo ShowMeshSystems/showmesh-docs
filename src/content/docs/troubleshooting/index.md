@@ -29,4 +29,8 @@ Do not restart everything before capturing the snapshot and the readiness respon
 - [Audio or clock sync is wrong](./audio-and-clock-sync/)
 - [Render or NDI output is wrong](./render-and-ndi/)
 - [Resolume control or recovery failed](./resolume/)
+- [A weather delay needs intervention](/guides/handle-a-weather-delay/)
+- [A player is running fallback after coordinator loss](/guides/recover-after-coordinator-loss/)
+- [An upgrade needs rollback or restore](/guides/upgrade-and-restore-showmesh/)
+- [Companion supervision or crash-report upload failed](/integrations/showmesh-companion/)
 - [Logs, health, events, and evidence](./diagnostics/)
