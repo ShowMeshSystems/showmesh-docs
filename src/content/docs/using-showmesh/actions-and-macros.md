@@ -15,11 +15,11 @@ Use the Show workspace to author and run them, or `showmeshctl` for scripts and 
 | Integration | What an action describes |
 | --- | --- |
 | **FPP** | One of eight playlist or volume primitives against a configured FPP instance. |
-| **Resolume** | One of seven composition operations using stable named references. |
+| **Resolume** | One of eight composition operations using stable named references. |
 | **MQTT** | A publish to a configured integration broker, optionally with response evidence. |
 | **Audio** | One audio session, gain, or output command for one or more configured audio nodes. |
 
-FPP supports playlist transport and volume. Resolume supports clip, layer, column, deck, and blackout operations. MQTT actions define a publish and optional response contract; publish success alone does not prove an external effect.
+FPP supports playlist transport and volume. Resolume supports clip, layer, column, deck, blackout, and layer fade operations; see [Resolume Arena](../../integrations/resolume/) for which results can be confirmed. MQTT actions define a publish and optional response contract; publish success alone does not prove an external effect.
 
 Audio actions use one of these operation names:
 

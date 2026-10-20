@@ -20,10 +20,12 @@ Each target reports its own outcome. Any failed immediate target fails the opera
 | Level | Immediate stop | Active Show Night effect |
 | --- | --- | --- |
 | `stop` | Stops FPP, silences audio, and blackouts Resolume and render surfaces. | Holds the active Night so its playback does not restart automatically. |
-| `stop-power-down` | Performs the same immediate stop. | Starts the session's standard graceful shutdown immediately. |
-| `hard-stop` | Performs the same immediate stop. | Abandons the session directly to `stopped`, with no wait. Requires arm and fire. |
+| `stop-power-down` | Performs the same immediate stop. | Starts the night's power down immediately, without waiting for the show or for safety checks. The shutdown sequences run with their waits once FPP is seen idle. |
+| `hard-stop` | Performs the same immediate stop. | Abandons the session directly to `stopped`, with no wait, and skips its end session actions. Every action in the selected shutdown sequences is sent at once. Requires arm and fire. |
 
-Each level can run optional follow-up actions, such as work lights. Their failures are reported separately.
+`stop-power-down` and `hard-stop` run the site [shutdown sequences](../site-power/#emergency-stop-and-shutdown-sequences), less the ones unticked for that level, plus the open night's extra sequences. With no night open, `stop-power-down` still runs its sequences. `stop` runs none.
+
+Each level can also run optional follow-up actions, such as work lights. Their failures are reported separately.
 
 ## Before you start
 
@@ -51,7 +53,11 @@ Hard stop requires two commands:
 
 Arming does not affect the show. Firing consumes the token before dispatch, so it cannot be reused. If it expires, arm again. After a conflict, check whether the stop already ran before retrying.
 
-## Configure follow-up actions
+## Configure follow-up actions and sequences
+
+In the Operator UI, open **Settings → Emergency stop**. Each level has a **Follow-up actions** list. The follow-up actions run in order after the immediate stop; a failed action is reported and the rest still run. **Stop and power down** and **Hard stop** also list the site shutdown sequences: untick one to leave it out of that level.
+
+From the command line:
 
 ```sh
 showmeshctl emergency-stop config get
@@ -59,7 +65,17 @@ showmeshctl emergency-stop config set --file ./emergency-stop-followups.json
 showmeshctl emergency-stop config revisions
 ```
 
-Configuration requires `config:write`. Each level has its own action list. Follow-up failures remain visible but do not change a confirmed immediate-stop result.
+Configuration requires `config:write`. The file names every level, each with an `actions` list. `stopPowerDown` and `hardStop` can also list the sequence IDs to skip:
+
+```json
+{
+  "stop": { "actions": ["work-lights-on"] },
+  "stopPowerDown": { "actions": [], "skipSequences": [] },
+  "hardStop": { "actions": [], "skipSequences": ["projector-cooldown"] }
+}
+```
+
+A skip list on `stop` is refused, because Stop runs no sequences. Follow-up failures remain visible but do not change a confirmed immediate-stop result. When a level starts shutdown sequences, the result lists them; read each step's outcome in the activity log.
 
 ## Interpret the result
 
@@ -86,7 +102,7 @@ An unconfirmed result does not prove failure. Inspect current state before repea
 ## What Emergency Stop does not do
 
 - It does not change Show Mode or configuration.
-- `stop` preserves the lifecycle state but holds the active Night. `stop-power-down` starts shutdown; `hard-stop` abandons it.
+- `stop` preserves the lifecycle state but holds the active Night. `stop-power-down` starts power down; `hard-stop` abandons the session.
 - It does not make failed or unreachable targets safe; operators must follow up.
 - It does not prove physical amplifiers, projectors, or fixtures reached a safe state.
 

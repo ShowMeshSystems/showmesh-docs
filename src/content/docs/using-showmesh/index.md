@@ -49,6 +49,8 @@ These are separate revisioned objects linked to a Show by ID.
 
 [Emergency Stop](./emergency-stop/) stops FPP, silences audio nodes, and blackouts Resolume and render surfaces. Stop holds the active Night until explicit Resume; higher levels start shutdown or abandon the session.
 
+[Site power and site actions](./site-power/) sets the shutdown sequences that cut power at the end of a night or in an emergency, and the actions a night runs when the site is prepared and after it ends.
+
 [Handle a weather delay](/guides/handle-a-weather-delay/) explains alerts, automatic trigger questions, resuming an interrupted show, and cancelling the night.
 
 [Access and permissions](./access-and-permissions/) explains roles, scopes, credentials, and revocation.
