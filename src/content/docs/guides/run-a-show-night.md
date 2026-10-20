@@ -73,7 +73,13 @@ showmeshctl night fade-out
 showmeshctl night power-down
 ```
 
-During a show, `night fade-out` waits until that show ends before fading and stopping FPP. Watch the lifecycle and fresh FPP evidence; a submitted closing command is not proof that playback stopped. For an immediate intervention, use Emergency Stop.
+`night final-show` makes the next normally timed show the last one. After it, the night runs its end-of-night steps and playlist until you fade out.
+
+`night fade-out` fades the lights and projections, then stops FPP. During a show, it waits until that show ends and skips the end-of-night playlist.
+
+`night power-down` stops the night without those fades. Once FPP is seen idle, the site and night [shutdown sequences](../../using-showmesh/site-power/) run, then the night's end session actions. Run it after `night fade-out` when the night has power steps or end session actions; a night that is only faded out does not run them.
+
+Watch the lifecycle and fresh FPP evidence; a submitted closing command is not proof that playback stopped. Check `night status` for the **Power phase** line. If it says power down stopped early, check the equipment that sequence controls by hand. For an immediate intervention, use Emergency Stop.
 
 These commands remain available when the session is degraded so the site can still close through the standard path.
 
@@ -85,7 +91,7 @@ For a weather interruption, follow [Handle a weather delay](../handle-a-weather-
 
 ## Degraded recovery
 
-If a restart or contradictory evidence marks the session degraded, use the permitted closing commands. If normal closing is unavailable, `night end-session` abandons it to `stopped` and preserves the degraded record. It does not stop FPP or power anything off; check affected devices separately:
+If a restart or contradictory evidence marks the session degraded, use the permitted closing commands. If normal closing is unavailable, `night end-session` abandons it to `stopped` and preserves the degraded record. It does not stop FPP or run shutdown sequences; check affected devices separately:
 
 ```sh
 showmeshctl night end-session

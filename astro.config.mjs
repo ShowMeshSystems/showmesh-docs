@@ -48,6 +48,7 @@ const usingShowMesh = {
 		{ label: 'Playlists', link: '/using-showmesh/playlists/' },
 		{ label: 'Show Mode', link: '/using-showmesh/show-mode/' },
 		{ label: 'Show Night', link: '/using-showmesh/show-night/' },
+		{ label: 'Site power and site actions', link: '/using-showmesh/site-power/' },
 		{ label: 'Surfaces', link: '/using-showmesh/surfaces/' },
 	],
 };

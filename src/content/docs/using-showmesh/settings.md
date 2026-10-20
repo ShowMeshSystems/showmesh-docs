@@ -11,16 +11,17 @@ Settings records installation-wide desired state. Use Monitor and current observ
 
 | Page | Purpose |
 | --- | --- |
-| **Connections** | FPP endpoints, integration MQTT, and related connectivity configuration. |
+| **Connections** | FPP endpoints, the Resolume instance and its control mode, integration MQTT, and related connectivity configuration. |
 | **Node enrollment** | Create, list, and cancel one-time node enrollment codes. |
 | **Content delivery** | Asset and FPP Connect delivery behavior. |
 | **Render recovery** | Render settings and recovery policy. |
 | **Weather delay** | Alert assets, power groups, automatic trigger timing, and the optional weather-service poller. |
+| **Emergency stop** | Follow-up actions for each level, and which shutdown sequences levels 2 and 3 run. |
+| **Site settings** | The site's [shutdown sequences and power-on actions](../site-power/). |
 | **Appearance** | Browser-local display preferences. |
 | **Audio defaults** | Engine-wide drift, gain, fade, announcement, and LTC defaults. |
 | **Node routing** | Per-node audio routes, PipeWire targets, channel placement, output latency, and node clocks. |
 | **Mode** | Program Mode or Show Mode. |
-| **Resolume** | The configured Resolume instance, composition, and recovery behavior. |
 | **Access** | A separate page for principals and credentials, linked from Settings. |
 
 ## Revisioned configuration

@@ -77,6 +77,8 @@ showmeshctl cuecatalog acknowledge --show <show-id> --generation <n> <node-id> <
 
 Deployment requires `cuecatalog:deploy`. An acknowledgement records the revision held by the node; it is not readiness by itself.
 
+The coordinator also deploys a missing or stale catalog by itself, every few minutes, to a node that is not busy. It holds the deploy while any FPP is playing, while an audio session on that node is playing or paused, or while the node runs its fallback program, and it never overrides an exclusive-claim conflict. The activity log records these deploys as **ShowMesh automatic cue-catalog deploy**. Until the deploy lands, night readiness reports that the node does not have the active Show's Cue list yet and when it will be sent.
+
 An exclusive-claim conflict blocks deployment unless an operator overrides it for that revision.
 
 Use Cues in [Playlists](../playlists/) for ordered playback and in [Show Night](../show-night/) for named changes around the night lifecycle.

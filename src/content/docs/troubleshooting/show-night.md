@@ -14,6 +14,20 @@ If Resume is refused, read the named state: a degraded session requires the clos
 
 Confirm recovery with a cleared hold, the expected show transition, and fresh playback evidence. Do not interpret the unchanged lifecycle state during a hold as continued output.
 
+## Symptom: power down stopped early, or end session actions did not run
+
+`showmeshctl night status` shows the **Power phase** line. "Power down stopped early in *sequence names*, so some power may still be on" means a step in each named sequence failed, was refused, or did not confirm while **Must confirm** was ticked. The steps after it in that sequence were not sent.
+
+1. Check the equipment that each named sequence controls, by hand, before leaving the site.
+2. Read the activity log for the failed step and its reason.
+3. Fix the action or its device, then test it between nights with **System power off** under **Testing**. See [Site power and site actions](../../using-showmesh/site-power/#test-power-outside-a-night).
+
+If end session actions did not run, check how the night ended. They run after power down, or after **End session** when no fade out or power down was requested. A night that was only faded out waits for **Power down presentation**, and a hard stop skips them. See [End session](../../using-showmesh/site-power/#end-session).
+
+### Confirm recovery
+
+The next power down reports "Power down finished.", and the equipment is in the expected state.
+
 ## Symptom: a night command exits `26` (not ready)
 
 Preserve the command's own output before retrying:

@@ -26,7 +26,7 @@ showmeshctl audio node set --help
 
 ## What playback does
 
-Only a Show-role audio session can start LTC. The node starts timecode from the configured or per-session offset plus the session's current playback position. It reports LTC as running only after downstream output confirmation. If LTC cannot start, program audio continues and the node reports the LTC outcome separately.
+Only a Show-role audio session can start LTC. The node starts timecode from the configured or per-session offset plus the session's current playback position. A Cue with an LTC output sets its own **Start offset**, entered as `hh:mm:ss.ff`, and each song starts from its own Cue's offset, including songs started by FPP MultiSync. A Cue without an LTC output clears the offset rather than keeping the previous Cue's. It reports LTC as running only after downstream output confirmation. If LTC cannot start, program audio continues and the node reports the LTC outcome separately.
 
 Cue activation keeps audio and timecode together: the node starts the Cue's audio asset, seeks to the observed Cue position, and derives LTC from that same session rather than a separate timing source.
 

@@ -48,6 +48,8 @@ A single-node start can use `scheduledAtNs`. For several nodes, aligned start pr
 
 Night beds, announcements, and resumes use scheduled playback. For FPP-backed Cues, nodes prepare from MultiSync OPEN and start from MultiSync START, with a coordinator fallback if the packet is missed. A node that loads too late joins at the song's reached position rather than playing the entire song late. Each target reports its start and alignment evidence.
 
+A node that plays only a Cue's audio, with no render output for that Cue, also starts from MultiSync START. It matches the FPP sequence that the bound FPP Playlist holds at that entry, so the coordinator must hold a stored copy of that FPP Playlist. When a Cue has no FPP sequence to match, readiness warns that the coordinator starts its audio instead.
+
 ShowMesh prepares the next song on every intended audio target, including a node sitting out the current song. Stage the assets and deploy the Cue catalog before playback.
 
 Output-latency calibration offsets known output-chain delay and records its method, configuration, timestamp, and confidence.

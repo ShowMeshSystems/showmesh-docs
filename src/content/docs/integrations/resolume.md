@@ -6,23 +6,28 @@ maturity: experimental-testing
 complexity: advanced
 ---
 
-ShowMesh integrates with **Resolume Arena** through its REST API, WebSocket change signal, and polling fallback. It supports one configured Arena instance today. Arena remains the authority for its own composition, source routing, projection mapping, preferences, and process lifetime.
+ShowMesh integrates with **Resolume Arena** through its REST API, WebSocket change signal, and polling fallback, and sends layer fades over OSC. An instance can instead be set to **OSC only**, where ShowMesh sends commands and never reads Arena. ShowMesh supports one configured Arena instance. Arena remains the authority for its own composition, source routing, projection mapping, preferences, and process lifetime.
 
 ## 1. Prepare Arena and its network path
 
 On the Arena host, enable the Webserver/API and record the port it is listening on. From the coordinator network, confirm that the API URL is reachable before configuring ShowMesh.
 
+To use layer fades or OSC-only control, also turn on Arena's OSC input and record its port. Arena's default is 7000. ShowMesh sends OSC to the host in the instance URL.
+
 The coordinator needs an HTTP(S) base URL with no embedded credentials, for example `http://arena-host:8080`. Put Arena and the coordinator on the trusted show-management network; the integration does not add a separate authentication layer around Arena's API.
 
 ## 2. Add the instance to ShowMesh
 
-Use the Operator UI configuration page or an administrator-scoped CLI token:
+In the Operator UI, open **Settings → Connections** and fill in the **Resolume** section. Or use an administrator-scoped CLI token:
 
 ```sh
 showmeshctl resolume instance set \
   --id arena-main \
-  --url http://arena-host:8080
+  --url http://arena-host:8080 \
+  --osc-port 7000
 ```
+
+`--osc-port` is Arena's OSC input port on the URL's host; leave it out to use 7000. `--control` chooses the control mode, described in [Choose a control mode](#choose-a-control-mode).
 
 The setting is store-backed and normally takes effect within about ten seconds; it does not require a coordinator restart. Check it with:
 
@@ -59,15 +64,55 @@ First confirm current state and choose a reversible target on a test composition
 - select a deck;
 - blackout tracked layers;
 - set layer bypass;
-- set a layer master value.
+- set a layer master value;
+- fade a layer, described in [Fade a layer](#fade-a-layer).
 
-The action path requires the `resolume:action` scope and reports the observed outcome, not only that an HTTP request was sent. Follow [Test a control safely](../../guides/test-a-control/) for how to interpret a command that is accepted but not confirmed.
+The action path requires the `resolume:action` scope. In the **REST and OSC** control mode it reports the observed outcome, not only that an HTTP request was sent. Layer fades and every action in **OSC only** mode are reported as not confirmed, because Arena does not answer OSC. Follow [Test a control safely](../../guides/test-a-control/) for how to interpret a command that is accepted but not confirmed.
 
 ## 5. Bring in a video surface or LTC deliberately
 
 For a ShowMesh render node, configure the NDI source and mapping in Arena after the node advertises the source. ShowMesh does not create that routing for you.
 
 Use [Set up a video node](../../guides/set-up-a-video-node/) for the sender side. Configure LTC separately from the NDI source and mapping; see [SMPTE / LTC](../smpte-ltc/) for timecode behavior.
+
+## Choose a control mode
+
+The **Control** setting in the Resolume section has two modes.
+
+**REST and OSC** is the default. ShowMesh reads Arena's state, confirms actions from that state, checks readiness, and can restore Arena after a restart. Layer fades go over OSC.
+
+**OSC only** (`--control osc`) sends every action to Arena over OSC and never reads Arena. Use it when the REST API is unavailable or unwanted. In this mode:
+
+- Nothing is confirmed. A sent action reads "Sent to Resolume over OSC. Resolume does not answer OSC, so ShowMesh cannot check it. Check Arena on its own screen."
+- Status, Monitor, and health show the instance as not read. Night readiness lists it as not verifiable instead of failing.
+- Automatic and manual recovery are unavailable. Restore Arena by hand.
+- Actions find layers, columns, and clips by name in the uploaded composition. Upload the composition before relying on any action except blackout. Names that are not in it are refused, and nothing is sent.
+- Launching a clip or column selects its deck first, which changes Arena's selected deck.
+- Persistent clips cannot be launched. Launch them in Arena.
+- Blackout clears every layer in the uploaded composition. With no composition uploaded, it sends Arena's disconnect-all command.
+- Emergency Stop and weather delay send their blackout over OSC and count it as sent. Check Arena's output on its own screen.
+
+The instance URL is still required in OSC-only mode because it supplies the OSC host.
+
+:::caution[OSC-only results are never confirmed]
+A typo in the OSC port, or Arena's OSC input being off, can look like a successful send. After changing the OSC settings, run one low-impact action and watch Arena's screen.
+:::
+
+## Fade a layer
+
+A layer fade changes a layer's master level over a set time. Add it as a Resolume action with a layer name, a target percent from 0 to 100, and an optional duration in milliseconds. A duration of 0 sets the level at once.
+
+```sh
+showmeshctl resolume action fade-layer --duration-ms 3000 "<layer-name>" <target-percent>
+```
+
+Put flags before the layer name and target percent.
+
+The coordinator performs the fade by sending the layer's master level over OSC about 25 times a second. A newer fade on the same layer replaces the running one and starts from the last level sent. In **REST and OSC** mode, ShowMesh reads the layer's current level first and refuses the fade if it cannot. In **OSC only** mode, the fade starts from the last level ShowMesh sent, or from full.
+
+In a Show Night transition step, a layer fade without its own duration uses the step's fade time, then the night's lights fade time for that transition. Fade out night replays the enter-show steps, so a layer fade there also runs when the night fades out.
+
+A fade sent to the wrong port or to an Arena with its OSC input off is still reported as sent. Confirm a new fade on Arena's screen.
 
 ## Recover after an Arena restart
 
